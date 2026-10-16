@@ -51,11 +51,13 @@ tailwind-watch: tailwind-version
 tailwind-build: tailwind-version
 	tailwindcss -i assets/tailwind.css -o static/css/output.css --minify
 
-# Fails when the committed stylesheet is not what its sources build.
+# Fails when the committed stylesheet is not what its sources build, and shows the rules that differ.
 css-check: tailwind-version
 	@built=$$(mktemp) && tailwindcss -i assets/tailwind.css -o $$built --minify 2>/dev/null \
 		&& cmp -s $$built static/css/output.css \
-		|| { echo "static/css/output.css is out of date: run make tailwind-build"; exit 1; }
+		|| { echo "static/css/output.css is out of date: run make tailwind-build"; \
+			tr '}' '\n' < static/css/output.css > $$built.committed; tr '}' '\n' < $$built > $$built.rules; \
+			diff $$built.committed $$built.rules | head -40; exit 1; }
 
 # Builds sodium.js from the npm packages, after checking each against the integrity the registry published. Both
 # must run as one script so that libsodium's plain JavaScript fallback initialises where WebAssembly is unavailable.
