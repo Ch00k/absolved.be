@@ -1,8 +1,10 @@
 // Signup and login: derives the keys from the password, posts the login key in place of the password,
-// and keeps the encryption key only once the server has accepted the login key.
+// and keeps the encryption key only once the server has accepted the login key. The pages kept for
+// offline use are forgotten then, since they may belong to the account that was here before.
 
-import { feedback, MIN_PASSWORD_LENGTH } from "./forms.js";
+import { csrfToken, errorMessage, feedback, newPasswordProblem } from "./forms.js";
 import { deriveKeys, storeKey } from "./keys.js";
+import { forgetPages } from "./offline.js";
 
 const form = document.querySelector("[data-credentials]");
 const { fail, busy } = feedback(form);
@@ -12,29 +14,26 @@ form.addEventListener("submit", async (event) => {
 
   const username = form.elements.username.value.trim().toLowerCase();
   const password = form.querySelector("[data-password]").value;
-  if (form.dataset.credentials === "signup") {
-    if ([...password].length < MIN_PASSWORD_LENGTH) {
-      return fail(form.dataset.tooShort);
-    }
-    if (form.querySelector("[data-password-confirmation]").value !== password) {
-      return fail(form.dataset.mismatch);
-    }
+  const problem = form.dataset.credentials === "signup" ? newPasswordProblem(form) : null;
+  if (problem) {
+    return fail(problem);
   }
 
   busy(true);
   try {
     const { authKey, encryptionKey } = await deriveKeys(username, password);
     const body = new FormData(form);
+    body.set("csrfmiddlewaretoken", csrfToken());
     body.set("username", username);
     body.set("auth_key", authKey);
     const response = await fetch(form.action, { method: "POST", body });
-    const result = await response.json();
     if (!response.ok) {
-      return fail(result.error);
+      return fail(await errorMessage(form, response));
     }
 
-    await storeKey(username, encryptionKey);
-    location.assign(result.next);
+    const { next } = await response.json();
+    await Promise.all([storeKey(username, encryptionKey), forgetPages()]);
+    location.assign(next);
   } catch {
     fail(form.dataset.failed);
   } finally {

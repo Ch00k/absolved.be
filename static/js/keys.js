@@ -5,14 +5,17 @@
 // encryption key is created non-extractable: the browser uses it but never hands its bytes to any
 // script, and it is kept in IndexedDB until logout.
 //
-// Changing any constant here changes every user's keys, which locks them out of their account and
-// makes their examination unreadable.
+// What determines the keys must never change, or every user is locked out of their account and their
+// examination becomes unreadable: the salt prefix, the Argon2id limits, NFC normalisation of the
+// password, the HKDF labels "auth" and "examination", the empty HKDF salt, the 32-byte lengths, and the
+// trimmed, lowercased username that credentials.js passes in. The browser tests pin the keys they give.
 
 const SALT_PREFIX = "absolved.be:";
 // libsodium's "interactive" limits, fixed here so that a libsodium release cannot change them.
 const ARGON2_PASSES = 2;
 const ARGON2_MEMORY_BYTES = 64 * 1024 * 1024;
 
+// Where this browser keeps the key. Changing these only makes each device log in once more.
 const DATABASE = "absolved";
 const STORE = "keys";
 const SLOT = "examination";
@@ -23,7 +26,7 @@ function hex(buffer) {
   return Array.from(new Uint8Array(buffer), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-// libsodium's scripts are loaded with defer ahead of the page's modules, so they have run by now;
+// libsodium's script, sodium.js, is loaded with defer ahead of the page's modules, so they have run by now;
 // `ready` settles once its WebAssembly, or its plain JavaScript fallback, is initialised.
 async function sodium() {
   await globalThis.sodium.ready;

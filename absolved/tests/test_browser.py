@@ -11,15 +11,21 @@ import datetime
 import hashlib
 import hmac
 import re
+import time
 from typing import TYPE_CHECKING
 
 import pytest
 from argon2.low_level import Type, hash_secret_raw
-from playwright.sync_api import Browser, BrowserContext, Locator, Page, Request, expect
+from playwright.sync_api import Browser, BrowserContext, Locator, Page, Request, Route, expect
 
 from absolved.models import Confession, Examination, User
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+    from pathlib import Path
+
+    from django.test import Client
+    from pytest_django.fixtures import Settings
     from pytest_django.live_server_helper import LiveServer
 
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -28,15 +34,15 @@ PASSWORD = "correct horse battery"
 NEW_PASSWORD = "staple battery horse"
 NOW = datetime.datetime(2026, 10, 15, 12, 0, tzinfo=datetime.UTC)
 
-# The login key and an examination sealed by the browser for anna with PASSWORD, kept from when
-# the key derivation was written. Deriving anything else from the same password would lock every
-# user out of their account and their examination.
+# The login key the browser derived for anna with PASSWORD when the key derivation was written, and an
+# examination it sealed for her, in the shape prepare.js saves. Deriving anything else from the same password
+# would lock every user out of their account and their examination.
 ANNA_AUTH_KEY = "f7e23d4b91f4122892a342ce38fcbbe3f939219b2109fd86f068162d50769e70"
 ANNA_SEALED = (
-    "hpnemlOo3zpczXmAeokryx4d7CPDxlYdmlnxtjPqOcBDW2IwJJfH+syQ5RxtD227x/EgaXZdKyzhVTfJ1sl5/HqHt8Om6rg4ThT1OhMy7GGGgA6M"
-    "Hgq3jrj1oxbw5CM2teDls+J2"
+    "cytPTovdYJ+vcQ1vt8bew0ZqTWyoE6KmJ8EnFDeAGWG8eaJuQ1BqtCwuJFsgemq+F5dfpK5Pcb8Q55RT2cdjL+NdE8sfszLrV4PDc1tUq4F8"
+    "X3rHydEkUSKA+m42+A8upnKilkUCdZrdDu7ydpZbCSPfnFIRD2eXp0lGrvb9LE9eP7ovZA=="
 )
-ANNA_EXAMINATION = {"questions": ["c8-lies"], "notes": {"general": "Zażółć gęślą jaźń"}}
+ANNA_EXAMINATION = {"statements": ["c8-lies"], "details": {"c8-lies": "Zażółć gęślą jaźń"}, "notes": "Łódź, Kraków."}
 
 
 @pytest.fixture
@@ -85,12 +91,19 @@ def skip_last_confession_question(page: Page) -> None:
     page.click("dialog button[value=skip] >> nth=0")
 
 
-def prepare(page: Page, live_server: LiveServer, questions: list[str], notes: str) -> None:
-    """Ticks each of the given questions, which have one statement each, and writes the general notes."""
+def prepare(page: Page, live_server: LiveServer, statements: list[str], notes: str) -> None:
+    """Marks each of the given statements, of questions that show them without opening, and writes the general
+    notes."""
     page.goto(f"{live_server.url}/prepare/")
-    for question in questions:
-        page.check(f'input[value="{question}"]')
+    for statement in statements:
+        page.check(f'input[value="{statement}"]')
     page.fill("textarea[data-notes]", notes)
+    expect_saved(page)
+
+
+def expect_saved(page: Page) -> None:
+    """Waits until the prepare page has saved its latest change. A test ending on an unsaved one would have the page
+    send it as it closes, while the database is being cleared for the next test."""
     expect(page.locator("[data-save-status]")).to_have_text("Saved")
 
 
@@ -151,7 +164,7 @@ def prepare_anger_cruelty_and_lies(page: Page, live_server: LiveServer) -> None:
     lies.locator('input[value="c8-lies"]').check()
     write_notes(page, "c8-lies", "About ten times.")
     page.fill("textarea[data-notes]", "Impatient at work.\nTwice.")
-    expect(page.locator("[data-save-status]")).to_have_text("Saved")
+    expect_saved(page)
 
 
 def test_preparing_is_saved_encrypted_and_read_back(page: Page, live_server: LiveServer) -> None:
@@ -247,7 +260,7 @@ def test_a_question_keeps_its_marks_when_closed(page: Page, live_server: LiveSer
     anger.locator("summary").click()
     expect(resentment).to_be_hidden()
     expect(anger.locator("summary")).not_to_have_css("color", unmarked_colour)
-    expect(page.locator("[data-save-status]")).to_have_text("Saved")
+    expect_saved(page)
 
     page.reload()
     expect(anger).to_have_js_property("open", value=True)
@@ -290,7 +303,7 @@ def test_a_marked_statement_takes_notes_behind_its_icon(
     checkbox.uncheck()
     page.check('input[value="c1-prayer"]')
     expect(toggle).to_be_hidden()
-    expect(page.locator("[data-save-status]")).to_have_text("Saved")
+    expect_saved(page)
 
     page.reload()
     expect(page.locator('input[value="c1-prayer"]')).to_be_checked()
@@ -298,6 +311,7 @@ def test_a_marked_statement_takes_notes_behind_its_icon(
     checkbox.check()
     expect(details).to_be_hidden()
     expect(details).to_have_value("")
+    expect_saved(page)
 
 
 def test_notes_grow_with_their_text_up_to_five_lines(page: Page, live_server: LiveServer) -> None:
@@ -314,6 +328,8 @@ def test_notes_grow_with_their_text_up_to_five_lines(page: Page, live_server: Li
         return details.evaluate("textarea => textarea.getBoundingClientRect().height")
 
     one, three, five, eight = height(1), height(3), height(5), height(8)
+
+    expect_saved(page)
 
     assert one < three < five
     assert eight == five
@@ -379,7 +395,8 @@ def test_an_empty_preparation_still_leads_to_confession(page: Page, live_server:
 
 
 def test_the_password_never_leaves_the_browser(page: Page, live_server: LiveServer) -> None:
-    """Signup, login and a password change post derived keys only: no request carries either password."""
+    """Signup, login, a password change and deleting the account post derived keys only: no request carries either
+    password."""
     bodies: list[str] = []
 
     def record(request: Request) -> None:
@@ -393,14 +410,22 @@ def test_the_password_never_leaves_the_browser(page: Page, live_server: LiveServ
     log_in(page, live_server)
     change_password(page, live_server, PASSWORD, NEW_PASSWORD)
     expect(page.locator("[data-form-success]")).to_be_visible()
-
-    assert len(bodies) >= 4
-    assert not [body for body in bodies if PASSWORD in body or NEW_PASSWORD in body]
     assert User.objects.get(username="anna").check_password(reference_auth_key("anna", NEW_PASSWORD))
+    delete_account(page, live_server, NEW_PASSWORD)
+    page.wait_for_url(f"{live_server.url}/")
+
+    assert len(bodies) >= 5
+    assert not [body for body in bodies if PASSWORD in body or NEW_PASSWORD in body]
+    assert not User.objects.exists()
 
 
 def change_password(page: Page, live_server: LiveServer, current: str, new: str) -> None:
     page.goto(f"{live_server.url}/account/")
+    submit_password_change(page, current, new)
+
+
+def submit_password_change(page: Page, current: str, new: str) -> None:
+    """Changes the password from the account page already open."""
     page.fill("#current-password", current)
     page.fill("#new-password", new)
     page.fill("#new-password-confirmation", new)
@@ -439,9 +464,404 @@ def test_a_wrong_current_password_changes_nothing(page: Page, live_server: LiveS
 
     change_password(page, live_server, "not my password at all", NEW_PASSWORD)
 
-    expect(page.locator("[data-form-error]")).to_have_text("The current password is wrong.")
+    expect(page.locator("[data-password-change] [data-form-error]")).to_have_text("The current password is wrong.")
     assert Examination.objects.get().ciphertext == ciphertext
     assert User.objects.get().check_password(reference_auth_key("anna", PASSWORD))
+
+
+def open_another_page(context: BrowserContext) -> Page:
+    """A second tab of the same browser, sharing the session and the key."""
+    other = context.new_page()
+    other.clock.set_fixed_time(NOW)
+    return other
+
+
+def test_a_page_open_across_a_password_change_stops_saving(
+    page: Page, live_server: LiveServer, context: BrowserContext
+) -> None:
+    """A prepare page keeps the old password's key; once the password changes in another tab it saves nothing,
+    and after a reload it opens the examination with the new key."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Written before the change.")
+
+    account = open_another_page(context)
+    change_password(account, live_server, PASSWORD, NEW_PASSWORD)
+    expect(account.locator("[data-form-success]")).to_be_visible()
+    ciphertext = Examination.objects.get().ciphertext
+    page.fill("textarea[data-notes]", "Written after the change.")
+
+    expect(page.locator("[data-save-status]")).to_have_text(
+        "Not saved: your preparation was changed elsewhere. Reload the page to continue."
+    )
+    assert Examination.objects.get().ciphertext == ciphertext
+    page.reload()
+    expect(page.locator("textarea[data-notes]")).to_have_value("Written before the change.")
+
+
+def test_a_password_change_from_an_out_of_date_account_page_is_refused(
+    page: Page, live_server: LiveServer, context: BrowserContext
+) -> None:
+    """The account page re-encrypts the examination it opened, so a change saved since from the prepare page stops
+    the password change instead of being lost."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "First draft.")
+    account = open_another_page(context)
+    account.goto(f"{live_server.url}/account/")
+
+    page.fill("textarea[data-notes]", "Second draft.")
+    expect_saved(page)
+    submit_password_change(account, PASSWORD, NEW_PASSWORD)
+
+    expect(account.locator("[data-password-change] [data-form-error]")).to_have_text(
+        "Your preparation changed meanwhile. Reload the page and try again."
+    )
+    assert User.objects.get().check_password(reference_auth_key("anna", PASSWORD))
+    page.reload()
+    expect(page.locator("textarea[data-notes]")).to_have_value("Second draft.")
+
+
+def test_a_page_open_across_a_confession_stops_saving(
+    page: Page, live_server: LiveServer, context: BrowserContext
+) -> None:
+    """Recording a confession destroys the examination; a prepare page left open in another tab cannot bring it
+    back."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Confessed already.")
+
+    confession = open_another_page(context)
+    confession.goto(f"{live_server.url}/confession/")
+    confession.click("summary")
+    confession.click('form[action="/confession/record/"] button')
+    confession.wait_for_url(f"{live_server.url}/")
+    page.fill("textarea[data-notes]", "Brought back.")
+
+    expect(page.locator("[data-save-status]")).to_have_text(
+        "Not saved: your preparation was changed elsewhere. Reload the page to continue."
+    )
+    assert not Examination.objects.exists()
+
+
+def test_recording_a_confession_forgets_the_kept_pages_with_the_examination(
+    page: Page, live_server: LiveServer
+) -> None:
+    """The pages kept for offline use carry the encrypted examination; recording the confession, which destroys
+    it, leaves no copy of it on the device."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Destroyed after confession.")
+    page.evaluate("navigator.serviceWorker.ready")
+    page.goto(f"{live_server.url}/confession/")
+    expect(page.locator("[data-notes]")).to_have_text("Destroyed after confession.")
+    ciphertext = Examination.objects.get().ciphertext
+    wait_until(lambda: bool(kept_paths_holding(page, ciphertext)))
+
+    page.click("summary")
+    page.click('form[action="/confession/record/"] button')
+    page.wait_for_url(f"{live_server.url}/")
+
+    assert not kept_paths_holding(page, ciphertext)
+
+
+def test_changing_the_password_forgets_the_kept_pages(page: Page, live_server: LiveServer) -> None:
+    """The kept pages carry the examination sealed under the old password, which the new key cannot open."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Sealed under the old password.")
+    page.evaluate("navigator.serviceWorker.ready")
+    page.goto(f"{live_server.url}/confession/")
+    ciphertext = Examination.objects.get().ciphertext
+    wait_until(lambda: bool(kept_paths_holding(page, ciphertext)))
+
+    change_password(page, live_server, PASSWORD, NEW_PASSWORD)
+    expect(page.locator("[data-form-success]")).to_be_visible()
+
+    assert not kept_paths_holding(page, ciphertext)
+
+
+def test_logging_in_forgets_the_pages_kept_for_another_account(page: Page, live_server: LiveServer) -> None:
+    """A session that ended without logging out, as by its expiry, leaves its pages behind; the next login on the
+    device, whoever it is for, forgets them."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    page.evaluate("navigator.serviceWorker.ready")
+    page.goto(f"{live_server.url}/history/")
+    wait_until(lambda: "/history/" in kept_paths_holding(page, "anna"))
+    page.context.clear_cookies(name="sessionid")
+
+    sign_up(page, live_server, username="bert")
+
+    assert not kept_paths_holding(page, "anna")
+
+
+def test_a_page_that_redirects_loses_its_kept_copy(page: Page, live_server: LiveServer) -> None:
+    """Once the session has ended a page answers with the login page, and its kept copy, which still shows the
+    account, is forgotten."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    page.evaluate("navigator.serviceWorker.ready")
+    page.goto(f"{live_server.url}/history/")
+    wait_until(lambda: "/history/" in kept_paths_holding(page, "anna"))
+    page.context.clear_cookies(name="sessionid")
+
+    page.goto(f"{live_server.url}/history/")
+    page.wait_for_url(f"{live_server.url}/login/?next=/history/")
+
+    wait_until(lambda: "/history/" not in kept_paths_holding(page, "anna"))
+
+
+def test_a_change_made_just_before_leaving_is_saved(page: Page, live_server: LiveServer) -> None:
+    """Leaving the page before the pause that triggers a save still saves the last change."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    page.goto(f"{live_server.url}/prepare/")
+
+    page.fill("textarea[data-notes]", "Typed while leaving.")
+    page.click('header a[href="/history/"]')
+    page.wait_for_url(f"{live_server.url}/history/")
+    # The request outlives the page it left, so it can arrive after the next page has loaded.
+    wait_until(Examination.objects.exists)
+
+    page.goto(f"{live_server.url}/prepare/")
+    expect(page.locator("textarea[data-notes]")).to_have_value("Typed while leaving.")
+
+
+def test_saving_after_the_session_ended_returns_to_the_page_after_logging_in(
+    page: Page, live_server: LiveServer, context: BrowserContext
+) -> None:
+    """A save that finds the session ended sends the user to log in, and back to the prepare page after."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Saved in the session.")
+    context.clear_cookies(name="sessionid")
+
+    page.fill("textarea[data-notes]", "Typed after it ended.")
+    page.wait_for_url(re.compile(r"/login/\?next=%2Fprepare%2F$"))
+    page.fill("#username", "anna")
+    page.fill("#password", PASSWORD)
+    page.click("button.button-primary")
+
+    page.wait_for_url(f"{live_server.url}/prepare/")
+    expect(page.locator("textarea[data-notes]")).to_have_value("Saved in the session.")
+
+
+def wait_until(condition: Callable[[], bool]) -> None:
+    """Waits for a condition on the server's side, which the browser cannot wait for."""
+    deadline = time.monotonic() + 5
+    while not condition():
+        assert time.monotonic() < deadline
+        time.sleep(0.05)
+
+
+def kept_pages(page: Page) -> dict[str, str]:
+    """The pages, not the static files, that the service worker keeps for offline use, by path."""
+    return page.evaluate(
+        """async () => {
+            const pages = {};
+            for (const name of await caches.keys()) {
+                const cache = await caches.open(name);
+                for (const request of await cache.keys()) {
+                    const url = new URL(request.url);
+                    if (!url.pathname.startsWith("/static/")) {
+                        pages[url.pathname + url.search] = await (await cache.match(request)).text();
+                    }
+                }
+            }
+            return pages;
+        }"""
+    )
+
+
+def kept_paths_holding(page: Page, text: str) -> list[str]:
+    """The paths of the kept pages that hold the text. The service worker keeps a page once it has answered with
+    it, so a test waits for what it expects to be kept."""
+    return [path for path, kept in kept_pages(page).items() if text in kept]
+
+
+# Playwright's WebKit routes a page's navigation before its service worker sees it, so a delay there never reaches
+# the worker's fallback; Chromium routes the request the worker makes.
+@pytest.mark.skip_browser("webkit")
+def test_a_page_the_network_is_slow_to_answer_opens_from_its_kept_copy(
+    page: Page, live_server: LiveServer, context: BrowserContext
+) -> None:
+    """After four seconds without an answer the kept copy is shown, and the answer, once it comes, is kept for the
+    next time."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    page.evaluate("navigator.serviceWorker.ready")
+    page.goto(f"{live_server.url}/history/")
+    wait_until(lambda: "/history/" in kept_paths_holding(page, "anna"))
+    Confession.objects.create(user=User.objects.get(), date="2026-09-01")
+
+    def answer_late(route: Route) -> None:
+        time.sleep(6)
+        route.continue_()
+
+    context.route("**/history/", answer_late)
+    page.goto(f"{live_server.url}/history/")
+
+    expect(page.locator("main")).not_to_contain_text("1 September 2026")
+    context.unroute("**/history/")
+    wait_until(lambda: "/history/" in kept_paths_holding(page, "1 September 2026"))
+
+
+def test_a_hashed_static_file_is_served_from_its_kept_copy(
+    page: Page, live_server: LiveServer, settings: Settings, tmp_path: Path
+) -> None:
+    """A file named for a hash of its contents never changes under that name, so once kept it is served without
+    asking the network; a file under a plain name is asked for every time."""
+    (tmp_path / "probe.0123456789ab.js").write_text("first")
+    (tmp_path / "probe.js").write_text("first")
+    settings.STATICFILES_DIRS = [*settings.STATICFILES_DIRS, tmp_path]
+    page.goto(f"{live_server.url}/")
+    page.evaluate("navigator.serviceWorker.ready")
+    page.reload()
+    assert page.evaluate("Boolean(navigator.serviceWorker.controller)")
+
+    def fetched(name: str) -> str:
+        # Past the browser's own HTTP cache, which would answer for the file under the plain name.
+        return page.evaluate(f"async () => (await fetch('/static/{name}', {{ cache: 'no-store' }})).text()")
+
+    assert fetched("probe.0123456789ab.js") == fetched("probe.js") == "first"
+    wait_until(lambda: page.evaluate("async () => Boolean(await caches.match('/static/probe.0123456789ab.js'))"))
+    (tmp_path / "probe.0123456789ab.js").write_text("second")
+    (tmp_path / "probe.js").write_text("second")
+
+    assert fetched("probe.0123456789ab.js") == "first"
+    assert fetched("probe.js") == "second"
+
+
+def delete_account(page: Page, live_server: LiveServer, password: str) -> None:
+    page.goto(f"{live_server.url}/account/")
+    page.click("summary")
+    form = page.locator("form[data-account-deletion]")
+    form.locator("#deletion-password").fill(password)
+    form.locator("input[type=checkbox]").check()
+    form.locator("button.button-danger").click()
+
+
+def test_a_wrong_password_deletes_nothing(page: Page, live_server: LiveServer) -> None:
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+
+    delete_account(page, live_server, NEW_PASSWORD)
+
+    expect(page.locator("form[data-account-deletion] [data-form-error]")).to_have_text("The password is wrong.")
+    assert User.objects.exists()
+    assert stored_key_owner(page) == "anna"
+
+
+def test_deleting_the_account_forgets_the_key_and_the_kept_pages(page: Page, live_server: LiveServer) -> None:
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Deleted with the account.")
+    page.evaluate("navigator.serviceWorker.ready")
+    page.goto(f"{live_server.url}/confession/")
+    ciphertext = Examination.objects.get().ciphertext
+    wait_until(lambda: bool(kept_paths_holding(page, ciphertext)))
+
+    delete_account(page, live_server, PASSWORD)
+    page.wait_for_url(f"{live_server.url}/")
+
+    assert not User.objects.exists()
+    assert stored_key_owner(page) is None
+    assert not kept_paths_holding(page, ciphertext)
+    assert not kept_paths_holding(page, "anna")
+
+
+def test_a_key_kept_for_another_account_is_not_used(
+    page: Page, live_server: LiveServer, context: BrowserContext, client: Client
+) -> None:
+    """A device whose stored key is another user's is sent to log in, which derives this user's key."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    bert = User.objects.create_user("bert", reference_auth_key("bert", PASSWORD))
+    bert.asked_last_confession = True
+    bert.save()
+    client.force_login(bert)
+    context.add_cookies([{"name": "sessionid", "value": client.cookies["sessionid"].value, "url": live_server.url}])
+
+    page.goto(f"{live_server.url}/prepare/")
+
+    page.wait_for_url(re.compile(r"/login/\?next=%2Fprepare%2F$"))
+    expect(page.locator("#username")).to_have_value("bert")
+    page.fill("#password", PASSWORD)
+    page.click("button.button-primary")
+    page.wait_for_url(f"{live_server.url}/prepare/")
+    expect(page.locator("#examination")).to_be_visible()
+    assert stored_key_owner(page) == "bert"
+
+
+def test_a_key_that_does_not_open_the_examination_is_replaced_by_logging_in(
+    page: Page, live_server: LiveServer
+) -> None:
+    """A key left from another password, as when a change of it did not reach this device, cannot open the
+    examination; the page sends the user to log in, which derives the right one."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Opened by the right key only.")
+    page.goto(f"{live_server.url}/login/")
+    page.evaluate(
+        """async (password) => {
+            const keys = await import("/static/js/keys.js");
+            await keys.storeKey("anna", (await keys.deriveKeys("anna", password)).encryptionKey);
+        }""",
+        NEW_PASSWORD,
+    )
+
+    page.goto(f"{live_server.url}/prepare/")
+
+    page.wait_for_url(re.compile(r"/login/\?next=%2Fprepare%2F$"))
+    page.fill("#password", PASSWORD)
+    page.click("button.button-primary")
+    page.wait_for_url(f"{live_server.url}/prepare/")
+    expect(page.locator("textarea[data-notes]")).to_have_value("Opened by the right key only.")
+
+
+def test_saving_after_a_login_in_another_tab(page: Page, live_server: LiveServer, context: BrowserContext) -> None:
+    """Logging in replaces the CSRF token, in every tab; a page rendered with the old one still saves."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Before the other login.")
+
+    log_in(open_another_page(context), live_server)
+    page.fill("textarea[data-notes]", "After the other login.")
+
+    expect_saved(page)
+    page.reload()
+    expect(page.locator("textarea[data-notes]")).to_have_value("After the other login.")
+
+
+def test_changing_the_password_after_the_session_ended_goes_to_log_in(
+    page: Page, live_server: LiveServer, context: BrowserContext
+) -> None:
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    page.goto(f"{live_server.url}/account/")
+    context.clear_cookies(name="sessionid")
+
+    submit_password_change(page, PASSWORD, NEW_PASSWORD)
+
+    page.wait_for_url(re.compile(r"/login/\?next=%2Faccount%2F$"))
+    assert User.objects.get().check_password(reference_auth_key("anna", PASSWORD))
+
+
+def test_an_error_page_in_answer_is_reported_as_one(
+    page: Page, live_server: LiveServer, context: BrowserContext
+) -> None:
+    """Without its CSRF cookie the request is refused with Django's error page, which is no failed connection."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    page.goto(f"{live_server.url}/account/")
+    context.clear_cookies(name="csrftoken")
+
+    submit_password_change(page, PASSWORD, NEW_PASSWORD)
+
+    expect(page.locator("[data-password-change] [data-form-error]")).to_have_text(
+        "Something went wrong. Reload the page and try again."
+    )
 
 
 def test_logging_out_forgets_the_key(page: Page, live_server: LiveServer) -> None:
@@ -455,22 +875,8 @@ def test_logging_out_forgets_the_key(page: Page, live_server: LiveServer) -> Non
     assert stored_key_owner(page) is None
     # Pages fetched after the logout, such as the landing page it ends on, are kept again; none of them
     # belongs to the account.
-    kept_pages = page.evaluate(
-        """async () => {
-            const pages = [];
-            for (const name of await caches.keys()) {
-                const cache = await caches.open(name);
-                for (const request of await cache.keys()) {
-                    if (!new URL(request.url).pathname.startsWith("/static/")) {
-                        pages.push(await (await cache.match(request)).text());
-                    }
-                }
-            }
-            return pages;
-        }"""
-    )
-    assert kept_pages
-    assert not [kept for kept in kept_pages if "anna" in kept]
+    assert kept_pages(page)
+    assert not kept_paths_holding(page, "anna")
 
 
 def test_a_device_without_the_key_unlocks_by_logging_in(
@@ -505,7 +911,8 @@ def test_signup_enforces_the_password_rules_before_sending_anything(page: Page, 
 
     page.fill("#password", "eleven char")
     page.fill("#password-confirmation", "eleven char")
-    page.evaluate("document.querySelector('#password').removeAttribute('minlength')")
+    # The browser's own check would stop the form first; the script's is the one that counts characters.
+    page.evaluate("document.querySelector('form').noValidate = true")
     page.click("button.button-primary")
     expect(page.locator("[data-form-error]")).to_have_text("The password must be at least 12 characters long.")
 
@@ -544,6 +951,21 @@ def test_browser_derives_the_reference_login_key(
     page.goto(f"{live_server.url}/login/")
 
     assert derive_in_browser(page, username, password) == reference_auth_key(username, password)
+
+
+def test_a_username_is_the_same_however_it_is_typed(page: Page, live_server: LiveServer) -> None:
+    """The username salts the key, so the login form trims and lowercases it before deriving: a phone that capitalises
+    the first letter still logs in to the same account, with the key that opens the same examination. Signing up
+    takes only the lowercase name, which the field's pattern holds to."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    prepare(page, live_server, ["c8-lies"], "Opened however the name is typed.")
+    log_out(page, live_server)
+
+    log_in(page, live_server, username=" Anna ")
+
+    page.goto(f"{live_server.url}/prepare/")
+    expect(page.locator("textarea[data-notes]")).to_have_value("Opened however the name is typed.")
 
 
 def test_unicode_passwords_derive_the_same_key_however_they_are_encoded(page: Page, live_server: LiveServer) -> None:
@@ -611,6 +1033,26 @@ def test_time_since(page: Page, live_server: LiveServer, since: str, unit: str, 
             return describeSince(since, "2026-10-15", unit, "en");
         }""",
         [since, unit],
+    )
+
+    assert described == expected
+
+
+@pytest.mark.parametrize(
+    ("since", "today", "expected"), [("2026-07-01", "2026-08-31", "8 weeks"), ("2026-07-01", "2026-09-01", "2 months")]
+)
+def test_weeks_turn_into_months_at_two_whole_months(
+    page: Page, live_server: LiveServer, since: str, today: str, expected: str
+) -> None:
+    """Across two 31-day months, 61 days are still one whole month, which reads as weeks, never as "1 month"."""
+    page.goto(f"{live_server.url}/")
+
+    described = page.evaluate(
+        """async ([since, today]) => {
+            const { describeSince } = await import("/static/js/since.js");
+            return describeSince(since, today, "natural", "en");
+        }""",
+        [since, today],
     )
 
     assert described == expected

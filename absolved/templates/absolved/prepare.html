@@ -17,10 +17,11 @@
 
   {# Filled from the decrypted examination and shown by prepare.js. Nothing here is posted as a form: the script encrypts it and saves the result. #}
   <form id="examination" class="mt-6 space-y-4" hidden
-        data-ciphertext="{{ examination.ciphertext|default:'' }}"
+        data-ciphertext="{{ examination.ciphertext|default:'' }}" data-opened-version="{{ user.examination_version }}"
         data-save-url="{% url 'save_examination' %}" data-confession-url="{% url 'confession' %}"
         data-saving="{% translate 'Saving...' %}" data-saved="{% translate 'Saved' %}"
-        data-failed="{% translate 'Not saved. Check your connection; it saves again with your next change.' %}">
+        data-failed="{% translate 'Not saved. Check your connection; it saves again with your next change.' %}"
+        data-stale="{% translate 'Not saved: your preparation was changed elsewhere. Reload the page to continue.' %}">
     {% csrf_token %}
     {% for section in sections %}
       <fieldset class="card">

@@ -12,8 +12,10 @@ an examination of conscience for the next one, and shows it during confession wi
 - Stack: Django, SQLite, Tailwind (standalone CLI), Lucide icons; Fly.io, one 256 MB machine in `fra`.
 - The examination is encrypted in the browser; the server never sees it or the password. Username and password only, no
   email, no recovery. English only for now, with every string translatable.
-- The constants in `static/js/keys.js` and the question and statement ids in `absolved/examination.py` must never
-  change: users would lose their accounts or their answers. `test_keys_never_change` pins the keys.
+- What determines the keys (listed at the top of `static/js/keys.js`) and the question and statement ids in
+  `absolved/examination.py` must never change: users would lose their accounts or their answers. The browser tests
+  pin the keys.
 - Avoid writing our own JavaScript where a library or the platform does the job; no HTMX (see `docs/plan.md`).
-- Plan, privacy model and data model: `docs/plan.md`. Commands, configuration and deployment: `README.md`.
-- No GitHub repo, commits or deploys until asked.
+- Plan, privacy model and data model: `docs/plan.md`. Commands, configuration and deployment: `README.md`. Backups
+  and restoring: `docs/backup.md`.
+- Repository: <https://github.com/Ch00k/absolved.be>, public. No commits, pushes or deploys until asked.

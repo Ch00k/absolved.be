@@ -81,7 +81,7 @@
 
   <details class="card mt-4">
     <summary class="disclosure">{% translate "I have confessed" %}{% icon "chevron-down" "disclosure-chevron" %}</summary>
-    <form method="post" action="{% url 'record_confession' %}" class="mt-4 space-y-4">
+    <form method="post" action="{% url 'record_confession' %}" class="mt-4 space-y-4" data-forget-pages>
       {% csrf_token %}
       <div>
         <label for="confession-date" class="label">{% translate "Date" %}</label>

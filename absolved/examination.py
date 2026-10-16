@@ -4,8 +4,9 @@ A question is the prompt; its statements are the answers the user can mark, and 
 statement is a whole sentence in the simple past, so that a count reads naturally after it and no sentence has to be
 assembled from fragments, which could not be translated.
 
-A user's answers are encrypted in their browser and refer to statements and questions by id, so an id must never be
-reused or changed once published. Wording can change freely.
+A user's answers are encrypted in their browser and refer to statements by id, so an id must never be reused or
+changed once published. A question with a single statement gives its own id to it, so that id must not change
+either. Wording can change freely.
 """
 
 from __future__ import annotations

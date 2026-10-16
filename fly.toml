@@ -1,13 +1,16 @@
 app = "absolved"
 primary_region = "fra"
+# gunicorn finishes the requests in progress on SIGTERM; Fly's default SIGINT drops them.
+kill_signal = "SIGTERM"
+kill_timeout = 30
 
 [build]
   dockerfile = "Dockerfile"
 
-# A volume attaches to a single machine, so a new machine cannot start
-# alongside the old one during a deploy. Stop and replace in place.
+# A volume attaches to a single machine, so the machine is replaced in place; a rolling deploy
+# waits for the health check, and fails when the release cannot serve.
 [deploy]
-  strategy = "immediate"
+  strategy = "rolling"
 
 # Static files are collected into the image; migrate runs at startup via run.sh.
 [env]
@@ -37,7 +40,7 @@ primary_region = "fra"
     grace_period = "10s"
     interval = "30s"
     method = "GET"
-    path = "/"
+    path = "/health/"
     timeout = "5s"
     # As Fly's proxy forwards a visitor's request: for a host Django serves, over HTTPS, which keeps
     # the check from being redirected there.

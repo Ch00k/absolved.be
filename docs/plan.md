@@ -41,13 +41,16 @@ and never sees the password, so neither a leaked database nor the operator can r
   into the login page could capture the typed password anyway, so this brief exposure adds nothing.
 - WebCrypto HKDF splits `master` into `auth_key` (derived as bits, since it is sent to the server) and `enc_key`
   (derived directly as a non-extractable AES-GCM-256 key, so its bytes are never visible to any script).
-- Login and signup send `auth_key` in place of the password; Django hashes it like any password.
+- Login and signup send `auth_key` in place of the password; Django hashes it like a password, with one round of
+  PBKDF2 (`absolved/hashers.py`). Argon2id has already stretched it, so whoever guesses from the hash runs Argon2id
+  for every guess; stretching again would cost each login CPU time on the shared machine for little more.
 - `enc_key` is kept in IndexedDB as a `CryptoKey` until logout. Script injected into the page could still use the key
   while it runs, but could not copy it out.
 - The examination is one JSON document, encrypted with a fresh 12-byte IV on every save, and stored as
   `iv || ciphertext`.
 - Changing the password: the browser decrypts with the old key, re-encrypts with the new one, and sends both auth keys
-  and the new blob in one request.
+  and the new blob in one request. It is refused if the examination changed since the page read it, which would
+  otherwise be lost.
 - No email and no password recovery. A forgotten password means a new account; only confession dates are lost.
 - The examination is deleted when a confession is recorded, as notes are traditionally destroyed after confession.
 - Confession dates are stored in plaintext. They reveal how often someone confesses, not what they confessed, and
@@ -57,6 +60,10 @@ and never sees the password, so neither a leaked database nor the operator can r
   limit.
 - Login is throttled per username and per IP with `django-ratelimit`, since there is no second factor. Its counters live
   in Django's in-memory cache (one gunicorn worker), so IP addresses are never written to disk.
+  Every attempt counts, the right key included, so anyone who knows a username can keep that account from logging in
+  for as long as they keep trying. That is accepted: reading someone's notes is the threat, keeping them out is not.
+  Counting only failures would not prevent it, and a per-username limit above the per-IP one would let guessing from
+  many addresses go faster.
 - Signup is throttled per IP (5 an hour) the same way. Bots gain nothing from an account here; the risk is load, since
   every signup and login costs a server-side password hash. Requests whose `auth_key` is not a well-formed derived key
   are rejected before hashing, so form bots that do not run the page's JS cost almost nothing. No honeypot and no
@@ -75,7 +82,12 @@ was last saved and roughly its size, and Fly's proxy logs (IP, user agent, time 
 ## Data model
 
 - `User`: a custom user model from the start (username only, no email), with `asked_last_confession` so the question
-  after the first login is asked once, whatever the answer.
+  after the first login is asked once, whatever the answer. `examination_version` changes with every change to the
+  examination, and `examination_writer` is the page that made it (each page gives itself a random id). A page writes
+  the examination only while it is the version the page read, or the page wrote it last; otherwise a page open in
+  another tab, or a copy kept for offline use, would undo a newer save, bring back an examination a confession
+  destroyed, or seal it under the key of a password since changed, which locks the user out of it. They are on
+  `User` because the examination's row is deleted with every confession.
 - `Confession`: `user`, `date`; unique per user and date.
 - `Examination`: one per user (`OneToOne`), `ciphertext`, `updated_at`. No row means nothing is being prepared.
 
@@ -92,7 +104,8 @@ page a script rather than a list of questions.
   details are per statement ("How often, or anything to add"), because the Church asks for mortal sins to be confessed
   in kind and number (CCC 1456). `notes` is the one general free-form field; there are no per-section notes.
 
-Answers inside the encrypted blob refer to statement and question ids, so wording can change but an id must not.
+Answers inside the encrypted blob refer to statement ids, so wording can change but an id must not, including the
+id of a question with one statement, which the statement takes.
 
 ## Pages
 
@@ -118,8 +131,12 @@ Answers inside the encrypted blob refer to statement and question ids, so wordin
     checkboxes. While one of its statements is marked its text and chevron take the accent colour, so a
     closed one still shows that it is answered. It opens on load when one of them was saved.
 
-  Saves automatically: changes are encrypted and posted shortly after the user stops typing. It ends with "Ready for
-  confession", which saves (even with nothing checked) and goes to Confession.
+  Saves automatically: changes are encrypted as they are made and posted shortly after the user stops typing; "Saved"
+  shows only once the latest change is. A change still waiting when the page is left goes out at once as a beacon,
+  which the service worker sends on itself, since Chromium hands it to the worker and loses it with the page
+  otherwise. A page whose copy is out of date stops saving and asks for a reload; a save that finds the session ended
+  sends the user to log in and back to Prepare. It ends with "Ready for confession", which saves (even with nothing
+  checked) and goes to Confession.
 - Confession: reachable only with an examination; otherwise it redirects to Prepare. A script of what to say, in four
   numbered parts, each headed by its number and title with a rule running to the right edge. Everything the penitent
   says is in a card; the stage directions between the cards are small and italic. In the card of sins a rule separates
@@ -137,7 +154,8 @@ Answers inside the encrypted blob refer to statement and question ids, so wordin
   Large type. At the bottom "Back to preparation" returns to Prepare, and "I have confessed" records today's date (editable), deletes the examination after an inline
   confirmation, and returns home, where the workflow starts over.
 - History: the list of confession dates; add a past date, delete one.
-- Account: change password, log out, delete account (including everything stored).
+- Account: change password, log out, delete account (including everything stored), which takes the password: a
+  session lasts a year, and whoever holds the unlocked device meanwhile must not be able to destroy it.
 
 The UI is minimal: a neutral palette, one accent colour, and dark mode (dimmer for use inside a
 church) that follows the device unless picked with the theme button in the header, a choice kept in the browser.
@@ -149,15 +167,21 @@ from a click anywhere. A visible date input is a field iOS Safari draws its own 
 ## Offline
 
 The confessional often has no signal. A service worker caches every page and file network-first (falling back to the
-copy after 4 seconds without an answer), so the last version of each opened still shows offline and the user can get
-from home to Confession. Logging out deletes the copies along with the key. Confession embeds the
+copy after 4 seconds without an answer), apart from static files whose names carry a hash of their contents, which it
+serves from the copy once it has one, so the last version of each opened still shows offline and the user can get
+from home to Confession. Logging out deletes the copies along with the key. Recording a confession deletes them too,
+since they carry the examination it destroys, and so does changing the password, since the new key cannot open the
+examination they carry; logging in or signing up deletes those another account left behind. A page that answers with
+a redirect, as when the session has ended, loses its copy. Keeping a copy is best effort: a failure to store one
+never costs the page its answer. Confession embeds the
 ciphertext and the last confession date; the browser decrypts with the key from IndexedDB and computes the time since
 from today's date, so a cached copy stays correct. A web app manifest makes it installable, which also exempts its
 storage from iOS Safari's 7-day eviction.
 
 ## Browser support
 
-Target: browsers from 2022 on (Safari and iOS 15.4+, current Chrome, Edge and Firefox), set by the native `<dialog>`.
+Target: Safari and iOS 16.4+, Chrome and Edge 111+, Firefox 128+, set by the stylesheet: Tailwind v4 relies on
+cascade layers, `@property` and `color-mix()`.
 WebCrypto (HKDF, AES-GCM), storing a `CryptoKey` in IndexedDB, WebAssembly and service workers are all older than that.
 
 - Everything requires HTTPS (WebCrypto and service workers refuse plain HTTP), apart from `localhost` in development.
@@ -197,7 +221,7 @@ Each milestone ends with its tests passing.
 4. **Examination**: questionnaire content, the prepare page with encrypted autosave, deletion on recording a confession.
 5. **Confession view**: decrypted view, Act of Contrition, the confirm-and-record flow.
 6. **Offline and install**: service worker, manifest, app icons.
-7. **Deploy**: Dockerfile, `fly.toml` (single machine, volume, `immediate` deploy strategy, health check), the
+7. **Deploy**: Dockerfile, `fly.toml` (single machine, volume, `rolling` deploy strategy, health check), the
    `absolved.be` and `www` certificates, DNS.
 
 ## Open

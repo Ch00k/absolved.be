@@ -1,4 +1,12 @@
-.PHONY: run makemigrations migrate lint static test browsers tailwind-watch tailwind-build app-icons
+.PHONY: run makemigrations migrate lint check static test browsers tailwind-version tailwind-watch tailwind-build \
+	css-check vendor-sodium makemessages compilemessages app-icons
+
+# The release of the Tailwind standalone CLI static/css/output.css is built with; another builds a different stylesheet.
+TAILWIND_VERSION := v4.3.3
+# libsodium's two npm packages that static/vendor/libsodium-sumo-0.8.4/sodium.js joins, with their registry integrity.
+SODIUM_VERSION := 0.8.4
+SODIUM_INTEGRITY := sha512-TMtHShQfVVsaxDygyapvUC3o7YsPgXa/hRWeIgzyFz6w5k/1hirGptCxp1U7XwW3rCskaTTYKgV10v86UiGgNw==
+SODIUM_WRAPPERS_INTEGRITY := sha512-ql7hcgulKZ3ekfa2DGAogcCKsWU0diA/0nArz1CFzh93WQdb46/Kj18ka/Hifq6uA3Ush34Pc6vU/6HXeRwUkg==
 
 run: migrate
 	DJANGO_DEBUG=1 uv run manage.py runserver 127.0.0.1:8095
@@ -14,6 +22,14 @@ lint:
 	uv run ruff check --fix .
 	uv run ty check
 
+# What has to pass before a deploy. Unlike lint it changes no file.
+check: css-check
+	uv lock --check
+	uv run ruff format --check .
+	uv run ruff check .
+	uv run ty check
+	DJANGO_DEBUG=1 uv run pytest
+
 static:
 	DJANGO_DEBUG=1 uv run manage.py collectstatic --noinput
 
@@ -24,11 +40,44 @@ test:
 browsers:
 	uv run playwright install chromium webkit
 
-tailwind-watch:
+tailwind-version:
+	@tailwindcss --help 2>&1 | head -1 | grep -qF "tailwindcss $(TAILWIND_VERSION)" \
+		|| { echo "The Tailwind CLI $(TAILWIND_VERSION) is required"; exit 1; }
+
+tailwind-watch: tailwind-version
 	tailwindcss -i assets/tailwind.css -o static/css/output.css --watch
 
-tailwind-build:
+tailwind-build: tailwind-version
 	tailwindcss -i assets/tailwind.css -o static/css/output.css --minify
+
+# Fails when the committed stylesheet is not what its sources build.
+css-check: tailwind-version
+	@built=$$(mktemp) && tailwindcss -i assets/tailwind.css -o $$built --minify 2>/dev/null \
+		&& cmp -s $$built static/css/output.css \
+		|| { echo "static/css/output.css is out of date: run make tailwind-build"; exit 1; }
+
+# Builds sodium.js from the npm packages, after checking each against the integrity the registry published. Both
+# must run as one script so that libsodium's plain JavaScript fallback initialises where WebAssembly is unavailable.
+vendor-sodium:
+	@work=$$(mktemp -d) && cd $$work \
+		&& for package in libsodium-sumo:$(SODIUM_INTEGRITY) libsodium-wrappers-sumo:$(SODIUM_WRAPPERS_INTEGRITY); do \
+			name=$${package%%:*}; integrity=$${package#*:}; \
+			curl -fsS -o $$name.tgz https://registry.npmjs.org/$$name/-/$$name-$(SODIUM_VERSION).tgz \
+				&& [ "sha512-$$(openssl dgst -sha512 -binary $$name.tgz | base64 -w0)" = "$$integrity" ] \
+				|| { echo "$$name does not match its integrity"; exit 1; }; \
+			mkdir $$name && tar -xzf $$name.tgz -C $$name; \
+		done \
+		&& { cat libsodium-sumo/package/dist/modules-sumo/libsodium-sumo.js; printf '\n;\n'; \
+			cat libsodium-wrappers-sumo/package/dist/modules-sumo/libsodium-wrappers.js; } \
+			> $(CURDIR)/static/vendor/libsodium-sumo-$(SODIUM_VERSION)/sodium.js \
+		&& rm -rf $$work
+
+# The translation catalogs, in locale/. A new language starts with makemessages -l <code>.
+makemessages:
+	DJANGO_DEBUG=1 uv run manage.py makemessages --all --ignore=.venv
+
+compilemessages:
+	DJANGO_DEBUG=1 uv run manage.py compilemessages --ignore=.venv
 
 # The home screen icons, rendered from their sources with rsvg-convert (Homebrew's librsvg). iOS rounds the
 # corners itself, so its icon is the full-bleed one, like the maskable icon Android crops to its own shape.

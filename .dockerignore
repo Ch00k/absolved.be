@@ -1,7 +1,11 @@
-.git
-.venv
-.envrc
+# Only what the app runs from goes into the image.
+*
+!absolved/
+!config/
+!static/
+!manage.py
+!run.sh
+!pyproject.toml
+!uv.lock
+absolved/tests/
 **/__pycache__
-db.sqlite3*
-staticfiles
-test-results

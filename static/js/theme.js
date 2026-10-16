@@ -32,7 +32,7 @@ applyTheme();
 systemDark.addEventListener("change", applyTheme);
 
 function labelThemeButton(button) {
-  const label = button.dataset[`label${pickedTheme[0].toUpperCase()}${pickedTheme.slice(1)}`];
+  const label = button.getAttribute(`data-label-${pickedTheme}`);
   button.setAttribute("aria-label", label);
   button.title = label;
 }

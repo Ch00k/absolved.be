@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import uuid
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
@@ -8,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 # Lowercase ASCII only: the browser derives the encryption key's salt from the username, so the
 # username must be the same string for every device and keyboard that types it.
-USERNAME_PATTERN = r"^[a-z0-9._-]{3,32}$"
+USERNAME_PATTERN = r"^[a-z0-9._\-]{3,32}$"
 
 
 class UserManager(BaseUserManager["User"]):
@@ -36,6 +38,11 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField(default=timezone.now)
     # The date of the last confession is asked once, after the first login, whatever the answer.
     asked_last_confession = models.BooleanField(default=False)
+    # A new version with every change to the examination, and the page that made the change, if one did: a page
+    # writes the examination only while it is the version the page read, or the page wrote it last. They live here
+    # because the examination's row is deleted with every confession.
+    examination_version = models.UUIDField(default=uuid.uuid4)
+    examination_writer = models.UUIDField(null=True)
 
     objects = UserManager()
 

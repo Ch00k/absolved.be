@@ -1,13 +1,18 @@
 // Changing the password: the examination is decrypted with the current password's key and encrypted
-// again with the new one, and the server replaces the login key and the examination together.
+// again with the new one, and the server replaces the login key and the examination together. The
+// pages kept for offline use then carry an examination the new key cannot open, so they are forgotten.
 
-import { feedback, MIN_PASSWORD_LENGTH } from "./forms.js";
+import { goToLogin } from "./examination.js";
+import { csrfToken, errorMessage, feedback, newPasswordProblem } from "./forms.js";
 import { deriveKeys, storeKey } from "./keys.js";
+import { forgetPages } from "./offline.js";
 import { seal, unseal } from "./seal.js";
 
 const form = document.querySelector("[data-password-change]");
 const success = form.querySelector("[data-form-success]");
 const { fail, busy } = feedback(form);
+// Lets the server tell this page's changes from those made elsewhere since the page was opened.
+const page = crypto.randomUUID();
 
 async function change(username, currentPassword, newPassword) {
   const current = await deriveKeys(username, currentPassword);
@@ -25,16 +30,22 @@ async function change(username, currentPassword, newPassword) {
   }
 
   const body = new FormData();
-  body.set("csrfmiddlewaretoken", form.elements.csrfmiddlewaretoken.value);
+  body.set("csrfmiddlewaretoken", csrfToken());
   body.set("old_auth_key", current.authKey);
   body.set("new_auth_key", next.authKey);
   body.set("ciphertext", ciphertext);
+  body.set("opened_version", form.dataset.openedVersion);
+  body.set("page", page);
   const response = await fetch(form.action, { method: "POST", body });
+  // The session ended, and the server sent the request to its login page.
+  if (response.redirected) {
+    return goToLogin();
+  }
   if (response.status !== 204) {
-    return fail((await response.json()).error);
+    return fail(await errorMessage(form, response));
   }
 
-  await storeKey(username, next.encryptionKey);
+  await Promise.all([storeKey(username, next.encryptionKey), forgetPages()]);
   form.dataset.ciphertext = ciphertext;
   form.reset();
   success.textContent = form.dataset.changed;
@@ -45,17 +56,18 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
   success.hidden = true;
 
-  const newPassword = form.querySelector("[data-password]").value;
-  if ([...newPassword].length < MIN_PASSWORD_LENGTH) {
-    return fail(form.dataset.tooShort);
-  }
-  if (form.querySelector("[data-password-confirmation]").value !== newPassword) {
-    return fail(form.dataset.mismatch);
+  const problem = newPasswordProblem(form);
+  if (problem) {
+    return fail(problem);
   }
 
   busy(true);
   try {
-    await change(document.body.dataset.username, form.querySelector("[data-current-password]").value, newPassword);
+    await change(
+      document.body.dataset.username,
+      form.querySelector("[data-current-password]").value,
+      form.querySelector("[data-password]").value,
+    );
   } catch {
     fail(form.dataset.failed);
   } finally {

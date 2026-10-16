@@ -1,11 +1,14 @@
 // The prepare page: fills the questionnaire from the decrypted examination, and encrypts and saves it
 // shortly after every change.
 
-import { openExamination, reveal } from "./examination.js";
+import { goToLogin, openExamination, reveal } from "./examination.js";
+import { csrfToken } from "./forms.js";
 import { seal } from "./seal.js";
 
 // How long typing has to pause before the examination is saved.
 const SAVE_DELAY_MS = 800;
+// A weak signal can leave a save hanging; after this long it counts as failed, and the saves after it go ahead.
+const SAVE_TIMEOUT_MS = 15_000;
 
 const form = document.getElementById("examination");
 const status = form.querySelector("[data-save-status]");
@@ -71,51 +74,105 @@ const { key, examination } = await openExamination(form.dataset.ciphertext);
 fill(examination);
 reveal(form);
 
-async function save() {
-  status.textContent = form.dataset.saving;
+// The server takes this page's saves while the examination is still the version the page opened, or this page
+// saved it last; otherwise it changed elsewhere since, and this page's copy is out of date.
+const page = crypto.randomUUID();
 
-  const body = new FormData();
-  body.set("csrfmiddlewaretoken", form.elements.csrfmiddlewaretoken.value);
-  body.set("ciphertext", await seal(key, read()));
-  const response = await fetch(form.dataset.saveUrl, { method: "POST", body }).catch(() => null);
-
-  // The session ended, and the server sent the request to its login page.
-  if (response?.redirected) {
-    location.assign(response.url);
-    return false;
-  }
-
-  const saved = response?.status === 204;
-  status.textContent = saved ? form.dataset.saved : form.dataset.failed;
-  return saved;
-}
-
+// Every change is encrypted as it is made, so that the latest is ready to send at once, even from a page that is
+// closing. Encryptions run one after another, so an older change never replaces a newer one.
+let unsent = null;
+let sealing = Promise.resolve();
 // Saves run one after another, so an older examination never lands after a newer one.
 let saving = Promise.resolve(true);
 let timer = null;
+let sending = 0;
+let failed = false;
+let stale = false;
+
+// "Saved" only once the latest change is.
+function showStatus() {
+  if (stale) {
+    status.textContent = form.dataset.stale;
+  } else if (sending) {
+    status.textContent = form.dataset.saving;
+  } else if (timer || unsent) {
+    status.textContent = "";
+  } else {
+    status.textContent = failed ? form.dataset.failed : form.dataset.saved;
+  }
+}
+
+function saveRequest(ciphertext) {
+  const body = new FormData();
+  body.set("csrfmiddlewaretoken", csrfToken());
+  body.set("opened_version", form.dataset.openedVersion);
+  body.set("page", page);
+  body.set("ciphertext", ciphertext);
+  return body;
+}
+
+// Sends the latest change, if there is one. Resolves to whether the examination is saved.
+async function save() {
+  const ciphertext = unsent;
+  unsent = null;
+  if (stale || ciphertext === null) {
+    showStatus();
+    return !failed;
+  }
+
+  sending += 1;
+  showStatus();
+  const response = await fetch(form.dataset.saveUrl, {
+    method: "POST",
+    body: saveRequest(ciphertext),
+    signal: AbortSignal.timeout(SAVE_TIMEOUT_MS),
+  }).catch(() => null);
+  sending -= 1;
+
+  // The session ended, and the server sent the request to its login page.
+  if (response?.redirected) {
+    return goToLogin();
+  }
+
+  stale ||= response?.status === 409;
+  failed = response?.status !== 204;
+  showStatus();
+  return !failed;
+}
 
 function saveNow() {
   clearTimeout(timer);
   timer = null;
-  saving = saving.then(save, save);
+  saving = saving.then(async () => {
+    await sealing;
+    return save();
+  });
   return saving;
 }
 
-function saveSoon() {
+form.addEventListener("input", () => {
+  const current = read();
+  sealing = sealing.then(async () => {
+    unsent = await seal(key, current);
+  });
   clearTimeout(timer);
   timer = setTimeout(saveNow, SAVE_DELAY_MS);
-}
+  showStatus();
+});
 
-form.addEventListener("input", saveSoon);
-
-// A phone may close a page put in the background, so a pending save goes out at once.
+// A phone may close a page put in the background, and a page being left is about to close: the latest change goes
+// out at once, as a beacon, which outlives the page. A page that lives on saves it again as usual, to learn whether
+// it was saved.
 document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden" && timer) {
-    saveNow();
+  if (document.visibilityState === "hidden" && unsent !== null && !stale) {
+    navigator.sendBeacon(form.dataset.saveUrl, saveRequest(unsent));
   }
 });
 
+// Saves even an untouched examination, which is what lets Confession open.
 form.querySelector("[data-ready]").addEventListener("click", async () => {
+  await sealing;
+  unsent = await seal(key, read());
   if (await saveNow()) {
     location.assign(form.dataset.confessionUrl);
   }

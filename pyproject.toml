@@ -8,7 +8,7 @@ dependencies = [
     "django>=6.1.2",
     "django-ratelimit>=4.1.0",
     "gunicorn>=26.2.0",
-    "whitenoise>=6.12.0",
+    "whitenoise[brotli]>=6.12.0",
 ]
 
 [dependency-groups]
@@ -55,3 +55,11 @@ select = ["ALL"]
     "S105", # Passwords the tests sign up with
 ]
 "**/migrations/**" = ["RUF012"]
+
+# ty does not see through Django's view decorators, so it takes every decorated view for a value of the wrong type.
+[[tool.ty.overrides]]
+include = ["absolved/urls.py", "absolved/views.py"]
+
+[tool.ty.overrides.rules]
+invalid-argument-type = "ignore"
+no-matching-overload = "ignore"

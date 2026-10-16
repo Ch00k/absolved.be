@@ -28,9 +28,24 @@ def _required(name: str, development_default: str) -> str:
 
 SECRET_KEY = _required("DJANGO_SECRET_KEY", "insecure-development-secret-key")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if not DEBUG else []
 
-CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host]
+def _allowed_hosts() -> list[str]:
+    """The hosts production serves. Without any, every request would be refused as a bad host while the
+    deployment looked healthy, so it refuses to start instead."""
+    if DEBUG:
+        return []
+
+    hosts = [host for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if host]
+    if not hosts:
+        message = "DJANGO_ALLOWED_HOSTS must be set when DJANGO_DEBUG is not 1."
+        raise ImproperlyConfigured(message)
+
+    return hosts
+
+
+ALLOWED_HOSTS = _allowed_hosts()
+
+CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS]
 
 CANONICAL_HOST = os.environ.get("DJANGO_CANONICAL_HOST", "")
 
@@ -44,8 +59,10 @@ CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 SECURE_SSL_REDIRECT = not DEBUG
 SECURE_HSTS_SECONDS = 0 if DEBUG else 31536000
+# Every subdomain is served by this app over HTTPS, as www is, so browsers may insist on it for all of
+# them. Not preloaded: anyone can submit a domain whose header asks for it to the browsers' preload
+# list, and leaving that list takes months.
 SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD = not DEBUG
 
 # The encryption key stays in the browser until logout, so the session lasts as long.
 SESSION_COOKIE_AGE = 365 * 24 * 60 * 60
@@ -87,6 +104,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.csp.ContentSecurityPolicyMiddleware",
+    "django_ratelimit.middleware.RatelimitMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -100,6 +118,7 @@ TEMPLATES = [
             "context_processors": [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
+                "absolved.context_processors.site",
             ],
         },
     },
@@ -112,6 +131,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": Path(os.environ.get("DJANGO_DB_PATH", BASE_DIR / "db.sqlite3")),
         "OPTIONS": {
+            # Write-ahead logging lets pages be read while a save is written. With it, synchronous=NORMAL
+            # skips a flush to disk on every commit; it survives the app crashing, and loses only the
+            # commits of the last moments if the machine itself goes down, at worst an autosave or two.
             # Writes take the lock up front so two of them queue instead of one discovering
             # halfway through that it has to roll back, and a writer waits rather than failing the
             # request outright.
@@ -128,17 +150,25 @@ CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"
 
 # django_ratelimit refuses the in-memory cache because separate processes would each count on
 # their own; with one worker there is only one process.
-SILENCED_SYSTEM_CHECKS = ["django_ratelimit.E003", "django_ratelimit.W001"]
+SILENCED_SYSTEM_CHECKS = [
+    "django_ratelimit.E003",
+    "django_ratelimit.W001",
+    # HSTS preloading is left off on purpose; see SECURE_HSTS_INCLUDE_SUBDOMAINS.
+    "security.W021",
+]
 
 # Fly's proxy sets this header to the client's address on every request; REMOTE_ADDR is the
 # proxy's own. Development has no proxy and falls back to REMOTE_ADDR.
 RATELIMIT_IP_META_KEY = "absolved.ratelimits.client_ip"
+# What a request over a limit is answered with, by the middleware above.
+RATELIMIT_VIEW = "absolved.views.too_many_attempts"
 
 AUTH_USER_MODEL = "absolved.User"
 
 # The browser sends a key derived from the password with Argon2id, never the password itself,
 # so rules about the password can only be checked in the browser.
 AUTH_PASSWORD_VALIDATORS = []
+PASSWORD_HASHERS = ["absolved.hashers.DerivedKeyHasher"]
 
 LOGIN_URL = "login"
 

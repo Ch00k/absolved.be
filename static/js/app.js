@@ -1,10 +1,10 @@
-// What every page does: counts the time since dates, keeps date inputs to the device's today, shows a
-// picked date and opens the calendar for it, opens dialogs, shows a password on request, approves a new password and its repetition, forgets the key on
-// logout, and installs the service worker that keeps pages for offline use.
+// What every page does: dates, dialogs, password fields, forgetting what the device keeps, and the service
+// worker that keeps pages for offline use.
 
-import { MIN_PASSWORD_LENGTH } from "./forms.js";
+import { longEnough } from "./forms.js";
 import { forgetKey } from "./keys.js";
-import { describeSince, formatDate, localDate } from "./since.js";
+import { forgetPages } from "./offline.js";
+import { describeSince, formatDate, localDate, naturalAmount } from "./since.js";
 
 const today = localDate();
 
@@ -12,12 +12,10 @@ for (const time of document.querySelectorAll("time[data-since]")) {
   time.textContent = describeSince(time.dateTime, today, time.dataset.since, document.documentElement.lang);
 }
 
-// A count of days under a time already given in days would only repeat it.
+// A count of days under the same time already given in days would only repeat it.
 for (const detail of document.querySelectorAll("[data-since-detail]")) {
-  const days = detail.querySelector("time").textContent;
-  detail.hidden = Array.from(document.querySelectorAll('time[data-since="natural"]')).some(
-    (time) => time.textContent === days,
-  );
+  const [, unit] = naturalAmount(detail.querySelector("time").dateTime, today);
+  detail.hidden = unit === "day";
 }
 
 // The server's today can be a day behind or ahead of the device's.
@@ -59,7 +57,7 @@ for (const button of document.querySelectorAll("button[data-reveal-password]")) 
 for (const repetition of document.querySelectorAll("input[data-password-confirmation]")) {
   const password = repetition.form.querySelector("input[data-password]");
   repetition.form.addEventListener("input", () => {
-    password.toggleAttribute("data-approved", [...password.value].length >= MIN_PASSWORD_LENGTH);
+    password.toggleAttribute("data-approved", longEnough(password));
     repetition.toggleAttribute("data-approved", repetition.value !== "" && repetition.value === password.value);
   });
   // A reset empties both fields.
@@ -69,21 +67,20 @@ for (const repetition of document.querySelectorAll("input[data-password-confirma
   });
 }
 
-// The copies of pages kept for offline use; there are none where the browser offers no cache storage.
-async function forgetPages() {
-  if (globalThis.caches) {
-    await Promise.all((await caches.keys()).map((name) => caches.delete(name)));
+function forgetOnSubmit(selector, forget) {
+  for (const form of document.querySelectorAll(selector)) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await Promise.allSettled(forget());
+      form.submit();
+    });
   }
 }
 
-// Logging out, or deleting the account, leaves nothing of the account on this device: neither the
-// key nor the copies of pages, which carry the encrypted examination.
-for (const form of document.querySelectorAll("form[data-forget-key]")) {
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    await Promise.allSettled([forgetKey(), forgetPages()]);
-    form.submit();
-  });
-}
+// Logging out leaves nothing of the account on this device: neither the key nor the copies of pages,
+// which carry the encrypted examination. Deleting the account does the same, in deletion.js.
+forgetOnSubmit("form[data-forget-key]", () => [forgetKey(), forgetPages()]);
+// Recording a confession deletes the examination, so its copies in the kept pages go too.
+forgetOnSubmit("form[data-forget-pages]", () => [forgetPages()]);
 
 navigator.serviceWorker?.register(document.body.dataset.serviceWorkerUrl);

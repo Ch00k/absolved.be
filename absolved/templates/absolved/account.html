@@ -6,6 +6,7 @@
 {% block scripts %}
   {% include "absolved/_key_derivation.html" %}
   <script type="module" src="{% static 'js/password.js' %}"></script>
+  <script type="module" src="{% static 'js/deletion.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,11 +15,12 @@
 
   {# The passwords have no name, so they are never sent: the script sends keys derived from them, and the preparation re-encrypted under the new one. #}
   <form method="post" action="{% url 'change_password' %}" class="card mt-6 space-y-5" data-password-change
-        data-ciphertext="{{ examination.ciphertext|default:'' }}"
-        data-too-short="{% translate 'The password must be at least 12 characters long.' %}"
+        data-ciphertext="{{ examination.ciphertext|default:'' }}" data-opened-version="{{ user.examination_version }}"
+        data-too-short="{% blocktranslate trimmed count length=min_password_length %}The password must be at least {{ length }} character long.{% plural %}The password must be at least {{ length }} characters long.{% endblocktranslate %}"
         data-mismatch="{% translate 'The passwords do not match.' %}"
         data-wrong-password="{% translate 'The current password is wrong.' %}"
         data-failed="{% translate 'Could not reach the server. Check your connection and try again.' %}"
+        data-unexpected="{% translate 'Something went wrong. Reload the page and try again.' %}"
         data-changed="{% translate 'Your password has been changed.' %}">
     {% csrf_token %}
     <h2 class="font-semibold">{% translate "Change password" %}</h2>
@@ -33,10 +35,10 @@
     <div>
       <label for="new-password" class="label">{% translate "New password" %}</label>
       <div class="password-field">
-        <input id="new-password" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="new-password" minlength="12" data-password>
+        <input id="new-password" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="new-password" minlength="{{ min_password_length }}" data-password>
         {% include "absolved/_password_tools.html" %}
       </div>
-      <p class="hint">{% translate "At least 12 characters." %}</p>
+      <p class="hint">{% blocktranslate trimmed count length=min_password_length %}At least {{ length }} character.{% plural %}At least {{ length }} characters.{% endblocktranslate %}</p>
     </div>
     <div>
       <label for="new-password-confirmation" class="label">{% translate "New password again" %}</label>
@@ -57,14 +59,26 @@
 
   <details class="card mt-10">
     <summary class="disclosure text-red-700 dark:text-red-400">{% translate "Delete account" %}{% icon "chevron-down" "disclosure-chevron" %}</summary>
-    <form method="post" action="{% url 'delete_account' %}" class="mt-4 space-y-4" data-forget-key>
+    {# The password confirms the deletion, as a key derived from it; a session outlasts the moments someone else holds the unlocked device. #}
+    <form method="post" action="{% url 'delete_account' %}" class="mt-4 space-y-4" data-account-deletion
+          data-failed="{% translate 'Could not reach the server. Check your connection and try again.' %}"
+          data-unexpected="{% translate 'Something went wrong. Reload the page and try again.' %}">
       {% csrf_token %}
-      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "This permanently deletes your account, your confession dates and your preparation." %}</p>
+      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "This permanently deletes your account, your confession dates and your preparation. Our backups forget them within a month." %}</p>
+      <input type="text" class="hidden" autocomplete="username" value="{{ user.username }}" readonly>
+      <div>
+        <label for="deletion-password" class="label">{% translate "Password" %}</label>
+        <div class="password-field">
+          <input id="deletion-password" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="current-password" data-current-password>
+          {% include "absolved/_password_tools.html" %}
+        </div>
+      </div>
       <label class="flex items-start gap-3 text-sm">
         <input type="checkbox" class="checkbox" required>
         <span>{% translate "I understand that this cannot be undone." %}</span>
       </label>
-      <button class="button-danger">{% icon "trash-2" "size-5" %}{% translate "Delete my account" %}</button>
+      <p class="form-error" data-form-error role="alert" hidden></p>
+      <button class="button-danger" data-busy-label="{% translate 'Deleting the account...' %}">{% icon "trash-2" "size-5" %}{% translate "Delete my account" %}</button>
     </form>
   </details>
 {% endblock %}

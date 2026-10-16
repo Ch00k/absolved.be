@@ -6,7 +6,8 @@ import { unseal } from "./seal.js";
 
 const EMPTY = { statements: [], details: {}, notes: "" };
 
-function goToLogin() {
+// Sends the page to log in, and back here after.
+export function goToLogin() {
   const login = new URL(document.body.dataset.loginUrl, location.href);
   login.searchParams.set("next", location.pathname);
   location.assign(login);

@@ -16,7 +16,8 @@
 
   {# The password has no name, so it is never sent: the script sends a key derived from it. #}
   <form method="post" action="{% url 'login' %}" class="mt-6 space-y-5" data-credentials="login"
-        data-failed="{% translate 'Could not reach the server. Check your connection and try again.' %}">
+        data-failed="{% translate 'Could not reach the server. Check your connection and try again.' %}"
+        data-unexpected="{% translate 'Something went wrong. Reload the page and try again.' %}">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next }}">
     <div>

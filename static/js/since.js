@@ -34,24 +34,30 @@ function monthsBetween(from, to) {
   return (toYear - fromYear) * 12 + (toMonth - fromMonth) - (toDay < fromDay ? 1 : 0);
 }
 
-// In days, or in the unit a person would answer with: days up to two weeks, weeks up to two months,
+// A date entered on a device a day ahead of this one counts as today.
+function daysSince(from, to) {
+  return Math.max(0, daysBetween(from, to));
+}
+
+// The time since in the unit a person would answer with: days up to two weeks, weeks up to two whole months,
 // months up to two years, then years.
-export function describeSince(from, to, unit, language) {
-  // A date entered on a device a day ahead of this one.
-  const days = Math.max(0, daysBetween(from, to));
+export function naturalAmount(from, to) {
+  const days = daysSince(from, to);
   const months = Math.max(0, monthsBetween(from, to));
-
-  let amount = [days, "day"];
-  if (unit === "natural" && days >= 14) {
-    if (days < 61) {
-      amount = [Math.floor(days / 7), "week"];
-    } else if (months < 24) {
-      amount = [months, "month"];
-    } else {
-      amount = [Math.floor(months / 12), "year"];
-    }
+  if (days < 14) {
+    return [days, "day"];
   }
+  if (months < 2) {
+    return [Math.floor(days / 7), "week"];
+  }
+  if (months < 24) {
+    return [months, "month"];
+  }
+  return [Math.floor(months / 12), "year"];
+}
 
-  const [count, name] = amount;
+// In days, or in the natural unit.
+export function describeSince(from, to, unit, language) {
+  const [count, name] = unit === "natural" ? naturalAmount(from, to) : [daysSince(from, to), "day"];
   return new Intl.NumberFormat(language, { style: "unit", unit: name, unitDisplay: "long" }).format(count);
 }

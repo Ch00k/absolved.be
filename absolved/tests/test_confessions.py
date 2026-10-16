@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from absolved.models import Confession, Examination, User
+from absolved.tests.conftest import SEALED
 
 if TYPE_CHECKING:
     from django.test import Client
@@ -60,6 +61,25 @@ def test_a_future_date_is_not_recorded(logged_in: Client) -> None:
     assert list(Confession.objects.values_list("date", flat=True)) == [tomorrow]
 
 
+def test_a_date_before_1900_is_not_recorded(logged_in: Client) -> None:
+    """Older than anyone who uses this: mistyped, and it would make every time since read wrong."""
+    logged_in.post(reverse("add_confession"), {"date": "1899-12-31"})
+    logged_in.post(reverse("add_confession"), {"date": "1900-01-01"})
+
+    assert list(Confession.objects.values_list("date", flat=True)) == [datetime.date(1900, 1, 1)]
+
+
+@pytest.mark.parametrize("date", ["", "2016-02-30", "1899-12-31"])
+def test_the_question_stays_until_a_date_is_kept(logged_in: Client, user: User, date: str) -> None:
+    """Answering with a date that cannot be kept leaves the question asked, so the date is not lost unnoticed."""
+    response = logged_in.post(reverse("last_confession"), {"answer": "date", "date": date})
+
+    assert response["Location"] == reverse("home")
+    user.refresh_from_db()
+    assert not user.asked_last_confession
+    assert not Confession.objects.exists()
+
+
 def test_home_shows_the_latest_confession(logged_in: Client, user: User) -> None:
     Confession.objects.create(user=user, date="2026-06-01")
     latest = Confession.objects.create(user=user, date="2026-09-01")
@@ -75,7 +95,7 @@ def test_confession_step_opens_only_once_prepared(logged_in: Client, user: User)
     """Confession follows preparation: its button appears only once an examination exists."""
     assert reverse("confession").encode() not in logged_in.get(reverse("home")).content
 
-    Examination.objects.create(user=user, ciphertext="b2xk")
+    Examination.objects.create(user=user, ciphertext=SEALED)
 
     content = logged_in.get(reverse("home")).content
     assert reverse("confession").encode() in content
