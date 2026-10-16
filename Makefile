@@ -40,8 +40,9 @@ test:
 browsers:
 	uv run playwright install chromium webkit
 
+# Without NO_COLOR the CLI colours its output where CI is set, as on GitHub's runners, even into a pipe.
 tailwind-version:
-	@tailwindcss --help 2>&1 | head -1 | grep -qF "tailwindcss $(TAILWIND_VERSION)" \
+	@NO_COLOR=1 tailwindcss --help 2>&1 | head -1 | grep -qF "tailwindcss $(TAILWIND_VERSION)" \
 		|| { echo "The Tailwind CLI $(TAILWIND_VERSION) is required"; exit 1; }
 
 tailwind-watch: tailwind-version
