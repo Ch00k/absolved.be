@@ -34,7 +34,7 @@ does, only Fly's snapshots back anything up.
    that opens the database can leave its `-wal` and `-shm` files owned by root, which the app then cannot write.
 2. The runner fetches it with `fly sftp get`, checks `pragma integrity_check` and that `django_migrations` is
    populated, gzips it, and encrypts it with [age](https://github.com/FiloSottile/age) to a public key. The private
-   key is in the password store, as `absolved/backup-age-key`, and nowhere else, so neither storage provider can read usernames or confession
+   key is in the password store, as `other/absolved.be_backup_key`, and nowhere else, so neither storage provider can read usernames or confession
    dates. The encryption runs on the runner; the Fly machine only runs `VACUUM INTO`.
 3. It uploads `db-<UTC timestamp>.sqlite3.gz.age` to both destinations, deletes Storage Box copies older than 30
    days, and removes the copy from the volume, whether or not the rest worked.
@@ -76,7 +76,7 @@ Every one is in the password store, under `absolved/`, until the repository exis
 | `STORAGE_BOX_KNOWN_HOSTS`  | `absolved/storage-box-known-hosts`                        | The box's host keys, pinned rather than trusted on sight       |
 | `STORAGE_BOX_HOST`         | none                                                      | `uXXXXXX-subN@uXXXXXX.your-storagebox.de`; a secret only because the repository is public and the name carries the account number |
 
-The age key that decrypts the backups is `absolved/backup-age-key`; the workflow carries its public half, which is not
+The age key that decrypts the backups is `other/absolved.be_backup_key`; the workflow carries its public half, which is not
 a secret. A failed run emails the repository owner, which is the only alarm there is. Actions cron is best-effort and
 can run an hour or more late. The repository is public, and GitHub disables the schedule of a public repository after
 60 days without a commit, with an email first; a quiet two months would otherwise stop the backups silently.
@@ -151,7 +151,7 @@ WAL sidecars, which would corrupt the copy on reopen. The upload arrives owned b
 able to write it.
 
 ```bash
-age --decrypt --identity <(pass show absolved/backup-age-key) db-<timestamp>.sqlite3.gz.age | gunzip > restore.sqlite3
+age --decrypt --identity <(pass show other/absolved.be_backup_key) db-<timestamp>.sqlite3.gz.age | gunzip > restore.sqlite3
 fly machine update <machine-id> --command "sleep inf" --yes -a absolved
 fly sftp put restore.sqlite3 /app/data/import.sqlite3 -a absolved
 fly ssh console -a absolved -C "sh -c 'rm -f /app/data/db.sqlite3 /app/data/db.sqlite3-wal /app/data/db.sqlite3-shm && mv /app/data/import.sqlite3 /app/data/db.sqlite3 && chown absolved:absolved /app/data/db.sqlite3'"

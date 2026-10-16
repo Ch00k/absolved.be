@@ -55,7 +55,7 @@ jobs:
           PY
 
       # The copy holds usernames and confession dates in plaintext, so it leaves the runner
-      # encrypted to a key only the owner holds, in the password store as absolved/backup-age-key;
+      # encrypted to a key only the owner holds, in the password store as other/absolved.be_backup_key;
       # this is its public half. One file per run, named for the moment it was taken, so nothing is
       # ever written over and a listing sorts oldest first, and the same name goes to both
       # destinations.
