@@ -1,4 +1,6 @@
-@import "tailwindcss";
+/* Only the templates and scripts are scanned for classes, so the stylesheet is the same wherever it is built, whatever
+   else lies in the tree. */
+@import "tailwindcss" source(none);
 @source "../absolved/templates/";
 @source "../static/js/";
 
