@@ -1,0 +1,45 @@
+{% load static i18n icons %}<!doctype html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}absolved.be{% endblock %}</title>
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+  <link rel="manifest" href="{% url 'manifest' %}">
+  <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+  <meta name="apple-mobile-web-app-title" content="absolved.be">
+  <meta name="theme-color" content="#fafaf9">
+  <script src="{% static 'js/theme.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+  {% block scripts %}{% endblock %}
+  <script type="module" src="{% static 'js/app.js' %}"></script>
+</head>
+{# Every icon is from Lucide (static/vendor/lucide-1.57.0), inlined through the icon tag. #}
+<body class="min-h-dvh bg-stone-50 text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100"
+      data-login-url="{% url 'login' %}" data-service-worker-url="{% url 'service_worker' %}"
+      {% if user.is_authenticated %}data-username="{{ user.username }}"{% endif %}>
+  <header class="mx-auto flex max-w-md items-center justify-between px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-2">
+    <a href="{% url 'home' %}" class="flex items-center gap-2 text-lg font-semibold tracking-tight">
+      {% icon "key" "size-5 text-accent dark:text-violet-400" %}absolved.be
+    </a>
+    <nav class="flex items-center gap-1">
+      {# theme.js labels the button with the pick it is on and moves to the next pick on a tap. #}
+      <button type="button" id="theme-button" class="icon-link"
+              data-label-system="{% translate 'Theme: as on this device' %}"
+              data-label-light="{% translate 'Theme: light' %}" data-label-dark="{% translate 'Theme: dark' %}">
+        {% icon "sun-moon" "hidden size-5 in-data-[theme-pick=system]:block" %}
+        {% icon "sun" "hidden size-5 in-data-[theme-pick=light]:block" %}
+        {% icon "moon" "hidden size-5 in-data-[theme-pick=dark]:block" %}
+      </button>
+      {% if user.is_authenticated %}
+        <a href="{% url 'history' %}" class="icon-link" aria-label="{% translate 'History' %}" title="{% translate 'History' %}">{% icon "history" "size-5" %}</a>
+        <a href="{% url 'account' %}" class="icon-link" aria-label="{% translate 'Account' %}" title="{% translate 'Account' %}">{% icon "user" "size-5" %}</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main class="mx-auto max-w-md px-5 pt-4 pb-[max(4rem,env(safe-area-inset-bottom))]">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

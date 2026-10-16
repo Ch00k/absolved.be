@@ -1,0 +1,110 @@
+@import "tailwindcss";
+@source "../absolved/templates/";
+@source "../static/js/";
+
+/* Violet is the liturgical colour of penance. */
+@theme {
+  --color-accent: var(--color-violet-700);
+  --color-accent-soft: var(--color-violet-50);
+}
+
+/* Dark while theme.js has set the page dark: by the device, or as picked with the theme button. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@layer base {
+  a, button, summary, label { cursor: pointer; }
+  /* The browser's own controls, such as the date picker and the scrollbars, follow the theme. */
+  :root { color-scheme: light; }
+  [data-theme=dark] { color-scheme: dark; }
+}
+
+@utility button {
+  @apply inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 font-medium transition
+    disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+/* Components sit below the utilities, so a utility on an element adjusts them. */
+@layer components {
+  .card { @apply rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200 dark:bg-stone-900 dark:ring-stone-800; }
+
+  .button-primary { @apply button bg-accent text-white hover:bg-violet-800 dark:bg-violet-600 dark:hover:bg-violet-500; }
+  /* Tinted with the accent, so it stands out on the page's background as well as on a card's. */
+  .button-secondary {
+    @apply button bg-violet-100 text-violet-900 hover:bg-violet-200 dark:bg-violet-950 dark:text-violet-100
+      dark:hover:bg-violet-900;
+  }
+  .button-danger { @apply button bg-red-700 text-white hover:bg-red-800; }
+
+  /* A size above the hints under the fields, so that the two read as different things. */
+  .label { @apply block font-medium text-stone-900 dark:text-stone-100; }
+  /* White with a border, standing out on the page and on a card alike. */
+  .input {
+    @apply mt-1 block w-full rounded-xl border-0 bg-white px-3 py-3 text-base text-stone-900 ring-1 ring-stone-300
+      outline-none focus:ring-2 focus:ring-accent dark:bg-stone-900 dark:text-stone-100 dark:ring-stone-700
+      dark:focus:ring-violet-500;
+  }
+  /* A date shown as text beside a calendar icon, with the date input invisible over both, so a tap opens the device's
+     own calendar. Shown, a date input is a field iOS Safari draws its own way. */
+  .date-picker {
+    @apply relative -mx-1.5 inline-flex items-center gap-2 rounded-lg px-1.5 py-1 font-medium text-accent dark:text-violet-400;
+  }
+  .date-picker > input { @apply absolute inset-0 size-full cursor-pointer opacity-0; }
+  .date-picker:has(> input:focus-visible) { @apply outline-2 outline-offset-2 outline-accent; }
+  .hint { @apply mt-1 text-sm text-stone-500 dark:text-stone-400; }
+  .form-error { @apply rounded-xl bg-red-50 px-3 py-2 text-sm text-red-800 dark:bg-red-950 dark:text-red-200; }
+
+  .icon-link {
+    @apply grid size-10 place-items-center rounded-xl text-stone-600 hover:bg-stone-200 dark:text-stone-400
+      dark:hover:bg-stone-800;
+  }
+
+  /* A collapsible card's heading, with a Lucide chevron in place of the browser's own marker. */
+  .disclosure { @apply flex list-none items-center gap-2 font-semibold; }
+  .disclosure::-webkit-details-marker { display: none; }
+  .disclosure-chevron { @apply ml-auto size-5 shrink-0 text-stone-400 transition; }
+  details[open] > .disclosure > .disclosure-chevron { @apply rotate-180; }
+
+  .checkbox { @apply mt-0.5 size-5 shrink-0 accent-accent dark:accent-violet-500; }
+
+  /* A password input with its tools inside it on the right: a tick once app.js approves the field, and a button that
+     shows what was typed. */
+  .password-field { @apply relative; }
+  .password-field > .input { @apply pr-20; }
+  .password-tools { @apply absolute inset-y-0 right-1 flex items-center gap-1; }
+  .password-ok { @apply hidden size-5 text-green-600 dark:text-green-500; }
+  .password-field:has(> input[data-approved]) .password-ok { @apply block; }
+  .password-reveal { @apply grid size-10 place-items-center rounded-lg text-stone-500 dark:text-stone-400; }
+
+  /* A marked statement offers a notes icon, which opens its notes field; the icon stands out while it holds notes. */
+  .notes-toggle {
+    @apply -my-2 grid size-10 shrink-0 place-items-center rounded-lg text-stone-400 dark:text-stone-500;
+  }
+  .statement:has(textarea:not(:placeholder-shown)) .notes-toggle { @apply text-accent dark:text-violet-400; }
+  .statement-notes { @apply block; }
+  .statement:not(:has(input[name=statement]:checked)) :is(.notes-toggle, .statement-notes),
+  .statement:not(:has([aria-expanded=true])) .statement-notes { display: none; }
+  /* A question with several statements stands out once one of them is marked, even while closed. */
+  details.question:has(input[name=statement]:checked) > .disclosure {
+    @apply text-accent dark:text-violet-400;
+    & > .disclosure-chevron { @apply text-accent dark:text-violet-400; }
+  }
+
+  /* The confession page's directions, set apart from the words the penitent says. */
+  .direction { @apply pt-1 text-sm text-stone-500 italic dark:text-stone-400; }
+  /* What the penitent adds to a sin, set apart from the sins themselves. */
+  .detail { @apply flex gap-2 text-base text-stone-500 dark:text-stone-400; }
+  /* A list whose rows may be hidden: a rule between the rows that are shown. */
+  .rows > :not([hidden]) ~ :not([hidden]) { @apply mt-2 border-t border-stone-200 pt-2 dark:border-stone-800; }
+  /* The heading of a part of the confession page, numbered in the order the parts happen, with a rule running to the
+     right edge that sets the part apart from the one before it. */
+  .step {
+    @apply flex items-center gap-2 text-sm font-semibold text-stone-500 after:h-px after:flex-1 after:bg-stone-200
+      dark:text-stone-400 dark:after:bg-stone-800;
+  }
+  .step-number {
+    @apply grid size-6 shrink-0 place-items-center rounded-full bg-accent-soft text-xs text-accent dark:bg-violet-950
+      dark:text-violet-300;
+  }
+
+  dialog::backdrop { @apply bg-stone-950/50; }
+}

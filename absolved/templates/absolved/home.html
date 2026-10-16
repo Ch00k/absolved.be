@@ -1,0 +1,72 @@
+{% extends "absolved/base.html" %}
+{% load i18n icons since %}
+
+{% block content %}
+  <section class="py-6 text-center">
+    {% if last_confession %}
+      <p class="text-5xl font-semibold tracking-tight">{% since last_confession.date "natural" %}</p>
+      <p class="mt-2 text-stone-600 dark:text-stone-400">
+        {% blocktranslate trimmed with date=last_confession.date|date:"j F Y" %}since your last confession on {{ date }}{% endblocktranslate %}
+      </p>
+      {# Hidden by app.js when the time above is already counted in days. #}
+      <p class="mt-1 text-sm text-stone-500 dark:text-stone-400" data-since-detail>{% since last_confession.date "days" %}</p>
+    {% else %}
+      <p class="text-stone-600 dark:text-stone-400">{% translate "No confession recorded yet." %}</p>
+      <a href="{% url 'history' %}" class="mt-1 inline-block text-sm font-medium text-accent dark:text-violet-400">{% translate "Add your last confession" %}</a>
+    {% endif %}
+  </section>
+
+  <ol class="space-y-3">
+    <li class="card flex items-start gap-4">
+      <span class="grid size-8 shrink-0 place-items-center rounded-full bg-accent-soft font-semibold text-accent dark:bg-violet-950 dark:text-violet-300">1</span>
+      <div class="min-w-0 flex-1">
+        <h2 class="font-semibold">{% translate "Prepare" %}</h2>
+        <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">
+          {% if examination %}
+            {% translate "In progress. Your notes are saved as you write." %}
+          {% else %}
+            {% translate "Examine your conscience before confession." %}
+          {% endif %}
+        </p>
+        <a href="{% url 'prepare' %}" class="{% if examination %}button-secondary{% else %}button-primary{% endif %} mt-4">
+          {% icon "notebook-pen" "size-5" %}{% if examination %}{% translate "Continue preparing" %}{% else %}{% translate "Prepare for confession" %}{% endif %}
+        </a>
+      </div>
+    </li>
+    <li class="card flex items-start gap-4 {% if not examination %}opacity-60{% endif %}">
+      <span class="grid size-8 shrink-0 place-items-center rounded-full bg-accent-soft font-semibold text-accent dark:bg-violet-950 dark:text-violet-300">2</span>
+      <div class="min-w-0 flex-1">
+        <h2 class="font-semibold">{% translate "Confession" %}</h2>
+        <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">
+          {% if examination %}
+            {% translate "Open your notes and the Act of Contrition in the confessional." %}
+          {% else %}
+            {% translate "Available once you have prepared." %}
+          {% endif %}
+        </p>
+        {% if examination %}
+          <a href="{% url 'confession' %}" class="button-primary mt-4">{% icon "church" "size-5" %}{% translate "Go to confession" %}</a>
+        {% endif %}
+      </div>
+    </li>
+  </ol>
+
+  {% if ask_last_confession %}
+    <dialog data-modal class="m-auto w-[calc(100%-2.5rem)] max-w-sm rounded-2xl bg-white p-6 text-stone-900 shadow-xl dark:bg-stone-900 dark:text-stone-100">
+      <form method="post" action="{% url 'last_confession' %}" class="space-y-4">
+        {% csrf_token %}
+        <h2 class="text-lg font-semibold">{% translate "When was your last confession?" %}</h2>
+        <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "It lets the app count the time since. You can change it later in History." %}</p>
+        <div>
+          <label for="last-confession-date" class="label">{% translate "Date" %}</label>
+          <div class="mt-1">{% include "absolved/_date_picker.html" with input_id="last-confession-date" %}</div>
+        </div>
+        <button name="answer" value="date" class="button-primary">{% translate "Save" %}</button>
+        <div class="grid grid-cols-2 gap-2">
+          <button name="answer" value="skip" formnovalidate class="button-secondary">{% translate "I don't remember" %}</button>
+          <button name="answer" value="skip" formnovalidate class="button-secondary">{% translate "Never" %}</button>
+        </div>
+      </form>
+    </dialog>
+  {% endif %}
+{% endblock %}

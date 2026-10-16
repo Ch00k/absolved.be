@@ -1,0 +1,18 @@
+{% load i18n icons %}
+{# A statement to mark, labelled with `text`. Once marked, its notes icon opens a field for how often or anything to add, which grows with its text from 1 line up to 5. #}
+<div class="statement" data-statement="{{ statement_id }}">
+  <div class="flex items-start gap-3">
+    <label class="flex flex-1 items-start gap-3">
+      <input type="checkbox" class="checkbox" name="statement" value="{{ statement_id }}">
+      <span>{{ text }}</span>
+    </label>
+    <button type="button" class="notes-toggle" data-notes-toggle aria-expanded="false"
+            aria-label="{% translate 'How often, or anything to add' %}" title="{% translate 'How often, or anything to add' %}">
+      {% icon "square-text" "size-5" %}
+    </button>
+  </div>
+  <label class="statement-notes mt-2 ml-8">
+    <span class="sr-only">{% translate "How often, or anything to add" %}</span>
+    <textarea class="input min-h-12 max-h-36 field-sizing-content" rows="1" placeholder="{% translate 'How often, or anything to add' %}" data-details></textarea>
+  </label>
+</div>

@@ -1,0 +1,70 @@
+{% extends "absolved/base.html" %}
+{% load static i18n icons %}
+
+{% block title %}{% translate "Account" %} - absolved.be{% endblock %}
+
+{% block scripts %}
+  {% include "absolved/_key_derivation.html" %}
+  <script type="module" src="{% static 'js/password.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-semibold tracking-tight">{% translate "Account" %}</h1>
+  <p class="mt-1 text-stone-600 dark:text-stone-400">{{ user.username }}</p>
+
+  {# The passwords have no name, so they are never sent: the script sends keys derived from them, and the preparation re-encrypted under the new one. #}
+  <form method="post" action="{% url 'change_password' %}" class="card mt-6 space-y-5" data-password-change
+        data-ciphertext="{{ examination.ciphertext|default:'' }}"
+        data-too-short="{% translate 'The password must be at least 12 characters long.' %}"
+        data-mismatch="{% translate 'The passwords do not match.' %}"
+        data-wrong-password="{% translate 'The current password is wrong.' %}"
+        data-failed="{% translate 'Could not reach the server. Check your connection and try again.' %}"
+        data-changed="{% translate 'Your password has been changed.' %}">
+    {% csrf_token %}
+    <h2 class="font-semibold">{% translate "Change password" %}</h2>
+    <input type="text" class="hidden" autocomplete="username" value="{{ user.username }}" readonly>
+    <div>
+      <label for="current-password" class="label">{% translate "Current password" %}</label>
+      <div class="password-field">
+        <input id="current-password" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="current-password" data-current-password>
+        {% include "absolved/_password_tools.html" %}
+      </div>
+    </div>
+    <div>
+      <label for="new-password" class="label">{% translate "New password" %}</label>
+      <div class="password-field">
+        <input id="new-password" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="new-password" minlength="12" data-password>
+        {% include "absolved/_password_tools.html" %}
+      </div>
+      <p class="hint">{% translate "At least 12 characters." %}</p>
+    </div>
+    <div>
+      <label for="new-password-confirmation" class="label">{% translate "New password again" %}</label>
+      <div class="password-field">
+        <input id="new-password-confirmation" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="new-password" data-password-confirmation>
+        {% include "absolved/_password_tools.html" %}
+      </div>
+    </div>
+    <p class="form-error" data-form-error role="alert" hidden></p>
+    <p class="rounded-xl bg-green-50 px-3 py-2 text-sm text-green-800 dark:bg-green-950 dark:text-green-200" data-form-success role="status" hidden></p>
+    <button class="button-primary" data-busy-label="{% translate 'Changing the password...' %}">{% translate "Change password" %}</button>
+  </form>
+
+  <form method="post" action="{% url 'logout' %}" class="mt-4" data-forget-key>
+    {% csrf_token %}
+    <button class="button-secondary">{% icon "log-out" "size-5" %}{% translate "Log out" %}</button>
+  </form>
+
+  <details class="card mt-10">
+    <summary class="disclosure text-red-700 dark:text-red-400">{% translate "Delete account" %}{% icon "chevron-down" "disclosure-chevron" %}</summary>
+    <form method="post" action="{% url 'delete_account' %}" class="mt-4 space-y-4" data-forget-key>
+      {% csrf_token %}
+      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "This permanently deletes your account, your confession dates and your preparation." %}</p>
+      <label class="flex items-start gap-3 text-sm">
+        <input type="checkbox" class="checkbox" required>
+        <span>{% translate "I understand that this cannot be undone." %}</span>
+      </label>
+      <button class="button-danger">{% icon "trash-2" "size-5" %}{% translate "Delete my account" %}</button>
+    </form>
+  </details>
+{% endblock %}

@@ -1,0 +1,7 @@
+.git
+.venv
+.envrc
+**/__pycache__
+db.sqlite3*
+staticfiles
+test-results

@@ -1,0 +1,53 @@
+{% extends "absolved/base.html" %}
+{% load static i18n %}
+
+{% block title %}{% translate "Create an account" %} - absolved.be{% endblock %}
+
+{% block scripts %}
+  {% include "absolved/_key_derivation.html" %}
+  <script type="module" src="{% static 'js/credentials.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-semibold tracking-tight">{% translate "Create an account" %}</h1>
+
+  {# The passwords have no name, so they are never sent: the script sends a key derived from them. #}
+  <form method="post" action="{% url 'signup' %}" class="mt-6 space-y-5" data-credentials="signup"
+        data-too-short="{% translate 'The password must be at least 12 characters long.' %}"
+        data-mismatch="{% translate 'The passwords do not match.' %}"
+        data-failed="{% translate 'Could not reach the server. Check your connection and try again.' %}">
+    {% csrf_token %}
+    <div>
+      <label for="username" class="label">{% translate "Username" %}</label>
+      <input id="username" name="username" class="input" required autocomplete="username" autocapitalize="none"
+             spellcheck="false" minlength="3" maxlength="32" pattern="[a-z0-9._\-]{3,32}">
+      <p class="hint">{% translate "3 to 32 lowercase letters, digits, dots, dashes or underscores. It cannot be changed later." %}</p>
+    </div>
+    <div>
+      <label for="password" class="label">{% translate "Password" %}</label>
+      <div class="password-field">
+        <input id="password" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="new-password" minlength="12" data-password>
+        {% include "absolved/_password_tools.html" %}
+      </div>
+      <p class="hint">{% translate "At least 12 characters. A few unrelated words make a passphrase that is long and easy to remember." %}</p>
+    </div>
+    <div>
+      <label for="password-confirmation" class="label">{% translate "Password again" %}</label>
+      <div class="password-field">
+        <input id="password-confirmation" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="new-password" data-password-confirmation>
+        {% include "absolved/_password_tools.html" %}
+      </div>
+    </div>
+    <p class="text-sm text-stone-600 dark:text-stone-400">
+      {% translate "Your password encrypts your notes, and there is no way to recover it. If you forget it, you will have to create a new account." %}
+    </p>
+    <p class="form-error" data-form-error role="alert" hidden></p>
+    <button class="button-primary" data-busy-label="{% translate 'Creating the account...' %}">{% translate "Create an account" %}</button>
+  </form>
+
+  <p class="mt-6 text-center text-sm text-stone-600 dark:text-stone-400">
+    {% translate "Already have an account?" %} <a href="{% url 'login' %}" class="font-medium text-accent dark:text-violet-400">{% translate "Log in" %}</a>
+  </p>
+
+  {% include "absolved/_privacy_details.html" %}
+{% endblock %}

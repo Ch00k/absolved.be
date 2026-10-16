@@ -1,0 +1,51 @@
+app = "absolved"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+# A volume attaches to a single machine, so a new machine cannot start
+# alongside the old one during a deploy. Stop and replace in place.
+[deploy]
+  strategy = "immediate"
+
+# Static files are collected into the image; migrate runs at startup via run.sh.
+[env]
+  DJANGO_ALLOWED_HOSTS = "absolved.be,www.absolved.be,absolved.fly.dev"
+  DJANGO_CANONICAL_HOST = "absolved.be"
+  DJANGO_DB_PATH = "/app/data/db.sqlite3"
+  DJANGO_STATIC_ROOT = "/app/staticfiles"
+
+# SQLite is a single local file, so the app runs as exactly one machine
+# backed by one persistent volume. Do not scale beyond a single machine.
+[mounts]
+  source = "absolved_data"
+  destination = "/app/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  min_machines_running = 1
+  # Stopping the machine when idle would also clear the rate-limit counters, which live in its
+  # memory, and put a cold start in front of the next visitor.
+  auto_stop_machines = "off"
+  auto_start_machines = true
+
+  # fly runs no health checks unless they are declared. This one is what makes
+  # a deploy notice a release that starts but cannot serve.
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    path = "/"
+    timeout = "5s"
+    # As Fly's proxy forwards a visitor's request: for a host Django serves, over HTTPS, which keeps
+    # the check from being redirected there.
+    [http_service.checks.headers]
+      Host = "absolved.be"
+      X-Forwarded-Proto = "https"
+
+# gunicorn with one worker and Django take about 55 MB.
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

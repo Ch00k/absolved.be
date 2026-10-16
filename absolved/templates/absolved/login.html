@@ -1,0 +1,43 @@
+{% extends "absolved/base.html" %}
+{% load static i18n %}
+
+{% block title %}{% translate "Log in" %} - absolved.be{% endblock %}
+
+{% block scripts %}
+  {% include "absolved/_key_derivation.html" %}
+  <script type="module" src="{% static 'js/credentials.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-semibold tracking-tight">{% translate "Log in" %}</h1>
+  {% if username %}
+    <p class="mt-2 text-stone-600 dark:text-stone-400">{% translate "Enter your password to unlock your notes on this device." %}</p>
+  {% endif %}
+
+  {# The password has no name, so it is never sent: the script sends a key derived from it. #}
+  <form method="post" action="{% url 'login' %}" class="mt-6 space-y-5" data-credentials="login"
+        data-failed="{% translate 'Could not reach the server. Check your connection and try again.' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <div>
+      <label for="username" class="label">{% translate "Username" %}</label>
+      <input id="username" name="username" class="input" required autocomplete="username" autocapitalize="none"
+             spellcheck="false" value="{{ username }}">
+    </div>
+    <div>
+      <label for="password" class="label">{% translate "Password" %}</label>
+      <div class="password-field">
+        <input id="password" type="password" class="input" autocapitalize="none" autocorrect="off" spellcheck="false" required autocomplete="current-password" data-password {% if username %}autofocus{% endif %}>
+        {% include "absolved/_password_tools.html" %}
+      </div>
+    </div>
+    <p class="form-error" data-form-error role="alert" hidden></p>
+    <button class="button-primary" data-busy-label="{% translate 'Logging in...' %}">{% translate "Log in" %}</button>
+  </form>
+
+  <p class="mt-6 text-center text-sm text-stone-600 dark:text-stone-400">
+    {% translate "No account yet?" %} <a href="{% url 'signup' %}" class="font-medium text-accent dark:text-violet-400">{% translate "Create one" %}</a>
+  </p>
+
+  {% include "absolved/_privacy_details.html" %}
+{% endblock %}

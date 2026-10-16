@@ -1,0 +1,3 @@
+{% load static %}
+{# libsodium's UMD build: WebAssembly where the browser allows it, plain JavaScript where it does not (iOS Lockdown Mode). sodium.js is libsodium-sumo.js and libsodium-wrappers.js joined into one script: switching to the plain JavaScript build replaces libsodium's module object, and the wrappers must take hold of it before that, in the same task. #}
+<script src="{% static 'vendor/libsodium-sumo-0.8.4/sodium.js' %}" defer></script>

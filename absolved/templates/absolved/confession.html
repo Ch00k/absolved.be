@@ -1,0 +1,94 @@
+{% extends "absolved/base.html" %}
+{% load static i18n icons since %}
+
+{% block title %}{% translate "Confession" %} - absolved.be{% endblock %}
+
+{% block scripts %}
+  <script type="module" src="{% static 'js/confession.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  {# The parts of the confession in the order they happen. What the penitent says is in cards; the directions between them are not. #}
+  <div class="space-y-6 text-lg">
+    <section class="space-y-2">
+      <h2 class="step"><span class="step-number">1</span>{% translate "Greeting" %}</h2>
+      <p class="direction">{% translate "Make the Sign of the Cross and say:" %}</p>
+      <p class="card px-4 py-3 font-medium">
+        {% if last_confession %}
+          {% since last_confession.date "natural" as time_since %}
+          {% blocktranslate trimmed with since=time_since %}
+            Bless me, Father, for I have sinned. It has been {{ since }} since my last confession.
+          {% endblocktranslate %}
+        {% else %}
+          {% translate "Bless me, Father, for I have sinned." %}
+        {% endif %}
+      </p>
+    </section>
+
+    <section class="space-y-2">
+      <h2 class="step"><span class="step-number">2</span>{% translate "Your sins" %}</h2>
+      <p class="text-center text-stone-500 dark:text-stone-400" data-unlocking>{% translate "Decrypting your notes..." %}</p>
+
+      {# Every statement is here, hidden; confession.js shows those marked in the decrypted examination. #}
+      <div id="examination" class="card rows px-4 py-3" data-ciphertext="{{ examination.ciphertext }}" hidden>
+        {% for section in sections %}
+          {% for question in section.questions %}
+            <div class="flex flex-col gap-1" data-question="{{ question.id }}" hidden>
+              {% for statement in question.statements %}
+                <div data-statement="{{ statement.id }}" hidden>
+                  <p>{{ statement.text }}</p>
+                  <p class="detail" data-details hidden>
+                    {% icon "corner-down-right" "mt-1 size-4 shrink-0" %}<span class="whitespace-pre-line"></span>
+                  </p>
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        {% endfor %}
+        <p class="whitespace-pre-line" data-notes hidden></p>
+        <p class="text-stone-500 dark:text-stone-400" data-nothing-marked hidden>{% translate "Nothing was marked in your preparation." %}</p>
+      </div>
+
+      <p class="card px-4 py-3 font-medium">{% translate "For these and all the sins of my past life, I am sorry." %}</p>
+    </section>
+
+    <section class="space-y-2">
+      <h2 class="step"><span class="step-number">3</span>{% translate "Penance and contrition" %}</h2>
+      <p class="direction">
+        {% translate "Listen to the priest's counsel and accept your penance. When he asks, pray the Act of Contrition:" %}
+      </p>
+      <p class="card px-4 py-3">
+        {% blocktranslate trimmed %}
+          O my God, I am heartily sorry for having offended Thee, and I detest all my sins because of Thy just
+          punishments, but most of all because they offend Thee, my God, who art all good and deserving of all my love.
+          I firmly resolve, with the help of Thy grace, to sin no more and to avoid the near occasion of sin. Amen.
+        {% endblocktranslate %}
+      </p>
+    </section>
+
+    <section class="space-y-2">
+      <h2 class="step"><span class="step-number">4</span>{% translate "Absolution" %}</h2>
+      <p class="direction">{% translate "The priest gives you absolution. Answer:" %}</p>
+      <p class="card px-4 py-3 font-medium">{% translate "Amen." %}</p>
+      <p class="direction">{% translate 'If he says "Give thanks to the Lord, for he is good", answer:' %}</p>
+      <p class="card px-4 py-3 font-medium">{% translate "His mercy endures for ever." %}</p>
+      <p class="direction">{% translate "When he sends you away in peace, answer:" %}</p>
+      <p class="card px-4 py-3 font-medium">{% translate "Thanks be to God." %}</p>
+    </section>
+  </div>
+
+  <a href="{% url 'prepare' %}" class="button-secondary mt-10">{% icon "notebook-pen" "size-5" %}{% translate "Back to preparation" %}</a>
+
+  <details class="card mt-4">
+    <summary class="disclosure">{% translate "I have confessed" %}{% icon "chevron-down" "disclosure-chevron" %}</summary>
+    <form method="post" action="{% url 'record_confession' %}" class="mt-4 space-y-4">
+      {% csrf_token %}
+      <div>
+        <label for="confession-date" class="label">{% translate "Date" %}</label>
+        <div class="mt-1">{% include "absolved/_date_picker.html" with input_id="confession-date" default_today=True %}</div>
+      </div>
+      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "This records the confession and permanently deletes your preparation." %}</p>
+      <button class="button-primary">{% translate "Record and delete my preparation" %}</button>
+    </form>
+  </details>
+{% endblock %}

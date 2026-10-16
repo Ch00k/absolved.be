@@ -1,0 +1,7 @@
+{% load i18n icons %}
+{# A date to pick from the device's own calendar, shown as text beside a calendar icon. The date input lies invisible over both, so a tap anywhere on them opens the calendar; app.js keeps the text to the input's date. With `default_today`, it starts on today. #}
+<span class="date-picker" data-date-picker data-empty="{% translate 'Choose a date' %}">
+  {% icon "calendar" "size-5 shrink-0" %}<span data-date-text>{% if default_today %}{{ today|date:"j F Y" }}{% else %}{% translate "Choose a date" %}{% endif %}</span>
+  <input id="{{ input_id }}" type="date" name="date" required max="{{ today|date:'Y-m-d' }}" data-not-after-today
+         {% if default_today %}value="{{ today|date:'Y-m-d' }}" data-default-today{% endif %}>
+</span>

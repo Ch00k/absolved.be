@@ -1,0 +1,25 @@
+{% extends "absolved/base.html" %}
+{% load i18n icons %}
+
+{% block content %}
+  <section class="text-center">
+    <div class="mx-auto grid size-16 place-items-center rounded-2xl bg-accent-soft dark:bg-violet-950">
+      {% icon "key" "size-8 text-accent dark:text-violet-400" %}
+    </div>
+    <h1 class="mt-5 text-3xl font-semibold tracking-tight">{% translate "Prepare for confession" %}</h1>
+    <p class="mt-3 text-stone-600 dark:text-stone-400">
+      {% translate "Examine your conscience, take your notes with you into the confessional, and keep track of the time since your last confession." %}
+    </p>
+  </section>
+
+  <div class="mt-8 grid grid-cols-2 gap-3">
+    <a href="{% url 'signup' %}" class="button-primary">{% translate "Sign up" %}</a>
+    <a href="{% url 'login' %}" class="button-secondary">{% translate "Log in" %}</a>
+  </div>
+
+  <section class="card mt-8">
+    <h2 class="flex items-center gap-2 text-lg font-semibold">{% icon "lock" "size-5 text-accent dark:text-violet-400" %}{% translate "Your privacy" %}</h2>
+    <p class="mt-2 mb-5 text-stone-600 dark:text-stone-400">{% translate "What you write here is between you and God. This is how we keep it that way." %}</p>
+    {% include "absolved/_privacy.html" %}
+  </section>
+{% endblock %}

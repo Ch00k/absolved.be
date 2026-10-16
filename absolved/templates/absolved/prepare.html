@@ -1,0 +1,67 @@
+{% extends "absolved/base.html" %}
+{% load static i18n icons %}
+
+{% block title %}{% translate "Prepare" %} - absolved.be{% endblock %}
+
+{% block scripts %}
+  <script type="module" src="{% static 'js/prepare.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-semibold tracking-tight">{% translate "Examination of conscience" %}</h1>
+  <p class="mt-2 text-stone-600 dark:text-stone-400">
+    {% translate "Ask the Holy Spirit for light, then go through the questions calmly. Mark what applies and add anything in your own words." %}
+  </p>
+
+  <p class="mt-6 text-center text-stone-500 dark:text-stone-400" data-unlocking>{% translate "Decrypting your notes..." %}</p>
+
+  {# Filled from the decrypted examination and shown by prepare.js. Nothing here is posted as a form: the script encrypts it and saves the result. #}
+  <form id="examination" class="mt-6 space-y-4" hidden
+        data-ciphertext="{{ examination.ciphertext|default:'' }}"
+        data-save-url="{% url 'save_examination' %}" data-confession-url="{% url 'confession' %}"
+        data-saving="{% translate 'Saving...' %}" data-saved="{% translate 'Saved' %}"
+        data-failed="{% translate 'Not saved. Check your connection; it saves again with your next change.' %}">
+    {% csrf_token %}
+    {% for section in sections %}
+      <fieldset class="card">
+        {# The number is centred over the checkboxes and chevrons below it, which are 4px narrower, and the title starts where their text does. #}
+        <legend class="float-left mb-4 flex w-full items-start gap-2.5 font-semibold">
+          {% if section.number %}<span class="step-number -ml-0.5">{{ section.number }}</span>{% endif %}<span>{{ section.title }}</span>
+        </legend>
+        <div class="clear-left space-y-3">
+          {% for question in section.questions %}
+            {% if question.statements|length == 1 %}
+              <div data-question="{{ question.id }}">
+                {% include "absolved/_statement.html" with statement_id=question.statements.0.id text=question.text %}
+              </div>
+            {% else %}
+              <details class="question" data-question="{{ question.id }}">
+                <summary class="disclosure items-start gap-3 font-normal">
+                  {% icon "chevron-down" "disclosure-chevron mt-0.5 ml-0" %}<span>{{ question.text }}</span>
+                </summary>
+                <div class="mt-3 ml-8 flex flex-col gap-3">
+                  {% for statement in question.statements %}
+                    {% include "absolved/_statement.html" with statement_id=statement.id text=statement.text %}
+                  {% endfor %}
+                </div>
+              </details>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </fieldset>
+    {% endfor %}
+    <fieldset class="card">
+      <legend class="float-left mb-4 w-full font-semibold">{% translate "Anything else" %}</legend>
+      <label class="clear-left block">
+        <span class="sr-only">{% translate "Anything else" %}</span>
+        {# Grows with its text from 3 lines up to 8. #}
+        <textarea class="input min-h-24 max-h-54 field-sizing-content" rows="3" placeholder="{% translate 'Other sins, or a question for the priest' %}" data-notes></textarea>
+      </label>
+    </fieldset>
+
+    <div class="sticky bottom-0 -mx-5 bg-stone-50/95 px-5 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur dark:bg-stone-950/95">
+      <p class="mb-2 min-h-5 text-center text-sm text-stone-500 dark:text-stone-400" data-save-status aria-live="polite"></p>
+      <button type="button" class="button-primary" data-ready>{% icon "church" "size-5" %}{% translate "Ready for confession" %}</button>
+    </div>
+  </form>
+{% endblock %}

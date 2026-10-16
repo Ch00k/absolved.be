@@ -1,0 +1,42 @@
+{% load i18n icons %}
+{# How the app keeps what a user writes private, for someone who does not know what encryption is. Every promise here must stay true of the code: see the privacy model in docs/plan.md. #}
+<ul class="space-y-4 text-left">
+  <li class="flex gap-3">
+    {% icon "key-round" "mt-0.5 size-5 shrink-0 text-accent dark:text-violet-400" %}
+    <div>
+      <p class="font-medium">{% translate "Only you hold the key" %}</p>
+      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "Your notes are locked on your own phone or computer, with your password, before they are saved. Your password never leaves your device: we never see it." %}</p>
+    </div>
+  </li>
+  <li class="flex gap-3">
+    {% icon "eye-off" "mt-0.5 size-5 shrink-0 text-accent dark:text-violet-400" %}
+    <div>
+      <p class="font-medium">{% translate "Unreadable to anyone else" %}</p>
+      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "What we store looks like a meaningless jumble of characters. Not us, not the company that hosts us, not even someone who broke into our server could read it." %}</p>
+    </div>
+  </li>
+  <li class="flex gap-3">
+    {% icon "user-x" "mt-0.5 size-5 shrink-0 text-accent dark:text-violet-400" %}
+    <div>
+      <p class="font-medium">{% translate "Nothing that says who you are" %}</p>
+      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "We never ask for your name, email address or phone number. Your account is just a username you make up." %}</p>
+    </div>
+  </li>
+  <li class="flex gap-3">
+    {% icon "flame" "mt-0.5 size-5 shrink-0 text-accent dark:text-violet-400" %}
+    <div>
+      <p class="font-medium">{% translate "Gone once you have confessed" %}</p>
+      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "When you mark your confession as done, your notes are deleted for good, like burning the paper you wrote them on." %}</p>
+    </div>
+  </li>
+  <li class="flex gap-3">
+    {% icon "shield-check" "mt-0.5 size-5 shrink-0 text-accent dark:text-violet-400" %}
+    <div>
+      <p class="font-medium">{% translate "No ads, no trackers" %}</p>
+      <p class="text-sm text-stone-600 dark:text-stone-400">{% translate "Nothing on this site comes from advertisers, analytics services or any other company watching what you do." %}</p>
+    </div>
+  </li>
+</ul>
+<p class="mt-5 text-sm text-stone-600 dark:text-stone-400">
+  {% translate "All we can see is your username and the dates of your confessions. And because we cannot read your notes, we cannot recover them either: if you forget your password, they are lost. Choose a long one that you will remember." %}
+</p>

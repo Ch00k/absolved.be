@@ -1,0 +1,16 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+
+# Virtual environments
+.venv
+
+# Django
+db.sqlite3*
+staticfiles/
+
+# Playwright's traces and screenshots of failed browser tests
+test-results/
+
+# Local environment. May hold secrets, so it must never be committable by accident.
+.envrc
