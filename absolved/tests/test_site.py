@@ -11,10 +11,12 @@ from typing import TYPE_CHECKING
 
 import pytest
 from django.conf import settings as django_settings
+from django.contrib.staticfiles import finders
 from django.core.management import call_command
 from django.template import Context, Template
 from django.test import Client, RequestFactory, override_settings
 from django.urls import reverse
+from django.utils import translation
 
 from absolved.ratelimits import client_ip
 
@@ -57,8 +59,8 @@ def test_production_settings_come_from_the_environment(tmp_path: Path) -> None:
         """import json
 from django.conf import settings
 names = ["DEBUG", "ALLOWED_HOSTS", "CSRF_TRUSTED_ORIGINS", "SECURE_SSL_REDIRECT", "SESSION_COOKIE_SECURE",
-         "CSRF_COOKIE_SECURE", "SECURE_HSTS_SECONDS", "SECURE_HSTS_INCLUDE_SUBDOMAINS", "SECURE_HSTS_PRELOAD",
-         "CANONICAL_HOST"]
+         "CSRF_COOKIE_SECURE", "LANGUAGE_COOKIE_SECURE", "SECURE_HSTS_SECONDS", "SECURE_HSTS_INCLUDE_SUBDOMAINS",
+         "SECURE_HSTS_PRELOAD", "CANONICAL_HOST"]
 print(json.dumps({name: getattr(settings, name) for name in names}))""",
     )
 
@@ -70,6 +72,7 @@ print(json.dumps({name: getattr(settings, name) for name in names}))""",
         "SECURE_SSL_REDIRECT": True,
         "SESSION_COOKIE_SECURE": True,
         "CSRF_COOKIE_SECURE": True,
+        "LANGUAGE_COOKIE_SECURE": True,
         "SECURE_HSTS_SECONDS": 31536000,
         "SECURE_HSTS_INCLUDE_SUBDOMAINS": True,
         "SECURE_HSTS_PRELOAD": False,
@@ -260,3 +263,86 @@ def test_pages_are_titled_with_the_domain(client: Client) -> None:
     assert b"<title>absolved.be</title>" in client.get(reverse("home")).content
     assert b"<title>Log in - absolved.be</title>" in client.get(reverse("login")).content
     assert client.get(reverse("manifest")).json()["name"] == "absolved.be"
+
+
+@pytest.mark.parametrize(
+    ("accepted", "language", "heading"),
+    [
+        ("en-GB,en;q=0.9", "en", "Your privacy"),
+        ("pl-PL,pl;q=0.9", "pl", "Twoja prywatność"),
+        ("uk", "uk", "Твоя приватність"),
+    ],
+)
+def test_pages_are_in_the_browsers_language(client: Client, accepted: str, language: str, heading: str) -> None:
+    content = client.get(reverse("home"), headers={"Accept-Language": accepted}).content.decode()
+
+    assert f'<html lang="{language}">' in content
+    assert heading in content
+
+
+def test_a_language_the_site_lacks_falls_back_to_english(client: Client) -> None:
+    content = client.get(reverse("home"), headers={"Accept-Language": "de"}).content.decode()
+
+    assert '<html lang="en">' in content
+
+
+def test_the_header_offers_every_language_by_its_flag_and_its_own_name(client: Client) -> None:
+    """The header's button shows the page's language by its flag and opens a menu of every language, each named in
+    itself beside its flag, which posts the page's path to return to."""
+    content = client.get(reverse("login"), headers={"Accept-Language": "pl"}).content.decode()
+
+    assert re.search(
+        r'<button type="button" class="icon-link" popovertarget="language-menu"\s+aria-label="Język" title="Język">'
+        r'<img src="/static/vendor/flag-icons-7.6.0/pl.svg" class="flag" alt=""></button>',
+        content,
+    )
+    menu = content[content.index('<form id="language-menu" popover') : content.index("</form>")]
+    assert '<input type="hidden" name="next" value="/login/">' in menu
+    options = re.findall(
+        r'<button name="language" value="(\w+)" lang="\1" class="language-option"\s*(aria-current="true")?>\s*'
+        r'<img src="/static/vendor/flag-icons-7.6.0/(\w+).svg" class="flag" alt="">(\S+)',
+        menu,
+    )
+    assert options == [
+        ("en", "", "gb", "English"),
+        ("pl", 'aria-current="true"', "pl", "Polski"),
+        ("uk", "", "ua", "Українська"),
+    ]
+
+
+def test_every_language_has_a_flag() -> None:
+    for code, _name in django_settings.LANGUAGES:
+        rendered = Template("{% load icons %}{% flag code %}").render(Context({"code": code}))
+
+        path = re.fullmatch(r'<img src="/static/([^"]+)" class="" alt="">', rendered)
+        assert path
+        assert finders.find(path[1])
+
+
+def test_a_picked_language_outlasts_the_browsers(client: Client) -> None:
+    """Picking a language returns to the page it was picked on, and a year-long cookie, out of reach of scripts,
+    keeps it ahead of the browser's own languages."""
+    response = client.post(reverse("set_language"), {"language": "uk", "next": reverse("login")})
+
+    assert response.status_code == 302
+    assert response["Location"] == reverse("login")
+    cookie = response.cookies[django_settings.LANGUAGE_COOKIE_NAME]
+    assert cookie.value == "uk"
+    assert cookie["max-age"] == 365 * 24 * 60 * 60
+    assert cookie["httponly"]
+    content = client.get(reverse("login"), headers={"Accept-Language": "en"}).content.decode()
+    assert '<html lang="uk">' in content
+
+
+@pytest.mark.parametrize(
+    ("language", "expected"), [("en", "1 September 2026"), ("pl", "1 września 2026"), ("uk", "1 вересня 2026")]
+)
+def test_dates_name_the_month_as_a_date_does(language: str, expected: str) -> None:
+    """Polish and Ukrainian name the month of a date in the genitive ("1 września"), which differs from the month's
+    name on its own ("wrzesień")."""
+    with translation.override(language):
+        rendered = Template('{% load since %}{% since date "days" %}').render(
+            Context({"date": datetime.date(2026, 9, 1)})
+        )
+
+    assert rendered == f'<time datetime="2026-09-01" data-since="days">{expected}</time>'

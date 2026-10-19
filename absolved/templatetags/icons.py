@@ -1,4 +1,5 @@
-"""Lucide icons inline in a template, read from the vendored copies so they stay exactly Lucide's."""
+"""Lucide icons inline in a template, read from the vendored copies so they stay exactly Lucide's, and the flags that
+stand for the site's languages."""
 
 from __future__ import annotations
 
@@ -8,12 +9,16 @@ from pathlib import Path
 
 from django import template
 from django.contrib.staticfiles import finders
+from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.safestring import SafeString, mark_safe
 
 register = template.Library()
 
 LUCIDE = "vendor/lucide-1.57.0"
+FLAG_ICONS = "vendor/flag-icons-7.6.0"
+# The country whose flag stands for each of the site's languages.
+LANGUAGE_FLAGS = {"en": "gb", "pl": "pl", "uk": "ua"}
 
 
 @functools.cache
@@ -35,3 +40,13 @@ def icon(name: str, classes: str = "") -> SafeString:
     """The icon, sized and coloured by `classes`, hidden from screen readers like any decoration."""
     opening = format_html('<svg class="{}" aria-hidden="true"', classes)
     return mark_safe(lucide_svg(name).replace("<svg", opening, 1))  # noqa: S308
+
+
+@register.simple_tag
+def flag(language: str, classes: str = "") -> SafeString:
+    """The flag of a language, sized by `classes`. An image, since the same flag may be on a page twice, and the
+    files' ids would be repeated inlined. Decoration, like the icons: the language's name goes beside it or in a
+    label."""
+    return format_html(
+        '<img src="{}" class="{}" alt="">', static(f"{FLAG_ICONS}/{LANGUAGE_FLAGS[language]}.svg"), classes
+    )

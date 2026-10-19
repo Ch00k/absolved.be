@@ -2,6 +2,7 @@
 *
 !absolved/
 !config/
+!locale/
 !static/
 !manage.py
 !run.sh

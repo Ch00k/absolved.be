@@ -11,7 +11,8 @@ an examination of conscience for the next one, and shows it during confession wi
 
 - Stack: Django, SQLite, Tailwind (standalone CLI), Lucide icons; Fly.io, one 256 MB machine in `fra`.
 - The examination is encrypted in the browser; the server never sees it or the password. Username and password only, no
-  email, no recovery. English only for now, with every string translatable.
+  email, no recovery. English, Polish and Ukrainian; how the translations handle gender and the confession script is in
+  `docs/plan.md`.
 - What determines the keys (listed at the top of `static/js/keys.js`) and the question and statement ids in
   `absolved/examination.py` must never change: users would lose their accounts or their answers. The browser tests
   pin the keys.
