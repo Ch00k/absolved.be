@@ -33,11 +33,13 @@ icons, `rsvg-convert`.
 | `make vendor-sodium`  | Rebuild the vendored libsodium from npm, checking the packages' integrity  |
 | `make makemessages`   | Update the translation catalogs in `locale/`                               |
 | `make compilemessages`| Compile them                                                               |
+| `make messages-check` | Fail if a catalog has untranslated or fuzzy messages, or a stale `.mo`     |
 | `make app-icons`      | Render the home screen icons from `assets/`                                |
 
-Every string is marked for translation, and English is the only language so far. A new one starts with
-`DJANGO_DEBUG=1 uv run manage.py makemessages -l <code>`, which creates `locale/<code>/`, and goes in `LANGUAGES` in
-`config/settings.py`. The compiled `.mo` files are committed, since the image has no gettext to compile them.
+Every string is marked for translation, into Polish and Ukrainian so far (`locale/pl/`, `locale/uk/`). A new language
+starts with `DJANGO_DEBUG=1 uv run manage.py makemessages -l <code>`, which creates `locale/<code>/`, and goes in
+`LANGUAGES` in `config/settings.py`. After changing a string, run `make makemessages`, translate what it added, and run
+`make compilemessages`. The compiled `.mo` files are committed, since the image has no gettext to compile them.
 
 ## Configuration
 
@@ -84,6 +86,7 @@ volume snapshots; `docs/backup.md` covers the setup and restoring.
 ## Vendored files
 
 - `static/vendor/lucide-1.57.0/`: the icons in use, from `lucide-static`.
+- `static/vendor/flag-icons-7.6.0/`: the flags of the site's languages, from `flag-icons/flags/4x3/`.
 - `static/vendor/libsodium-sumo-0.8.4/sodium.js`: `libsodium-sumo/dist/modules-sumo/libsodium-sumo.js` followed by a line holding `;`
   and `libsodium-wrappers-sumo/dist/modules-sumo/libsodium-wrappers.js`, both 0.8.4 from npm. They must run as one
   script so that libsodium's plain JavaScript fallback initialises where WebAssembly is unavailable.

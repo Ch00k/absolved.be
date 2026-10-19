@@ -16,7 +16,7 @@ Versions are checked for the latest release when each dependency is added.
 | Crypto        | libsodium.js 0.8.4 (sumo, UMD build) for Argon2id; WebCrypto for the rest |
 | Rate limiting | `django-ratelimit` on the in-memory cache                                     |
 | Styling       | Tailwind, standalone CLI (no Node), built stylesheet committed                |
-| Icons         | Lucide SVGs vendored into the repo, inlined by a template tag; `key` is the mark   |
+| Icons         | Lucide SVGs vendored into the repo, inlined by a template tag; `key` is the mark; flag-icons for the languages |
 | Database      | SQLite on one Fly volume                                                      |
 | Hosting       | Fly.io, `fra`, one `shared-cpu-1x` machine with 256 MB                        |
 | Tests         | pytest + pytest-django; pytest-playwright for the in-browser crypto           |
@@ -205,7 +205,16 @@ WebCrypto (HKDF, AES-GCM), storing a `CryptoKey` in IndexedDB, WebAssembly and s
   theological review before launch.
 - Act of Contrition: the traditional English version ("O my God, I am heartily sorry..."), which is in the public
   domain.
-- All strings use Django's translation tooling from the start, so other languages can be added later.
+- All strings use Django's translation tooling. The site is in English, Polish and Ukrainian: the browser's languages
+  pick one, and the header's flag opens a menu to pick another, which a cookie remembers.
+- Polish and Ukrainian past tenses and adjectives agree with the speaker's gender, which the app does not know. Both
+  forms are written out, in the convention of printed examinations in those languages: "Skłamałem(-am).",
+  "Я брехав(-ла)." The one statement only a woman can make ("I had an abortion.") has her form alone.
+- The confession script is localised, not translated word for word: each line is what a Polish or Ukrainian Latin-rite
+  penitent says at that point ("Niech będzie pochwalony Jezus Chrystus...", "Więcej grzechów nie pamiętam..."). The
+  Polish Act of Contrition is the traditional "Ach, żałuję za me złości..."; the Ukrainian one, its formulas and the
+  answers to absolution are those of the prayer book of the Roman Catholic Church in Ukraine (rkc.org.ua). Like the
+  examination, the translations need theological review by a native speaker.
 
 ## Milestones
 

@@ -1,0 +1,1460 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: absolved\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-19 07:24+0000\n"
+"PO-Revision-Date: 2026-10-19 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Polish\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: absolved/examination.py:52
+msgid "I am the Lord your God: you shall not have strange gods before me."
+msgstr "Jam jest Pan, Bóg twój: nie będziesz miał bogów cudzych przede mną."
+
+#: absolved/examination.py:54
+msgid "Have I neglected daily prayer?"
+msgstr "Czy zaniedbywałem(-am) codzienną modlitwę?"
+
+#: absolved/examination.py:54
+msgid "I neglected daily prayer."
+msgstr "Zaniedbywałem(-am) codzienną modlitwę."
+
+#: absolved/examination.py:57
+msgid "Have I been lukewarm or lazy in my life with God?"
+msgstr "Czy byłem(-am) letni(-a) lub leniwy(-a) w życiu z Bogiem?"
+
+#: absolved/examination.py:58
+msgid "I was lukewarm and lazy in my life with God."
+msgstr "Byłem(-am) letni(-a) i leniwy(-a) w życiu z Bogiem."
+
+#: absolved/examination.py:62
+msgid ""
+"Have I doubted or denied a truth of the faith, or been ashamed of it before "
+"others?"
+msgstr ""
+"Czy wątpiłem(-am) w prawdę wiary lub jej zaprzeczałem(-am), albo "
+"wstydziłem(-am) się wiary przed innymi?"
+
+#: absolved/examination.py:64
+msgid "I doubted a truth of the faith."
+msgstr "Wątpiłem(-am) w prawdę wiary."
+
+#: absolved/examination.py:65
+msgid "I denied a truth of the faith."
+msgstr "Zaprzeczałem(-am) prawdzie wiary."
+
+#: absolved/examination.py:66
+msgid "I was ashamed of my faith before others."
+msgstr "Wstydziłem(-am) się swojej wiary przed innymi."
+
+#: absolved/examination.py:71
+msgid ""
+"Have I put my trust in horoscopes, fortune-telling, superstition or the "
+"occult?"
+msgstr "Czy ufałem(-am) horoskopom, wróżbom, przesądom lub okultyzmowi?"
+
+#: absolved/examination.py:73
+msgid "I put my trust in horoscopes."
+msgstr "Ufałem(-am) horoskopom."
+
+#: absolved/examination.py:74
+msgid "I put my trust in fortune-telling."
+msgstr "Ufałem(-am) wróżbom."
+
+#: absolved/examination.py:75
+msgid "I put my trust in superstition."
+msgstr "Ufałem(-am) przesądom."
+
+#: absolved/examination.py:76
+msgid "I took part in the occult."
+msgstr "Uczestniczyłem(-am) w praktykach okultystycznych."
+
+#: absolved/examination.py:81
+msgid "Have I put money, work, pleasure or anything else before God?"
+msgstr ""
+"Czy stawiałem(-am) pieniądze, pracę, przyjemności lub cokolwiek innego ponad "
+"Boga?"
+
+#: absolved/examination.py:83
+msgid "I put money before God."
+msgstr "Stawiałem(-am) pieniądze ponad Boga."
+
+#: absolved/examination.py:84
+msgid "I put my work before God."
+msgstr "Stawiałem(-am) pracę ponad Boga."
+
+#: absolved/examination.py:85
+msgid "I put pleasure before God."
+msgstr "Stawiałem(-am) przyjemności ponad Boga."
+
+#: absolved/examination.py:86
+msgid "I put other things before God."
+msgstr "Stawiałem(-am) inne rzeczy ponad Boga."
+
+#: absolved/examination.py:91
+msgid "Have I been proud, vain or boastful, or refused to be corrected?"
+msgstr ""
+"Czy byłem(-am) pyszny(-a), próżny(-a) lub chełpliwy(-a), albo nie "
+"przyjmowałem(-am) upomnień?"
+
+#: absolved/examination.py:93
+msgid "I thought myself better than others."
+msgstr "Uważałem(-am) się za lepszego(-ą) od innych."
+
+#: absolved/examination.py:94
+msgid "I was vain about my looks or achievements."
+msgstr "Byłem(-am) próżny(-a) z powodu swojego wyglądu lub osiągnięć."
+
+#: absolved/examination.py:95
+msgid "I boasted."
+msgstr "Przechwalałem(-am) się."
+
+#: absolved/examination.py:96
+msgid "I refused to be corrected."
+msgstr "Nie przyjmowałem(-am) upomnień."
+
+#: absolved/examination.py:101
+msgid "Have I despaired of God's mercy, or presumed on it?"
+msgstr ""
+"Czy zwątpiłem(-am) w Boże miłosierdzie albo zuchwale na nie liczyłem(-am)?"
+
+#: absolved/examination.py:103
+msgid "I despaired of God's mercy."
+msgstr "Zwątpiłem(-am) w Boże miłosierdzie."
+
+#: absolved/examination.py:104
+msgid "I presumed on God's mercy."
+msgstr "Zuchwale liczyłem(-am) na Boże miłosierdzie."
+
+#: absolved/examination.py:109
+msgid "Have I received Holy Communion while conscious of a serious sin?"
+msgstr ""
+"Czy przyjmowałem(-am) Komunię Świętą ze świadomością grzechu ciężkiego?"
+
+#: absolved/examination.py:110
+msgid "I received Holy Communion while conscious of a serious sin."
+msgstr "Przyjmowałem(-am) Komunię Świętą ze świadomością grzechu ciężkiego."
+
+#: absolved/examination.py:114
+msgid "Have I deliberately concealed a serious sin in confession?"
+msgstr "Czy świadomie zataiłem(-am) grzech ciężki podczas spowiedzi?"
+
+#: absolved/examination.py:115
+msgid "I deliberately concealed a serious sin in a past confession."
+msgstr ""
+"Świadomie zataiłem(-am) grzech ciężki podczas jednej z poprzednich spowiedzi."
+
+#: absolved/examination.py:121
+msgid "You shall not take the name of the Lord your God in vain."
+msgstr "Nie będziesz brał imienia Pana Boga twego nadaremno."
+
+#: absolved/examination.py:125
+msgid ""
+"Have I used the name of God, Jesus, Mary or the saints carelessly or in "
+"anger?"
+msgstr ""
+"Czy wymawiałem(-am) imię Boga, Jezusa, Maryi lub świętych lekkomyślnie albo w"
+" gniewie?"
+
+#: absolved/examination.py:127
+msgid "I used the name of God or of the saints carelessly."
+msgstr "Wymawiałem(-am) imię Boga lub świętych lekkomyślnie."
+
+#: absolved/examination.py:128
+msgid "I used the name of God or of the saints in anger."
+msgstr "Wymawiałem(-am) imię Boga lub świętych w gniewie."
+
+#: absolved/examination.py:133
+msgid "Have I cursed, or wished evil on anyone?"
+msgstr "Czy przeklinałem(-am) kogoś lub życzyłem(-am) komuś zła?"
+
+#: absolved/examination.py:135
+msgid "I cursed someone."
+msgstr "Przeklinałem(-am) kogoś."
+
+#: absolved/examination.py:136
+msgid "I wished evil on someone."
+msgstr "Życzyłem(-am) komuś zła."
+
+#: absolved/examination.py:141
+msgid "Have I sworn an oath falsely or without need?"
+msgstr "Czy przysięgałem(-am) fałszywie lub bez potrzeby?"
+
+#: absolved/examination.py:143
+msgid "I swore an oath falsely."
+msgstr "Przysięgałem(-am) fałszywie."
+
+#: absolved/examination.py:144
+msgid "I swore an oath without need."
+msgstr "Przysięgałem(-am) bez potrzeby."
+
+#: absolved/examination.py:149
+msgid "Have I broken a promise or vow made to God?"
+msgstr "Czy złamałem(-am) obietnicę lub ślub złożony Bogu?"
+
+#: absolved/examination.py:151
+msgid "I broke a promise made to God."
+msgstr "Złamałem(-am) obietnicę złożoną Bogu."
+
+#: absolved/examination.py:152
+msgid "I broke a vow made to God."
+msgstr "Złamałem(-am) ślub złożony Bogu."
+
+#: absolved/examination.py:157
+msgid "Have I mocked religion, sacred things, or people consecrated to God?"
+msgstr "Czy wyśmiewałem(-am) religię, rzeczy święte lub osoby poświęcone Bogu?"
+
+#: absolved/examination.py:159
+msgid "I mocked religion."
+msgstr "Wyśmiewałem(-am) religię."
+
+#: absolved/examination.py:160
+msgid "I mocked sacred things."
+msgstr "Wyśmiewałem(-am) rzeczy święte."
+
+#: absolved/examination.py:161
+msgid "I mocked people consecrated to God."
+msgstr "Wyśmiewałem(-am) osoby poświęcone Bogu."
+
+#: absolved/examination.py:168
+msgid "Remember to keep holy the Lord's Day."
+msgstr "Pamiętaj, abyś dzień święty święcił."
+
+#: absolved/examination.py:172
+msgid ""
+"Have I missed Mass on a Sunday or holy day of obligation through my own "
+"fault?"
+msgstr ""
+"Czy z własnej winy opuściłem(-am) Mszę Świętą w niedzielę lub święto "
+"nakazane?"
+
+#: absolved/examination.py:174
+msgid "I missed Mass on a Sunday through my own fault."
+msgstr "Z własnej winy opuściłem(-am) niedzielną Mszę Świętą."
+
+#: absolved/examination.py:176
+msgid "I missed Mass on a holy day of obligation through my own fault."
+msgstr "Z własnej winy opuściłem(-am) Mszę Świętą w święto nakazane."
+
+#: absolved/examination.py:182
+msgid "Have I come late to Mass or left early without good reason?"
+msgstr ""
+"Czy bez ważnego powodu spóźniałem(-am) się na Mszę Świętą lub "
+"wychodziłem(-am) przed jej końcem?"
+
+#: absolved/examination.py:184
+msgid "I came late to Mass without good reason."
+msgstr "Bez ważnego powodu spóźniłem(-am) się na Mszę Świętą."
+
+#: absolved/examination.py:185
+msgid "I left Mass early without good reason."
+msgstr "Bez ważnego powodu opuściłem(-am) Mszę Świętą przed jej końcem."
+
+#: absolved/examination.py:190
+msgid "Have I been deliberately inattentive or irreverent at Mass?"
+msgstr ""
+"Czy byłem(-am) świadomie nieuważny(-a) lub zachowywałem(-am) się bez szacunku"
+" podczas Mszy Świętej?"
+
+#: absolved/examination.py:192
+msgid "I was deliberately inattentive at Mass."
+msgstr "Byłem(-am) świadomie nieuważny(-a) podczas Mszy Świętej."
+
+#: absolved/examination.py:193
+msgid "I was irreverent at Mass."
+msgstr "Zachowywałem(-am) się bez szacunku podczas Mszy Świętej."
+
+#: absolved/examination.py:198
+msgid ""
+"Have I done needless work or shopping on Sunday, or kept others from rest?"
+msgstr ""
+"Czy w niedzielę wykonywałem(-am) niepotrzebną pracę lub robiłem(-am) "
+"niepotrzebne zakupy, albo odbierałem(-am) innym niedzielny odpoczynek?"
+
+#: absolved/examination.py:200
+msgid "I did needless work on Sunday."
+msgstr "W niedzielę wykonywałem(-am) niepotrzebną pracę."
+
+#: absolved/examination.py:201
+msgid "I did needless shopping on Sunday."
+msgstr "W niedzielę robiłem(-am) niepotrzebne zakupy."
+
+#: absolved/examination.py:202
+msgid "I kept others from their Sunday rest."
+msgstr "Odbierałem(-am) innym niedzielny odpoczynek."
+
+#: absolved/examination.py:209
+msgid "Honour your father and your mother."
+msgstr "Czcij ojca swego i matkę swoją."
+
+#: absolved/examination.py:213
+msgid ""
+"Have I been disrespectful to my parents, or neglected them in their need?"
+msgstr ""
+"Czy okazywałem(-am) brak szacunku rodzicom albo zaniedbywałem(-am) ich w "
+"potrzebie?"
+
+#: absolved/examination.py:215
+msgid "I was disrespectful to my parents."
+msgstr "Okazywałem(-am) brak szacunku rodzicom."
+
+#: absolved/examination.py:216
+msgid "I neglected my parents in their need."
+msgstr "Zaniedbywałem(-am) rodziców w potrzebie."
+
+#: absolved/examination.py:221
+msgid ""
+"Have I neglected the care, upbringing in the faith or good example I owe my "
+"children?"
+msgstr ""
+"Czy zaniedbywałem(-am) opiekę nad dziećmi, ich wychowanie w wierze lub "
+"dawanie im dobrego przykładu?"
+
+#: absolved/examination.py:223
+msgid "I neglected the care of my children."
+msgstr "Zaniedbywałem(-am) opiekę nad dziećmi."
+
+#: absolved/examination.py:224
+msgid "I neglected my children's upbringing in the faith."
+msgstr "Zaniedbywałem(-am) wychowanie dzieci w wierze."
+
+#: absolved/examination.py:225
+msgid "I failed to give my children a good example."
+msgstr "Nie dawałem(-am) dzieciom dobrego przykładu."
+
+#: absolved/examination.py:230
+msgid "Have I failed in love or respect towards my spouse or family?"
+msgstr "Czy brakowało mi miłości lub szacunku wobec współmałżonka lub rodziny?"
+
+#: absolved/examination.py:232
+msgid "I failed in love towards my spouse."
+msgstr "Brakowało mi miłości wobec współmałżonka."
+
+#: absolved/examination.py:233
+msgid "I was disrespectful to my spouse."
+msgstr "Okazywałem(-am) brak szacunku współmałżonkowi."
+
+#: absolved/examination.py:234
+msgid "I failed in love towards my family."
+msgstr "Brakowało mi miłości wobec rodziny."
+
+#: absolved/examination.py:235
+msgid "I was disrespectful to my family."
+msgstr "Okazywałem(-am) brak szacunku rodzinie."
+
+#: absolved/examination.py:240
+msgid "Have I disobeyed lawful authority without just cause?"
+msgstr ""
+"Czy bez słusznej przyczyny byłem(-am) nieposłuszny(-a) prawowitej władzy?"
+
+#: absolved/examination.py:241
+msgid "I disobeyed lawful authority without just cause."
+msgstr "Bez słusznej przyczyny byłem(-am) nieposłuszny(-a) prawowitej władzy."
+
+#: absolved/examination.py:247
+msgid "You shall not kill."
+msgstr "Nie zabijaj."
+
+#: absolved/examination.py:251
+msgid "Have I harmed anyone physically, or wished them harm?"
+msgstr ""
+"Czy wyrządziłem(-am) komuś krzywdę fizyczną lub życzyłem(-am) komuś krzywdy?"
+
+#: absolved/examination.py:253
+msgid "I harmed someone physically."
+msgstr "Wyrządziłem(-am) komuś krzywdę fizyczną."
+
+#: absolved/examination.py:254
+msgid "I wished someone harm."
+msgstr "Życzyłem(-am) komuś krzywdy."
+
+#: absolved/examination.py:259
+msgid "Have I had, encouraged or helped with an abortion?"
+msgstr ""
+"Czy miałem(-am) udział w aborcji, poddając się jej, namawiając do niej lub "
+"pomagając w niej?"
+
+#: absolved/examination.py:261
+msgid "I had an abortion."
+msgstr "Poddałam się aborcji."
+
+#: absolved/examination.py:262
+msgid "I encouraged an abortion."
+msgstr "Namawiałem(-am) do aborcji."
+
+#: absolved/examination.py:263
+msgid "I helped with an abortion."
+msgstr "Pomagałem(-am) w aborcji."
+
+#: absolved/examination.py:268
+msgid "Have I nursed anger, hatred or resentment, or refused to forgive?"
+msgstr ""
+"Czy żywiłem(-am) w sobie gniew, nienawiść lub urazę, albo odmawiałem(-am) "
+"przebaczenia?"
+
+#: absolved/examination.py:270
+msgid "I nursed anger."
+msgstr "Żywiłem(-am) w sobie gniew."
+
+#: absolved/examination.py:271
+msgid "I hated someone."
+msgstr "Nienawidziłem(-am) kogoś."
+
+#: absolved/examination.py:272
+msgid "I held on to resentment."
+msgstr "Chowałem(-am) urazę."
+
+#: absolved/examination.py:273
+msgid "I refused to forgive someone."
+msgstr "Odmawiałem(-am) komuś przebaczenia."
+
+#: absolved/examination.py:278
+msgid "Have I lost my temper, or been impatient with others?"
+msgstr ""
+"Czy wpadałem(-am) w gniew lub byłem(-am) niecierpliwy(-a) wobec innych?"
+
+#: absolved/examination.py:280
+msgid "I lost my temper."
+msgstr "Wpadałem(-am) w gniew."
+
+#: absolved/examination.py:281
+msgid "I was impatient with others."
+msgstr "Byłem(-am) niecierpliwy(-a) wobec innych."
+
+#: absolved/examination.py:286
+msgid "Have I hurt anyone with cruel words, bullying or contempt?"
+msgstr "Czy raniłem(-am) kogoś okrutnymi słowami, nękaniem lub pogardą?"
+
+#: absolved/examination.py:288
+msgid "I hurt someone with cruel words."
+msgstr "Raniłem(-am) kogoś okrutnymi słowami."
+
+#: absolved/examination.py:289
+msgid "I bullied someone."
+msgstr "Nękałem(-am) kogoś."
+
+#: absolved/examination.py:290
+msgid "I treated someone with contempt."
+msgstr "Traktowałem(-am) kogoś z pogardą."
+
+#: absolved/examination.py:295
+msgid ""
+"Have I harmed my health through drunkenness, drugs, gluttony or recklessness?"
+msgstr ""
+"Czy szkodziłem(-am) swojemu zdrowiu przez pijaństwo, narkotyki, obżarstwo lub"
+" lekkomyślność?"
+
+#: absolved/examination.py:297
+msgid "I got drunk."
+msgstr "Upiłem(-am) się."
+
+#: absolved/examination.py:298
+msgid "I took drugs."
+msgstr "Zażywałem(-am) narkotyki."
+
+#: absolved/examination.py:299
+msgid "I was gluttonous."
+msgstr "Grzeszyłem(-am) obżarstwem."
+
+#: absolved/examination.py:300
+msgid "I harmed my health through recklessness."
+msgstr "Szkodziłem(-am) swojemu zdrowiu przez lekkomyślność."
+
+#: absolved/examination.py:305
+msgid ""
+"Have I put others in danger, for example by driving recklessly or under the "
+"influence?"
+msgstr ""
+"Czy narażałem(-am) innych na niebezpieczeństwo, na przykład jeżdżąc brawurowo"
+" lub pod wpływem alkoholu czy narkotyków?"
+
+#: absolved/examination.py:307
+msgid "I drove recklessly."
+msgstr "Jeździłem(-am) brawurowo."
+
+#: absolved/examination.py:308
+msgid "I drove under the influence."
+msgstr "Prowadziłem(-am) pojazd pod wpływem alkoholu lub narkotyków."
+
+#: absolved/examination.py:309
+msgid "I put others in danger."
+msgstr "Narażałem(-am) innych na niebezpieczeństwo."
+
+#: absolved/examination.py:314
+msgid "Have I led someone into sin by my words or example?"
+msgstr "Czy swoimi słowami lub przykładem prowadziłem(-am) kogoś do grzechu?"
+
+#: absolved/examination.py:316
+msgid "I led someone into sin by my words."
+msgstr "Swoimi słowami prowadziłem(-am) kogoś do grzechu."
+
+#: absolved/examination.py:317
+msgid "I led someone into sin by my example."
+msgstr "Swoim przykładem prowadziłem(-am) kogoś do grzechu."
+
+#: absolved/examination.py:324
+msgid "You shall not commit adultery."
+msgstr "Nie cudzołóż."
+
+#: absolved/examination.py:328
+msgid ""
+"Have I been unfaithful to my spouse, or had sexual relations outside "
+"marriage?"
+msgstr ""
+"Czy byłem(-am) niewierny(-a) współmałżonkowi lub współżyłem(-am) poza "
+"małżeństwem?"
+
+#: absolved/examination.py:330
+msgid "I was unfaithful to my spouse."
+msgstr "Byłem(-am) niewierny(-a) współmałżonkowi."
+
+#: absolved/examination.py:331
+msgid "I had sexual relations outside marriage."
+msgstr "Współżyłem(-am) poza małżeństwem."
+
+#: absolved/examination.py:336
+msgid "Have I committed impure acts, alone or with others?"
+msgstr "Czy popełniałem(-am) czyny nieczyste sam(-a) lub z innymi?"
+
+#: absolved/examination.py:338
+msgid "I committed impure acts alone."
+msgstr "Popełniałem(-am) czyny nieczyste sam(-a) ze sobą."
+
+#: absolved/examination.py:339
+msgid "I committed impure acts with someone else."
+msgstr "Popełniałem(-am) czyny nieczyste z kimś innym."
+
+#: absolved/examination.py:344
+msgid "Have I deliberately looked at pornography?"
+msgstr "Czy świadomie oglądałem(-am) pornografię?"
+
+#: absolved/examination.py:345
+msgid "I deliberately looked at pornography."
+msgstr "Świadomie oglądałem(-am) pornografię."
+
+#: absolved/examination.py:349
+msgid "Have I acted against the openness of marriage to new life?"
+msgstr "Czy działałem(-am) przeciw otwartości małżeństwa na nowe życie?"
+
+#: absolved/examination.py:350
+msgid "I acted against the openness of marriage to new life."
+msgstr "Działałem(-am) przeciw otwartości małżeństwa na nowe życie."
+
+#: absolved/examination.py:354
+msgid ""
+"Have I dressed, spoken or acted immodestly, or joined in impure conversation?"
+msgstr ""
+"Czy ubierałem(-am) się, mówiłem(-am) lub zachowywałem(-am) się nieskromnie, "
+"albo uczestniczyłem(-am) w nieczystych rozmowach?"
+
+#: absolved/examination.py:356
+msgid "I dressed immodestly."
+msgstr "Ubierałem(-am) się nieskromnie."
+
+#: absolved/examination.py:357
+msgid "I spoke immodestly."
+msgstr "Mówiłem(-am) nieskromnie."
+
+#: absolved/examination.py:358
+msgid "I acted immodestly."
+msgstr "Zachowywałem(-am) się nieskromnie."
+
+#: absolved/examination.py:359
+msgid "I joined in impure conversation."
+msgstr "Uczestniczyłem(-am) w nieczystych rozmowach."
+
+#: absolved/examination.py:366
+msgid "You shall not steal."
+msgstr "Nie kradnij."
+
+#: absolved/examination.py:370
+msgid "Have I stolen, or kept something that is not mine?"
+msgstr "Czy kradłem(-am) lub zatrzymałem(-am) coś, co nie jest moje?"
+
+#: absolved/examination.py:372
+msgid "I stole."
+msgstr "Kradłem(-am)."
+
+#: absolved/examination.py:373
+msgid "I kept something that is not mine."
+msgstr "Zatrzymałem(-am) coś, co nie jest moje."
+
+#: absolved/examination.py:378
+msgid "Have I cheated anyone, or failed to pay what I owe?"
+msgstr "Czy oszukałem(-am) kogoś lub nie spłacałem(-am) swoich długów?"
+
+#: absolved/examination.py:380
+msgid "I cheated someone."
+msgstr "Oszukałem(-am) kogoś."
+
+#: absolved/examination.py:381
+msgid "I failed to pay what I owe."
+msgstr "Nie spłacałem(-am) swoich długów."
+
+#: absolved/examination.py:386
+msgid "Have I damaged someone's property without making amends?"
+msgstr "Czy zniszczyłem(-am) czyjąś własność i nie naprawiłem(-am) szkody?"
+
+#: absolved/examination.py:387
+msgid "I damaged someone's property without making amends."
+msgstr "Zniszczyłem(-am) czyjąś własność i nie naprawiłem(-am) szkody."
+
+#: absolved/examination.py:391
+msgid "Have I been lazy or dishonest in my work, or withheld a just wage?"
+msgstr ""
+"Czy byłem(-am) leniwy(-a) lub nieuczciwy(-a) w pracy, albo nie "
+"wypłaciłem(-am) komuś sprawiedliwej zapłaty?"
+
+#: absolved/examination.py:393
+msgid "I was lazy in my work."
+msgstr "Byłem(-am) leniwy(-a) w pracy."
+
+#: absolved/examination.py:394
+msgid "I was dishonest in my work."
+msgstr "Byłem(-am) nieuczciwy(-a) w pracy."
+
+#: absolved/examination.py:395
+msgid "I withheld a just wage."
+msgstr "Nie wypłaciłem(-am) komuś sprawiedliwej zapłaty."
+
+#: absolved/examination.py:400
+msgid "Have I wasted time, or neglected my duties through laziness?"
+msgstr ""
+"Czy marnowałem(-am) czas lub z lenistwa zaniedbywałem(-am) swoje obowiązki?"
+
+#: absolved/examination.py:402
+msgid "I wasted time."
+msgstr "Marnowałem(-am) czas."
+
+#: absolved/examination.py:403
+msgid "I neglected my duties through laziness."
+msgstr "Z lenistwa zaniedbywałem(-am) swoje obowiązki."
+
+#: absolved/examination.py:408
+msgid "Have I wasted money, or been ungenerous to those in need?"
+msgstr ""
+"Czy trwoniłem(-am) pieniądze lub byłem(-am) skąpy(-a) wobec potrzebujących?"
+
+#: absolved/examination.py:410
+msgid "I wasted money."
+msgstr "Trwoniłem(-am) pieniądze."
+
+#: absolved/examination.py:411
+msgid "I was ungenerous to those in need."
+msgstr "Byłem(-am) skąpy(-a) wobec potrzebujących."
+
+#: absolved/examination.py:418
+msgid "You shall not bear false witness against your neighbour."
+msgstr "Nie mów fałszywego świadectwa przeciw bliźniemu swemu."
+
+#: absolved/examination.py:420
+msgid "Have I lied?"
+msgstr "Czy kłamałem(-am)?"
+
+#: absolved/examination.py:420
+msgid "I lied."
+msgstr "Kłamałem(-am)."
+
+#: absolved/examination.py:423
+msgid "Have I gossiped, or revealed others' faults without need?"
+msgstr "Czy plotkowałem(-am) lub bez potrzeby ujawniałem(-am) wady innych?"
+
+#: absolved/examination.py:425
+msgid "I gossiped."
+msgstr "Plotkowałem(-am)."
+
+#: absolved/examination.py:426
+msgid "I revealed others' faults without need."
+msgstr "Bez potrzeby ujawniałem(-am) wady innych."
+
+#: absolved/examination.py:431
+msgid "Have I damaged someone's reputation with things that are untrue?"
+msgstr "Czy szkodziłem(-am) czyjemuś dobremu imieniu, mówiąc nieprawdę?"
+
+#: absolved/examination.py:432
+msgid "I damaged someone's reputation by saying things that are untrue."
+msgstr "Szkodziłem(-am) czyjemuś dobremu imieniu, mówiąc nieprawdę."
+
+#: absolved/examination.py:434
+msgid "Have I judged others rashly?"
+msgstr "Czy pochopnie osądzałem(-am) innych?"
+
+#: absolved/examination.py:434
+msgid "I judged others rashly."
+msgstr "Pochopnie osądzałem(-am) innych."
+
+#: absolved/examination.py:437
+msgid "Have I failed to keep a secret entrusted to me?"
+msgstr "Czy nie dochowałem(-am) powierzonej mi tajemnicy?"
+
+#: absolved/examination.py:438
+msgid "I failed to keep a secret entrusted to me."
+msgstr "Nie dochowałem(-am) powierzonej mi tajemnicy."
+
+#: absolved/examination.py:444
+msgid "You shall not covet your neighbour's wife."
+msgstr "Nie pożądaj żony bliźniego swego."
+
+#: absolved/examination.py:448
+msgid "Have I deliberately dwelt on impure thoughts or desires?"
+msgstr "Czy świadomie trwałem(-am) w nieczystych myślach lub pragnieniach?"
+
+#: absolved/examination.py:450
+msgid "I deliberately dwelt on impure thoughts."
+msgstr "Świadomie trwałem(-am) w nieczystych myślach."
+
+#: absolved/examination.py:451
+msgid "I deliberately dwelt on impure desires."
+msgstr "Świadomie trwałem(-am) w nieczystych pragnieniach."
+
+#: absolved/examination.py:456
+msgid "Have I desired someone else's husband or wife?"
+msgstr "Czy pożądałem(-am) cudzego męża lub cudzej żony?"
+
+#: absolved/examination.py:457
+msgid "I desired someone else's husband or wife."
+msgstr "Pożądałem(-am) cudzego męża lub cudzej żony."
+
+#: absolved/examination.py:461
+msgid ""
+"Have I let films, books or social media fill my imagination with impurity?"
+msgstr ""
+"Czy pozwalałem(-am), by filmy, książki lub media społecznościowe wypełniały "
+"moją wyobraźnię nieczystością?"
+
+#: absolved/examination.py:463
+msgid "I let films fill my imagination with impurity."
+msgstr "Pozwalałem(-am), by filmy wypełniały moją wyobraźnię nieczystością."
+
+#: absolved/examination.py:464
+msgid "I let books fill my imagination with impurity."
+msgstr "Pozwalałem(-am), by książki wypełniały moją wyobraźnię nieczystością."
+
+#: absolved/examination.py:465
+msgid "I let social media fill my imagination with impurity."
+msgstr ""
+"Pozwalałem(-am), by media społecznościowe wypełniały moją wyobraźnię "
+"nieczystością."
+
+#: absolved/examination.py:472
+msgid "You shall not covet your neighbour's goods."
+msgstr "Nie pożądaj żadnej rzeczy bliźniego swego."
+
+#: absolved/examination.py:476
+msgid "Have I envied others their possessions, success or gifts?"
+msgstr "Czy zazdrościłem(-am) innym ich majątku, sukcesów lub talentów?"
+
+#: absolved/examination.py:478
+msgid "I envied others their possessions."
+msgstr "Zazdrościłem(-am) innym ich majątku."
+
+#: absolved/examination.py:479
+msgid "I envied others their success."
+msgstr "Zazdrościłem(-am) innym ich sukcesów."
+
+#: absolved/examination.py:480
+msgid "I envied others their gifts."
+msgstr "Zazdrościłem(-am) innym ich talentów."
+
+#: absolved/examination.py:484
+msgid "Have I set my heart on money and things?"
+msgstr "Czy przywiązywałem(-am) serce do pieniędzy i rzeczy?"
+
+#: absolved/examination.py:484
+msgid "I set my heart on money and things."
+msgstr "Przywiązywałem(-am) serce do pieniędzy i rzeczy."
+
+#: absolved/examination.py:488
+msgid "Have I been discontented instead of thankful for what God has given me?"
+msgstr ""
+"Czy byłem(-am) niezadowolony(-a) zamiast wdzięczny(-a) za to, co dał mi Bóg?"
+
+#: absolved/examination.py:489
+msgid "I was discontented instead of thankful for what God has given me."
+msgstr ""
+"Byłem(-am) niezadowolony(-a) zamiast wdzięczny(-a) za to, co dał mi Bóg."
+
+#: absolved/examination.py:495
+msgid "The precepts of the Church"
+msgstr "Przykazania kościelne"
+
+#: absolved/examination.py:499
+msgid "Have I failed to confess serious sins at least once a year?"
+msgstr ""
+"Czy nie spowiadałem(-am) się z grzechów ciężkich przynajmniej raz w roku?"
+
+#: absolved/examination.py:500
+msgid "I failed to confess serious sins at least once a year."
+msgstr "Nie spowiadałem(-am) się z grzechów ciężkich przynajmniej raz w roku."
+
+#: absolved/examination.py:504
+msgid "Have I failed to receive Holy Communion during the Easter season?"
+msgstr "Czy nie przystąpiłem(-am) do Komunii Świętej w okresie wielkanocnym?"
+
+#: absolved/examination.py:505
+msgid "I failed to receive Holy Communion during the Easter season."
+msgstr "Nie przystąpiłem(-am) do Komunii Świętej w okresie wielkanocnym."
+
+#: absolved/examination.py:509
+msgid "Have I failed to keep the days of fasting and abstinence?"
+msgstr "Czy nie zachowałem(-am) dni postu i wstrzemięźliwości?"
+
+#: absolved/examination.py:511
+msgid "I failed to keep a day of fasting."
+msgstr "Nie zachowałem(-am) dnia postu."
+
+#: absolved/examination.py:512
+msgid "I failed to keep a day of abstinence."
+msgstr "Nie zachowałem(-am) dnia wstrzemięźliwości."
+
+#: absolved/examination.py:517
+msgid "Have I failed to keep the fast before Holy Communion?"
+msgstr "Czy nie zachowałem(-am) postu eucharystycznego przed Komunią Świętą?"
+
+#: absolved/examination.py:518
+msgid "I failed to keep the fast before Holy Communion."
+msgstr "Nie zachowałem(-am) postu eucharystycznego przed Komunią Świętą."
+
+#: absolved/examination.py:522
+msgid "Have I failed to help provide for the needs of the Church?"
+msgstr "Czy nie troszczyłem(-am) się o potrzeby Kościoła?"
+
+#: absolved/examination.py:523
+msgid "I failed to help provide for the needs of the Church."
+msgstr "Nie troszczyłem(-am) się o potrzeby Kościoła."
+
+#: absolved/forms.py:56
+msgid "Not an encrypted examination."
+msgstr "To nie jest zaszyfrowany rachunek sumienia."
+
+#: absolved/forms.py:84
+msgid "The date cannot be in the future."
+msgstr "Data nie może być z przyszłości."
+
+#: absolved/forms.py:86
+msgid "The date is too long ago."
+msgstr "Ta data jest zbyt odległa."
+
+#: absolved/models.py:28
+msgid "username"
+msgstr "nazwa użytkownika"
+
+#: absolved/models.py:34
+msgid "Use 3 to 32 lowercase letters, digits, dots, dashes or underscores."
+msgstr ""
+"Użyj od 3 do 32 małych liter (a-z), cyfr, kropek, myślników lub podkreśleń."
+
+#: absolved/templates/absolved/_date_picker.html:3
+#: absolved/templates/absolved/_date_picker.html:4
+msgid "Choose a date"
+msgstr "Wybierz datę"
+
+#: absolved/templates/absolved/_password_tools.html:6
+msgid "Show password"
+msgstr "Pokaż hasło"
+
+#: absolved/templates/absolved/_privacy.html:7
+msgid "Only you hold the key"
+msgstr "Tylko ty masz klucz"
+
+#: absolved/templates/absolved/_privacy.html:8
+msgid ""
+"Your notes are locked on your own phone or computer, with your password, "
+"before they are saved. Your password never leaves your device: we never see "
+"it."
+msgstr ""
+"Twoje notatki są zamykane twoim hasłem na twoim własnym telefonie lub "
+"komputerze, zanim zostaną zapisane. Hasło nigdy nie opuszcza twojego "
+"urządzenia: nigdy go nie widzimy."
+
+#: absolved/templates/absolved/_privacy.html:14
+msgid "Unreadable to anyone else"
+msgstr "Nieczytelne dla nikogo innego"
+
+#: absolved/templates/absolved/_privacy.html:15
+msgid ""
+"What we store looks like a meaningless jumble of characters. Not us, not the "
+"company that hosts us, not even someone who broke into our server could read "
+"it."
+msgstr ""
+"To, co przechowujemy, wygląda jak bezsensowna mieszanina znaków. Nie "
+"przeczyta tego ani nikt z nas, ani firma, która nas hostuje, ani nawet ktoś, "
+"kto włamałby się na nasz serwer."
+
+#: absolved/templates/absolved/_privacy.html:21
+msgid "Nothing that says who you are"
+msgstr "Nic, co by mówiło, kim jesteś"
+
+#: absolved/templates/absolved/_privacy.html:22
+msgid ""
+"We never ask for your name, email address or phone number. Your account is "
+"just a username you make up."
+msgstr ""
+"Nigdy nie pytamy o imię i nazwisko, adres e-mail ani numer telefonu. Twoje "
+"konto to tylko wymyślona przez ciebie nazwa użytkownika."
+
+#: absolved/templates/absolved/_privacy.html:28
+msgid "Gone once you have confessed"
+msgstr "Znikają po spowiedzi"
+
+#: absolved/templates/absolved/_privacy.html:29
+msgid ""
+"When you mark your confession as done, your notes are deleted for good, like "
+"burning the paper you wrote them on. The copies in our backups, still locked,"
+" are gone within a month."
+msgstr ""
+"Gdy oznaczysz spowiedź jako odbytą, twoje notatki zostaną usunięte na zawsze,"
+" jak spalona kartka, na której je zapisano. Ich wciąż zamknięte kopie znikają"
+" z naszych kopii zapasowych w ciągu miesiąca."
+
+#: absolved/templates/absolved/_privacy.html:35
+msgid "No ads, no trackers"
+msgstr "Bez reklam i śledzenia"
+
+#: absolved/templates/absolved/_privacy.html:36
+msgid ""
+"Nothing on this site comes from advertisers, analytics services or any other "
+"company watching what you do."
+msgstr ""
+"Nic na tej stronie nie pochodzi od reklamodawców, usług analitycznych ani "
+"żadnej innej firmy, która śledzi, co robisz."
+
+#: absolved/templates/absolved/_privacy.html:41
+msgid ""
+"All we can see is your username and the dates of your confessions. And "
+"because we cannot read your notes, we cannot recover them either: if you "
+"forget your password, they are lost. Choose a long one that you will "
+"remember."
+msgstr ""
+"Widzimy tylko twoją nazwę użytkownika i daty twoich spowiedzi. A ponieważ nie"
+" możemy odczytać twoich notatek, nie możemy ich też odzyskać: jeśli zapomnisz"
+" hasła, przepadną. Wybierz długie hasło, które zapamiętasz."
+
+#: absolved/templates/absolved/_privacy_details.html:3
+msgid "How we keep your notes private"
+msgstr "Jak chronimy twoje notatki"
+
+#: absolved/templates/absolved/_statement.html:10
+#: absolved/templates/absolved/_statement.html:15
+#: absolved/templates/absolved/_statement.html:16
+msgid "How often, or anything to add"
+msgstr "Ile razy lub inne uwagi"
+
+#: absolved/templates/absolved/account.html:4
+#: absolved/templates/absolved/account.html:13
+#: absolved/templates/absolved/base.html:37
+msgid "Account"
+msgstr "Konto"
+
+#: absolved/templates/absolved/account.html:19
+#: absolved/templates/absolved/signup.html:16
+#, python-format
+msgid "The password must be at least %(length)s character long."
+msgid_plural "The password must be at least %(length)s characters long."
+msgstr[0] "Hasło musi mieć co najmniej %(length)s znak."
+msgstr[1] "Hasło musi mieć co najmniej %(length)s znaki."
+msgstr[2] "Hasło musi mieć co najmniej %(length)s znaków."
+msgstr[3] "Hasło musi mieć co najmniej %(length)s znaku."
+
+#: absolved/templates/absolved/account.html:20
+#: absolved/templates/absolved/signup.html:17
+msgid "The passwords do not match."
+msgstr "Hasła nie są zgodne."
+
+#: absolved/templates/absolved/account.html:21 absolved/views.py:307
+msgid "The current password is wrong."
+msgstr "Obecne hasło jest nieprawidłowe."
+
+#: absolved/templates/absolved/account.html:22
+#: absolved/templates/absolved/account.html:64
+#: absolved/templates/absolved/login.html:19
+#: absolved/templates/absolved/signup.html:18
+msgid "Could not reach the server. Check your connection and try again."
+msgstr ""
+"Nie udało się połączyć z serwerem. Sprawdź połączenie i spróbuj ponownie."
+
+#: absolved/templates/absolved/account.html:23
+#: absolved/templates/absolved/account.html:65
+#: absolved/templates/absolved/login.html:20
+#: absolved/templates/absolved/signup.html:19 absolved/views.py:70
+msgid "Something went wrong. Reload the page and try again."
+msgstr "Coś poszło nie tak. Odśwież stronę i spróbuj ponownie."
+
+#: absolved/templates/absolved/account.html:24
+msgid "Your password has been changed."
+msgstr "Twoje hasło zostało zmienione."
+
+#: absolved/templates/absolved/account.html:26
+#: absolved/templates/absolved/account.html:52
+msgid "Change password"
+msgstr "Zmień hasło"
+
+#: absolved/templates/absolved/account.html:29
+msgid "Current password"
+msgstr "Obecne hasło"
+
+#: absolved/templates/absolved/account.html:36
+msgid "New password"
+msgstr "Nowe hasło"
+
+#: absolved/templates/absolved/account.html:41
+#, python-format
+msgid "At least %(length)s character."
+msgid_plural "At least %(length)s characters."
+msgstr[0] "Co najmniej %(length)s znak."
+msgstr[1] "Co najmniej %(length)s znaki."
+msgstr[2] "Co najmniej %(length)s znaków."
+msgstr[3] "Co najmniej %(length)s znaku."
+
+#: absolved/templates/absolved/account.html:44
+msgid "New password again"
+msgstr "Powtórz nowe hasło"
+
+#: absolved/templates/absolved/account.html:52
+msgid "Changing the password..."
+msgstr "Zmienianie hasła..."
+
+#: absolved/templates/absolved/account.html:57
+msgid "Log out"
+msgstr "Wyloguj się"
+
+#: absolved/templates/absolved/account.html:61
+msgid "Delete account"
+msgstr "Usuń konto"
+
+#: absolved/templates/absolved/account.html:67
+msgid ""
+"This permanently deletes your account, your confession dates and your "
+"preparation. Our backups forget them within a month."
+msgstr ""
+"To trwale usuwa twoje konto, daty twoich spowiedzi i twoje przygotowanie. "
+"Nasze kopie zapasowe zapominają je w ciągu miesiąca."
+
+#: absolved/templates/absolved/account.html:70
+#: absolved/templates/absolved/login.html:29
+#: absolved/templates/absolved/signup.html:28
+msgid "Password"
+msgstr "Hasło"
+
+#: absolved/templates/absolved/account.html:78
+msgid "I understand that this cannot be undone."
+msgstr "Rozumiem, że tego nie można cofnąć."
+
+#: absolved/templates/absolved/account.html:81
+msgid "Deleting the account..."
+msgstr "Usuwanie konta..."
+
+#: absolved/templates/absolved/account.html:81
+msgid "Delete my account"
+msgstr "Usuń moje konto"
+
+#: absolved/templates/absolved/base.html:29
+msgid "Theme: as on this device"
+msgstr "Motyw: jak na tym urządzeniu"
+
+#: absolved/templates/absolved/base.html:30
+msgid "Theme: light"
+msgstr "Motyw: jasny"
+
+#: absolved/templates/absolved/base.html:30
+msgid "Theme: dark"
+msgstr "Motyw: ciemny"
+
+#: absolved/templates/absolved/base.html:36
+#: absolved/templates/absolved/history.html:4
+#: absolved/templates/absolved/history.html:7
+msgid "History"
+msgstr "Historia"
+
+#: absolved/templates/absolved/base.html:47
+msgid "Language"
+msgstr "Język"
+
+#: absolved/templates/absolved/confession.html:4
+#: absolved/templates/absolved/home.html:39
+msgid "Confession"
+msgstr "Spowiedź"
+
+#: absolved/templates/absolved/confession.html:14
+msgid "Greeting"
+msgstr "Powitanie"
+
+#: absolved/templates/absolved/confession.html:15
+msgid "Make the Sign of the Cross and say:"
+msgstr ""
+"Powiedz \"Niech będzie pochwalony Jezus Chrystus\", przeżegnaj się i mów "
+"dalej:"
+
+#: absolved/templates/absolved/confession.html:19
+#, python-format
+msgid ""
+"Bless me, Father, for I have sinned. It has been %(since)s since my last "
+"confession."
+msgstr ""
+"Ostatni raz u spowiedzi świętej byłem(-am) %(since)s temu. Obraziłem(-am) "
+"Pana Boga następującymi grzechami:"
+
+#: absolved/templates/absolved/confession.html:23
+msgid "Bless me, Father, for I have sinned."
+msgstr "Obraziłem(-am) Pana Boga następującymi grzechami:"
+
+#: absolved/templates/absolved/confession.html:29
+msgid "Your sins"
+msgstr "Twoje grzechy"
+
+#: absolved/templates/absolved/confession.html:30
+#: absolved/templates/absolved/prepare.html:16
+msgid "Decrypting your notes..."
+msgstr "Odszyfrowywanie notatek..."
+
+#: absolved/templates/absolved/confession.html:49
+msgid "Nothing was marked in your preparation."
+msgstr "W przygotowaniu nic nie zostało zaznaczone."
+
+#: absolved/templates/absolved/confession.html:52
+msgid "For these and all the sins of my past life, I am sorry."
+msgstr ""
+"Więcej grzechów nie pamiętam, za wszystkie serdecznie żałuję, postanawiam "
+"poprawę, proszę o pokutę i rozgrzeszenie."
+
+#: absolved/templates/absolved/confession.html:56
+msgid "Penance and contrition"
+msgstr "Pokuta i żal"
+
+#: absolved/templates/absolved/confession.html:58
+msgid ""
+"Listen to the priest's counsel and accept your penance. When he asks, pray "
+"the Act of Contrition:"
+msgstr ""
+"Wysłuchaj nauki kapłana i przyjmij pokutę. Jeśli o to poprosi, odmów akt "
+"żalu:"
+
+#: absolved/templates/absolved/confession.html:61
+msgid ""
+"O my God, I am heartily sorry for having offended Thee, and I detest all my "
+"sins because of Thy just punishments, but most of all because they offend "
+"Thee, my God, who art all good and deserving of all my love. I firmly "
+"resolve, with the help of Thy grace, to sin no more and to avoid the near "
+"occasion of sin. Amen."
+msgstr ""
+"Ach, żałuję za me złości, jedynie dla Twej miłości. Bądź miłościw mnie "
+"grzesznemu, dla Ciebie odpuszczam bliźniemu. Amen."
+
+#: absolved/templates/absolved/confession.html:70
+msgid "Absolution"
+msgstr "Rozgrzeszenie"
+
+#: absolved/templates/absolved/confession.html:71
+msgid "The priest gives you absolution. Answer:"
+msgstr "Kapłan udziela ci rozgrzeszenia. Odpowiedz:"
+
+#: absolved/templates/absolved/confession.html:72
+msgid "Amen."
+msgstr "Amen."
+
+#: absolved/templates/absolved/confession.html:73
+msgid "If he says \"Give thanks to the Lord, for he is good\", answer:"
+msgstr "Jeśli powie \"Chwalmy Pana, bo jest dobry\", odpowiedz:"
+
+#: absolved/templates/absolved/confession.html:74
+msgid "His mercy endures for ever."
+msgstr "Bo Jego miłosierdzie trwa na wieki."
+
+#: absolved/templates/absolved/confession.html:75
+msgid "When he sends you away in peace, answer:"
+msgstr "Gdy odeśle cię w pokoju, odpowiedz:"
+
+#: absolved/templates/absolved/confession.html:76
+msgid "Thanks be to God."
+msgstr "Bogu niech będą dzięki."
+
+#: absolved/templates/absolved/confession.html:80
+msgid "Back to preparation"
+msgstr "Wróć do przygotowania"
+
+#: absolved/templates/absolved/confession.html:83
+msgid "I have confessed"
+msgstr "Wyspowiadałem(-am) się"
+
+#: absolved/templates/absolved/confession.html:87
+#: absolved/templates/absolved/home.html:61
+msgid "Date"
+msgstr "Data"
+
+#: absolved/templates/absolved/confession.html:90
+msgid "This records the confession and permanently deletes your preparation."
+msgstr "To zapisze spowiedź i trwale usunie twoje przygotowanie."
+
+#: absolved/templates/absolved/confession.html:91
+msgid "Record and delete my preparation"
+msgstr "Zapisz i usuń moje przygotowanie"
+
+#: absolved/templates/absolved/history.html:11
+msgid "Add a confession"
+msgstr "Dodaj spowiedź"
+
+#: absolved/templates/absolved/history.html:15
+msgid "Add"
+msgstr "Dodaj"
+
+#: absolved/templates/absolved/history.html:26
+#, python-format
+msgid "Delete %(date)s"
+msgstr "Usuń %(date)s"
+
+#: absolved/templates/absolved/history.html:27
+msgid "Delete"
+msgstr "Usuń"
+
+#: absolved/templates/absolved/history.html:33
+#: absolved/templates/absolved/home.html:14
+msgid "No confession recorded yet."
+msgstr "Nie zapisano jeszcze żadnej spowiedzi."
+
+#: absolved/templates/absolved/home.html:9
+#, python-format
+msgid "since your last confession on %(date)s"
+msgstr "od ostatniej spowiedzi (%(date)s)"
+
+#: absolved/templates/absolved/home.html:15
+msgid "Add your last confession"
+msgstr "Dodaj swoją ostatnią spowiedź"
+
+#: absolved/templates/absolved/home.html:23
+#: absolved/templates/absolved/prepare.html:4
+msgid "Prepare"
+msgstr "Przygotowanie"
+
+#: absolved/templates/absolved/home.html:26
+msgid "In progress. Your notes are saved as you write."
+msgstr "W toku. Twoje notatki zapisują się na bieżąco."
+
+#: absolved/templates/absolved/home.html:28
+msgid "Examine your conscience before confession."
+msgstr "Zrób rachunek sumienia przed spowiedzią."
+
+#: absolved/templates/absolved/home.html:32
+msgid "Continue preparing"
+msgstr "Kontynuuj przygotowanie"
+
+#: absolved/templates/absolved/home.html:32
+#: absolved/templates/absolved/landing.html:9
+msgid "Prepare for confession"
+msgstr "Przygotuj się do spowiedzi"
+
+#: absolved/templates/absolved/home.html:42
+msgid "Open your notes and the Act of Contrition in the confessional."
+msgstr "Otwórz swoje notatki i akt żalu w konfesjonale."
+
+#: absolved/templates/absolved/home.html:44
+msgid "Available once you have prepared."
+msgstr "Dostępne po przygotowaniu."
+
+#: absolved/templates/absolved/home.html:48
+msgid "Go to confession"
+msgstr "Przejdź do spowiedzi"
+
+#: absolved/templates/absolved/home.html:58
+msgid "When was your last confession?"
+msgstr "Kiedy była twoja ostatnia spowiedź?"
+
+#: absolved/templates/absolved/home.html:59
+msgid ""
+"It lets the app count the time since. You can change it later in History."
+msgstr ""
+"Dzięki temu aplikacja policzy, ile czasu minęło. Możesz to później zmienić w "
+"Historii."
+
+#: absolved/templates/absolved/home.html:64
+msgid "Save"
+msgstr "Zapisz"
+
+#: absolved/templates/absolved/home.html:66
+msgid "I don't remember"
+msgstr "Nie pamiętam"
+
+#: absolved/templates/absolved/home.html:67
+msgid "Never"
+msgstr "Nigdy"
+
+#: absolved/templates/absolved/landing.html:11
+msgid ""
+"Examine your conscience, take your notes with you into the confessional, and "
+"keep track of the time since your last confession."
+msgstr ""
+"Zrób rachunek sumienia, zabierz notatki ze sobą do konfesjonału i śledź, ile "
+"czasu minęło od ostatniej spowiedzi."
+
+#: absolved/templates/absolved/landing.html:16
+msgid "Sign up"
+msgstr "Zarejestruj się"
+
+#: absolved/templates/absolved/landing.html:17
+#: absolved/templates/absolved/login.html:4
+#: absolved/templates/absolved/login.html:12
+#: absolved/templates/absolved/login.html:36
+#: absolved/templates/absolved/signup.html:50
+msgid "Log in"
+msgstr "Zaloguj się"
+
+#: absolved/templates/absolved/landing.html:21
+msgid "Your privacy"
+msgstr "Twoja prywatność"
+
+#: absolved/templates/absolved/landing.html:22
+msgid ""
+"What you write here is between you and God. This is how we keep it that way."
+msgstr "To, co tu piszesz, pozostaje między tobą a Bogiem. Oto jak o to dbamy."
+
+#: absolved/templates/absolved/login.html:14
+msgid "Enter your password to unlock your notes on this device."
+msgstr "Wpisz hasło, aby odblokować notatki na tym urządzeniu."
+
+#: absolved/templates/absolved/login.html:24
+#: absolved/templates/absolved/signup.html:22
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+#: absolved/templates/absolved/login.html:36
+msgid "Logging in..."
+msgstr "Logowanie..."
+
+#: absolved/templates/absolved/login.html:40
+msgid "No account yet?"
+msgstr "Nie masz jeszcze konta?"
+
+#: absolved/templates/absolved/login.html:40
+msgid "Create one"
+msgstr "Załóż je"
+
+#: absolved/templates/absolved/prepare.html:11
+msgid "Examination of conscience"
+msgstr "Rachunek sumienia"
+
+#: absolved/templates/absolved/prepare.html:13
+msgid ""
+"Ask the Holy Spirit for light, then go through the questions calmly. Mark "
+"what applies and add anything in your own words."
+msgstr ""
+"Poproś Ducha Świętego o światło, a potem spokojnie przejdź przez pytania. "
+"Zaznacz to, co cię dotyczy, i dopisz, co chcesz, własnymi słowami."
+
+#: absolved/templates/absolved/prepare.html:22
+msgid "Saving..."
+msgstr "Zapisywanie..."
+
+#: absolved/templates/absolved/prepare.html:22
+msgid "Saved"
+msgstr "Zapisano"
+
+#: absolved/templates/absolved/prepare.html:23
+msgid "Not saved. Check your connection; it saves again with your next change."
+msgstr ""
+"Nie zapisano. Sprawdź połączenie; zapis nastąpi przy następnej zmianie."
+
+#: absolved/templates/absolved/prepare.html:24
+msgid ""
+"Not saved: your preparation was changed elsewhere. Reload the page to "
+"continue."
+msgstr ""
+"Nie zapisano: twoje przygotowanie zostało zmienione gdzie indziej. Odśwież "
+"stronę, aby kontynuować."
+
+#: absolved/templates/absolved/prepare.html:55
+#: absolved/templates/absolved/prepare.html:57
+msgid "Anything else"
+msgstr "Coś jeszcze"
+
+#: absolved/templates/absolved/prepare.html:59
+msgid "Other sins, or a question for the priest"
+msgstr "Inne grzechy lub pytanie do kapłana"
+
+#: absolved/templates/absolved/prepare.html:65
+msgid "Ready for confession"
+msgstr "Gotowe do spowiedzi"
+
+#: absolved/templates/absolved/signup.html:4
+#: absolved/templates/absolved/signup.html:12
+#: absolved/templates/absolved/signup.html:46
+msgid "Create an account"
+msgstr "Załóż konto"
+
+#: absolved/templates/absolved/signup.html:25
+msgid ""
+"3 to 32 lowercase letters, digits, dots, dashes or underscores. It cannot be "
+"changed later."
+msgstr ""
+"Od 3 do 32 małych liter (a-z), cyfr, kropek, myślników lub podkreśleń. Nie "
+"można jej później zmienić."
+
+#: absolved/templates/absolved/signup.html:33
+#, python-format
+msgid ""
+"At least %(length)s character. A few unrelated words make a passphrase that "
+"is long and easy to remember."
+msgid_plural ""
+"At least %(length)s characters. A few unrelated words make a passphrase that "
+"is long and easy to remember."
+msgstr[0] ""
+"Co najmniej %(length)s znak. Kilka niezwiązanych ze sobą słów tworzy hasło "
+"długie i łatwe do zapamiętania."
+msgstr[1] ""
+"Co najmniej %(length)s znaki. Kilka niezwiązanych ze sobą słów tworzy hasło "
+"długie i łatwe do zapamiętania."
+msgstr[2] ""
+"Co najmniej %(length)s znaków. Kilka niezwiązanych ze sobą słów tworzy hasło "
+"długie i łatwe do zapamiętania."
+msgstr[3] ""
+"Co najmniej %(length)s znaku. Kilka niezwiązanych ze sobą słów tworzy hasło "
+"długie i łatwe do zapamiętania."
+
+#: absolved/templates/absolved/signup.html:36
+msgid "Password again"
+msgstr "Powtórz hasło"
+
+#: absolved/templates/absolved/signup.html:43
+msgid ""
+"Your password encrypts your notes, and there is no way to recover it. If you "
+"forget it, you will have to create a new account."
+msgstr ""
+"Twoje hasło szyfruje twoje notatki i nie da się go odzyskać. Jeśli je "
+"zapomnisz, trzeba będzie założyć nowe konto."
+
+#: absolved/templates/absolved/signup.html:46
+msgid "Creating the account..."
+msgstr "Zakładanie konta..."
+
+#: absolved/templates/absolved/signup.html:50
+msgid "Already have an account?"
+msgstr "Masz już konto?"
+
+#: absolved/views.py:65
+msgid "Too many attempts. Wait a few minutes and try again."
+msgstr "Zbyt wiele prób. Odczekaj kilka minut i spróbuj ponownie."
+
+#: absolved/views.py:74
+msgid "Your preparation changed meanwhile. Reload the page and try again."
+msgstr ""
+"Twoje przygotowanie zmieniło się w międzyczasie. Odśwież stronę i spróbuj "
+"ponownie."
+
+#: absolved/views.py:138
+msgid "Wrong username or password."
+msgstr "Nieprawidłowa nazwa użytkownika lub hasło."
+
+#: absolved/views.py:202
+msgid "Not saved."
+msgstr "Nie zapisano."
+
+#: absolved/views.py:340
+msgid "The password is wrong."
+msgstr "Hasło jest nieprawidłowe."
+
+#: absolved/views.py:370
+msgid "Prepare for confession."
+msgstr "Przygotuj się do spowiedzi."

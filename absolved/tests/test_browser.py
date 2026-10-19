@@ -912,7 +912,7 @@ def test_signup_enforces_the_password_rules_before_sending_anything(page: Page, 
     page.fill("#password", "eleven char")
     page.fill("#password-confirmation", "eleven char")
     # The browser's own check would stop the form first; the script's is the one that counts characters.
-    page.evaluate("document.querySelector('form').noValidate = true")
+    page.evaluate("document.querySelector('form[data-credentials]').noValidate = true")
     page.click("button.button-primary")
     expect(page.locator("[data-form-error]")).to_have_text("The password must be at least 12 characters long.")
 
@@ -1104,3 +1104,53 @@ def test_theme_button_cycles_and_is_remembered(page: Page, live_server: LiveServ
     expect(root).to_have_attribute("data-theme", "light")
     page.emulate_media(color_scheme="dark")
     expect(root).to_have_attribute("data-theme", "dark")
+
+
+def test_confessing_in_a_language_picked_in_the_header(page: Page, live_server: LiveServer) -> None:
+    """Picking Polish on the confession page reloads it in Polish: the decrypted statements, and the time since the
+    last confession counted in Polish words."""
+    sign_up(page, live_server)
+    page.fill("#last-confession-date", "2026-09-01")
+    page.click("dialog button[value=date]")
+    prepare(page, live_server, ["c8-lies"], "Read in the confessional.")
+    page.goto(f"{live_server.url}/confession/")
+    expect(page.locator("[data-notes]")).to_have_text("Read in the confessional.")
+
+    page.click('header [popovertarget="language-menu"]')
+    page.click('#language-menu button[value="pl"]')
+
+    page.wait_for_url(f"{live_server.url}/confession/")
+    expect(page.locator("html")).to_have_attribute("lang", "pl")
+    expect(page.locator("[data-statement]:visible > p:first-child")).to_have_text(["Kłamałem(-am)."])
+    expect(page.locator("main")).to_contain_text("Ostatni raz u spowiedzi świętej byłem(-am) 6 tygodni temu.")
+    expect(page.locator("#language-menu")).to_be_hidden()
+    expect(page.locator('#language-menu [aria-current="true"]')).to_have_text("Polski")
+
+
+@pytest.mark.parametrize(
+    ("language", "expected"),
+    [
+        ("pl", ["2 tygodnie", "6 tygodni", "22 miesiące", "4 lata", "5 lat"]),
+        ("uk", ["2 тижні", "6 тижнів", "22 місяці", "4 роки", "5 років"]),
+    ],
+)
+def test_time_since_takes_the_languages_plural_forms(
+    page: Page, live_server: LiveServer, language: str, expected: list[str]
+) -> None:
+    """Polish and Ukrainian decline a count's unit three ways, as the browser's own number formatting does.
+
+    Days are left out: the WebKit build the tests run on formats with the system's older ICU, whose Polish days are
+    "doby", where current browsers say "dni"."""
+    page.goto(f"{live_server.url}/")
+
+    described = page.evaluate(
+        """async (language) => {
+            const { describeSince } = await import("/static/js/since.js");
+            return ["2026-10-01", "2026-09-03", "2024-12-01", "2022-10-15", "2021-10-15"].map(
+                (since) => describeSince(since, "2026-10-15", "natural", language),
+            );
+        }""",
+        language,
+    )
+
+    assert described == expected

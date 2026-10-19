@@ -33,6 +33,9 @@ jobs:
       - run: uv sync --locked
       # The browsers' own system libraries, which make browsers leaves to the machine.
       - run: uv run playwright install-deps chromium webkit
+      # make check compares each translation catalog with what msgfmt compiles it to. Installing the browsers'
+      # libraries above has already refreshed the package lists.
+      - run: sudo apt-get install --yes gettext
       - run: make browsers
       - run: make check
 

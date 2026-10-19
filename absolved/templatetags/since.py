@@ -21,5 +21,5 @@ def since(date: datetime.date, unit: str) -> SafeString:
     today, so a copy of the page kept for offline use stays right.
     """
     return format_html(
-        '<time datetime="{}" data-since="{}">{}</time>', date.isoformat(), unit, date_format(date, "j F Y")
+        '<time datetime="{}" data-since="{}">{}</time>', date.isoformat(), unit, date_format(date, "j E Y")
     )

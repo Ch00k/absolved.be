@@ -15,7 +15,7 @@
   {% block scripts %}{% endblock %}
   <script type="module" src="{% static 'js/app.js' %}"></script>
 </head>
-{# Every icon is from Lucide (static/vendor/lucide-1.57.0), inlined through the icon tag. #}
+{# Every icon is from Lucide (static/vendor/lucide-1.57.0), inlined through the icon tag, and every flag from flag-icons (static/vendor/flag-icons-7.6.0), through the flag tag. #}
 <body class="min-h-dvh bg-stone-50 text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100"
       data-login-url="{% url 'login' %}" data-service-worker-url="{% url 'service_worker' %}"
       {% if user.is_authenticated %}data-username="{{ user.username }}"{% endif %}>
@@ -24,6 +24,21 @@
       {% icon "key" "size-5 text-accent dark:text-violet-400" %}absolved.be
     </a>
     <nav class="flex items-center gap-1">
+      <button type="button" class="icon-link" popovertarget="language-menu"
+              aria-label="{% translate 'Language' %}" title="{% translate 'Language' %}">{% flag LANGUAGE_CODE "flag" %}</button>
+      {# The browser opens and closes the menu. Each language is named in itself, for whoever cannot read the one the page is in. #}
+      <form id="language-menu" popover method="post" action="{% url 'set_language' %}" class="language-menu">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% get_available_languages as available_languages %}
+        {% get_language_info_list for available_languages as languages %}
+        {% for language in languages %}
+          <button name="language" value="{{ language.code }}" lang="{{ language.code }}" class="language-option"
+                  {% if language.code == LANGUAGE_CODE %}aria-current="true"{% endif %}>
+            {% flag language.code "flag" %}{{ language.name_local|capfirst }}
+            {% if language.code == LANGUAGE_CODE %}{% icon "check" "ml-auto size-5 text-accent dark:text-violet-400" %}{% endif %}
+          </button>
+        {% endfor %}
+      </form>
       {# theme.js labels the button with the pick it is on and moves to the next pick on a tap. #}
       <button type="button" id="theme-button" class="icon-link"
               data-label-system="{% translate 'Theme: as on this device' %}"

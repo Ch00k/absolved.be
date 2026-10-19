@@ -6,7 +6,7 @@
     {% if last_confession %}
       <p class="text-5xl font-semibold tracking-tight">{% since last_confession.date "natural" %}</p>
       <p class="mt-2 text-stone-600 dark:text-stone-400">
-        {% blocktranslate trimmed with date=last_confession.date|date:"j F Y" %}since your last confession on {{ date }}{% endblocktranslate %}
+        {% blocktranslate trimmed with date=last_confession.date|date:"j E Y" %}since your last confession on {{ date }}{% endblocktranslate %}
       </p>
       {# The same date as the time above; app.js hides it when that time is already counted in days. #}
       <p class="mt-1 text-sm text-stone-500 dark:text-stone-400" data-since-detail>{% since last_confession.date "days" %}</p>

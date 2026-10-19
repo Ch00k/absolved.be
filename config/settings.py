@@ -173,7 +173,11 @@ PASSWORD_HASHERS = ["absolved.hashers.DerivedKeyHasher"]
 LOGIN_URL = "login"
 
 LANGUAGE_CODE = "en"
-LANGUAGES = [("en", "English")]
+# The browser's languages pick one until the user picks another in the header, which a cookie remembers.
+LANGUAGES = [("en", "English"), ("pl", "Polish"), ("uk", "Ukrainian")]
+LANGUAGE_COOKIE_AGE = 365 * 24 * 60 * 60
+LANGUAGE_COOKIE_HTTPONLY = True
+LANGUAGE_COOKIE_SECURE = not DEBUG
 LOCALE_PATHS = [BASE_DIR / "locale"]
 # Users are anywhere; dates are the ones their own devices give, and stored as plain dates.
 TIME_ZONE = "UTC"

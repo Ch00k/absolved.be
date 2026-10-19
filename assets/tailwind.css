@@ -60,6 +60,22 @@
       dark:hover:bg-stone-800;
   }
 
+  /* The language menu, opened below its button in the header: the header is as wide as the main column, so the menu
+     lines up with that column's right edge. Placed against the page, which a menu in the top layer is positioned in,
+     so it scrolls with the header, and its width leaves out a scrollbar as the header's does. */
+  .language-menu {
+    @apply absolute inset-auto top-[calc(max(1rem,env(safe-area-inset-top))+3rem)] right-[max(1.25rem,calc(50%-12.75rem))]
+      m-0 min-w-48 rounded-2xl bg-white p-1 text-stone-900 shadow-lg ring-1 ring-stone-200 dark:bg-stone-900
+      dark:text-stone-100 dark:ring-stone-800;
+  }
+  .language-option {
+    @apply flex w-full items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-stone-100 dark:hover:bg-stone-800;
+  }
+  /* As wide as an icon, and with an even height, so that centred in an icon's place it lands on whole pixels; a flag
+     drawn 4:3 loses a sliver at its sides. A thin edge, so that a flag with a white stripe stands out on a white
+     background. */
+  .flag { @apply h-4 w-5 rounded-xs object-cover ring-1 ring-stone-900/10 dark:ring-white/15; }
+
   /* A collapsible card's heading, with a Lucide chevron in place of the browser's own marker. */
   .disclosure { @apply flex list-none items-center gap-2 font-semibold; }
   .disclosure::-webkit-details-marker { display: none; }
