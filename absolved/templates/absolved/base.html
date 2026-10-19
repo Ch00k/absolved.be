@@ -28,7 +28,6 @@
               aria-label="{% translate 'Language' %}" title="{% translate 'Language' %}">{% flag LANGUAGE_CODE "flag" %}</button>
       {# The browser opens and closes the menu. Each language is named in itself, for whoever cannot read the one the page is in. #}
       <form id="language-menu" popover method="post" action="{% url 'set_language' %}" class="language-menu">
-        {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
         {% get_available_languages as available_languages %}
         {% get_language_info_list for available_languages as languages %}

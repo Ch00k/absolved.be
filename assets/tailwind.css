@@ -61,9 +61,10 @@
   }
 
   /* The language menu, opened below its button in the header: the header is as wide as the main column, so the menu
-     lines up with that column's right edge. */
+     lines up with that column's right edge. Placed against the page, which a menu in the top layer is positioned in,
+     so it scrolls with the header, and its width leaves out a scrollbar as the header's does. */
   .language-menu {
-    @apply fixed inset-auto top-[calc(max(1rem,env(safe-area-inset-top))+3rem)] right-[max(1.25rem,calc(50vw-12.75rem))]
+    @apply absolute inset-auto top-[calc(max(1rem,env(safe-area-inset-top))+3rem)] right-[max(1.25rem,calc(50%-12.75rem))]
       m-0 min-w-48 rounded-2xl bg-white p-1 text-stone-900 shadow-lg ring-1 ring-stone-200 dark:bg-stone-900
       dark:text-stone-100 dark:ring-stone-800;
   }

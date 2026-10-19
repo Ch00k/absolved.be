@@ -82,15 +82,23 @@ makemessages:
 compilemessages:
 	DJANGO_DEBUG=1 uv run manage.py compilemessages --ignore=.venv
 
-# Fails when a catalog has a message left untranslated or fuzzy, or its committed .mo is not what it compiles to.
-# The compiled catalogs are compared decompiled, as text, since msgfmt releases may lay out the same .mo differently.
+# Fails when a string in the sources is missing from a catalog or left untranslated or fuzzy there, or when a
+# committed .mo is not what its catalog compiles to. The strings are extracted into a copy of the catalogs, where a
+# missing one shows as untranslated, so that the check changes no file. The compiled catalogs are compared decompiled,
+# as text, since msgfmt releases may lay out the same .mo differently. msgfmt reports in English for grep to read it.
 messages-check:
-	@work=$$(mktemp -d) && for po in locale/*/LC_MESSAGES/django.po; do \
-		msgfmt --check --statistics -o $$work/built.mo $$po 2> $$work/statistics || exit 1; \
-		if grep -qE 'untranslated|fuzzy' $$work/statistics; then echo "$$po: $$(cat $$work/statistics)"; exit 1; fi; \
-		msgunfmt $$work/built.mo > $$work/built.po && msgunfmt $${po%.po}.mo | cmp -s - $$work/built.po \
-			|| { echo "$${po%.po}.mo is out of date: run make compilemessages"; exit 1; }; \
-	done; rm -rf $$work
+	@work=$$(mktemp -d) && trap 'rm -rf "$$work"' EXIT \
+		&& cp -r absolved config locale manage.py $$work/ \
+		&& (cd $$work && DJANGO_DEBUG=1 uv run --quiet --project $(CURDIR) manage.py makemessages --all > /dev/null) \
+		&& for po in locale/*/LC_MESSAGES/django.po; do \
+			LC_ALL=C msgfmt --check -o $$work/built.mo $$po || exit 1; \
+			msgunfmt $$work/built.mo > $$work/built.po && msgunfmt $${po%.po}.mo | cmp -s - $$work/built.po \
+				|| { echo "$${po%.po}.mo is out of date: run make compilemessages"; exit 1; }; \
+			LC_ALL=C msgfmt --statistics -o /dev/null $$work/$$po 2> $$work/statistics; \
+			if grep -qE 'untranslated|fuzzy' $$work/statistics; then \
+				echo "$$po: $$(cat $$work/statistics) Run make makemessages and translate them."; exit 1; \
+			fi; \
+		done
 
 # The home screen icons, rendered from their sources with rsvg-convert (Homebrew's librsvg). iOS rounds the
 # corners itself, so its icon is the full-bleed one, like the maskable icon Android crops to its own shape.

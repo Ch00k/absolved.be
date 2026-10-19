@@ -23,6 +23,8 @@ from absolved.ratelimits import client_ip
 if TYPE_CHECKING:
     from pytest_django.fixtures import Settings
 
+    from absolved.models import User
+
 pytestmark = pytest.mark.django_db
 
 FLY = tomllib.loads((django_settings.BASE_DIR / "fly.toml").read_text())
@@ -332,6 +334,18 @@ def test_a_picked_language_outlasts_the_browsers(client: Client) -> None:
     assert cookie["httponly"]
     content = client.get(reverse("login"), headers={"Accept-Language": "en"}).content.decode()
     assert '<html lang="uk">' in content
+
+
+def test_a_language_is_picked_without_a_csrf_token(user: User) -> None:
+    """A page rendered before a login, in another tab or kept for offline use, holds a token the login replaced, so
+    the language menu posts none; a forged request could change no more than the language."""
+    client = Client(enforce_csrf_checks=True)
+    client.force_login(user)
+
+    response = client.post(reverse("set_language"), {"language": "pl", "next": reverse("home")})
+
+    assert response.status_code == 302
+    assert response.cookies[django_settings.LANGUAGE_COOKIE_NAME].value == "pl"
 
 
 @pytest.mark.parametrize(
