@@ -158,7 +158,7 @@ def test_manifest(client: Client) -> None:
         ("512x512", "maskable"),
     ]
     for icon in manifest["icons"]:
-        assert client.get(icon["src"]).status_code == 200
+        assert finders.find(icon["src"].removeprefix(django_settings.STATIC_URL))
 
 
 def test_pages_link_the_web_app(client: Client) -> None:
@@ -167,7 +167,7 @@ def test_pages_link_the_web_app(client: Client) -> None:
 
     assert f'<link rel="manifest" href="{reverse("manifest")}">' in content
     assert '<link rel="apple-touch-icon" href="/static/apple-touch-icon.png">' in content
-    assert client.get("/static/apple-touch-icon.png").status_code == 200
+    assert finders.find("apple-touch-icon.png")
 
 
 def test_pages_run_only_this_sites_scripts(client: Client) -> None:

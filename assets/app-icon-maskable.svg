@@ -1,7 +1,7 @@
 <!-- The home screen icon for Android's own shapes: the favicon's key (the Lucide key icon, ISC) in white on the
-     favicon's violet, its 24-unit box kept to the middle 62%, so that the key stays inside the circle that Android's
-     masks leave whole. The icon everywhere else is app-icon.svg. `make app-icons` renders the PNGs in static/ from
-     both. -->
+     favicon's violet. With its lines the key is 21 units square; scaled by 40/3 it spans 280 px (about 55%), centred,
+     so that its farthest point stays inside the 80% circle that Android's masks leave whole. The icon everywhere else
+     is app-icon.svg. `make app-icons` renders the PNGs in static/ from both. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" fill="#6d28d9"/>
   <g transform="translate(102.6667 102.6667) scale(13.3333)" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 21 9.6-9.6"/><path d="m7.5 15.5 2.3 2.3a1 1 0 0 1 0 1.4l-2.1 2.1a1 1 0 0 1-1.4 0L4 19"/><circle cx="15.5" cy="7.5" r="5.5"/></g>
