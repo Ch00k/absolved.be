@@ -152,7 +152,22 @@ def test_manifest(client: Client) -> None:
     manifest = response.json()
     assert manifest["start_url"] == "/"
     assert manifest["display"] == "standalone"
-    assert {icon["sizes"] for icon in manifest["icons"]} == {"192x192", "512x512"}
+    assert [(icon["sizes"], icon.get("purpose", "any")) for icon in manifest["icons"]] == [
+        ("192x192", "any"),
+        ("512x512", "any"),
+        ("512x512", "maskable"),
+    ]
+    for icon in manifest["icons"]:
+        assert finders.find(icon["src"].removeprefix(django_settings.STATIC_URL))
+
+
+def test_pages_link_the_web_app(client: Client) -> None:
+    """A page names its manifest and the icon iOS puts on the home screen."""
+    content = client.get(reverse("home")).content.decode()
+
+    assert f'<link rel="manifest" href="{reverse("manifest")}">' in content
+    assert '<link rel="apple-touch-icon" href="/static/apple-touch-icon.png">' in content
+    assert finders.find("apple-touch-icon.png")
 
 
 def test_pages_run_only_this_sites_scripts(client: Client) -> None:

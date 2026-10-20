@@ -1,4 +1,8 @@
+<!-- The home screen icon: the favicon's key (the Lucide key icon, ISC) in white on the favicon's violet, square,
+     as iOS rounds the corners itself and fills a transparent icon with black. With its lines the key is 21 units
+     square; at 70% of the icon it leaves 15% on each side, well clear of the corners iOS rounds off. Android's own
+     shapes use app-icon-maskable.svg. `make app-icons` renders the PNGs in static/ from both. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#6d28d9"/>
-  <g transform="translate(112 112) scale(12)" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m2 21 9.6-9.6"/><path d="m7.5 15.5 2.3 2.3a1 1 0 0 1 0 1.4l-2.1 2.1a1 1 0 0 1-1.4 0L4 19"/><circle cx="15.5" cy="7.5" r="5.5"/></g>
+  <rect width="512" height="512" fill="#6d28d9"/>
+  <g transform="translate(59.7333 59.7333) scale(17.0667)" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 21 9.6-9.6"/><path d="m7.5 15.5 2.3 2.3a1 1 0 0 1 0 1.4l-2.1 2.1a1 1 0 0 1-1.4 0L4 19"/><circle cx="15.5" cy="7.5" r="5.5"/></g>
 </svg>

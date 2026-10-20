@@ -100,10 +100,9 @@ messages-check:
 			fi; \
 		done
 
-# The home screen icons, rendered from their sources with rsvg-convert (Homebrew's librsvg). iOS rounds the
-# corners itself, so its icon is the full-bleed one, like the maskable icon Android crops to its own shape.
+# The home screen icons, rendered from their sources with rsvg-convert (Homebrew's librsvg).
 app-icons:
-	rsvg-convert -w 180 -h 180 assets/app-icon-maskable.svg -o static/apple-touch-icon.png
+	rsvg-convert -w 180 -h 180 assets/app-icon.svg -o static/apple-touch-icon.png
 	rsvg-convert -w 192 -h 192 assets/app-icon.svg -o static/icon-192.png
 	rsvg-convert -w 512 -h 512 assets/app-icon.svg -o static/icon-512.png
 	rsvg-convert -w 512 -h 512 assets/app-icon-maskable.svg -o static/icon-maskable-512.png
