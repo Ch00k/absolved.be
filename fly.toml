@@ -7,8 +7,9 @@ kill_timeout = 30
 [build]
   dockerfile = "Dockerfile"
 
-# A volume attaches to a single machine, so the machine is replaced in place; a rolling deploy
-# waits for the health check, and fails when the release cannot serve.
+# A volume attaches to a single machine, so the machine is replaced in place. A rolling deploy
+# waits for the health check only when the machine is running; CI's deploy job checks a release
+# that lands on a suspended one.
 [deploy]
   strategy = "rolling"
 
