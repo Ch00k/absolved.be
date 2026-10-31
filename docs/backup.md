@@ -29,14 +29,16 @@ Whatever is deleted is gone from all of them within 32 days. Raising any of thes
 `.github/workflows/backup.yml` runs at 03:17 UTC. It needs the GitHub repository, which does not exist yet; until it
 does, only Fly's snapshots back anything up.
 
-1. `manage.py backup_database` writes a copy with `VACUUM INTO`, which is safe against the live database and produces
+1. A request to `/health/` wakes the machine, which is suspended when idle; SSH alone does not wake it. Nothing keeps
+   it awake afterwards, so Fly could suspend it again mid-copy; the copy takes seconds and a failed run emails.
+2. `manage.py backup_database` writes a copy with `VACUUM INTO`, which is safe against the live database and produces
    one self-contained file even in WAL mode. It runs as the app's user: an SSH session is root, and a root process
    that opens the database can leave its `-wal` and `-shm` files owned by root, which the app then cannot write.
-2. The runner fetches it with `fly sftp get`, checks `pragma integrity_check` and that `django_migrations` is
+3. The runner fetches it with `fly sftp get`, checks `pragma integrity_check` and that `django_migrations` is
    populated, gzips it, and encrypts it with [age](https://github.com/FiloSottile/age) to a public key. The private
    key is in the password store, as `other/absolved.be_backup_key`, and nowhere else, so neither storage provider can read usernames or confession
    dates. The encryption runs on the runner; the Fly machine only runs `VACUUM INTO`.
-3. It uploads `db-<UTC timestamp>.sqlite3.gz.age` to both destinations, deletes Storage Box copies older than 30
+4. It uploads `db-<UTC timestamp>.sqlite3.gz.age` to both destinations, deletes Storage Box copies older than 30
    days, and removes the copy from the volume, whether or not the rest worked.
 
 ### Tigris
@@ -119,8 +121,8 @@ Left, in this order:
 ## Restore
 
 Restoring replaces the database the app serves, so the app comes off it first: the machine stays up, since SSH needs
-it, with a command that serves nothing. Whatever was written after the copy was taken is lost. `fly machine list -a
-absolved` gives the machine ID.
+it, with a command that serves nothing, and with autostop off, since Fly's proxy suspends a machine nothing requests.
+Whatever was written after the copy was taken is lost. `fly machine list -a absolved` gives the machine ID.
 
 ### From a Fly snapshot
 
@@ -132,10 +134,11 @@ fly volumes create absolved_data --snapshot-id <snapshot-id> --region fra --size
 fly machine cordon <machine-id> -a absolved
 fly machine stop <machine-id> -a absolved
 fly machine clone <machine-id> --attach-volume <new-volume-id>:/app/data --override-cmd "sleep inf" -a absolved
+fly machine update <new-machine-id> --autostop=off --yes -a absolved
 ```
 
-Check it (below), then `fly machine update <new-machine-id> --command /app/run.sh --yes -a absolved` and destroy the
-old machine. Keep the old volume until the restore has proved itself.
+Check it (below), then `fly machine update <new-machine-id> --command /app/run.sh --autostop=suspend --yes -a absolved`
+and destroy the old machine. Keep the old volume until the restore has proved itself.
 
 ### From a daily copy
 
@@ -152,13 +155,13 @@ able to write it.
 
 ```bash
 age --decrypt --identity <(pass show other/absolved.be_backup_key) db-<timestamp>.sqlite3.gz.age | gunzip > restore.sqlite3
-fly machine update <machine-id> --command "sleep inf" --yes -a absolved
+fly machine update <machine-id> --command "sleep inf" --autostop=off --yes -a absolved
 fly sftp put restore.sqlite3 /app/data/import.sqlite3 -a absolved
 fly ssh console -a absolved -C "sh -c 'rm -f /app/data/db.sqlite3 /app/data/db.sqlite3-wal /app/data/db.sqlite3-shm && mv /app/data/import.sqlite3 /app/data/db.sqlite3 && chown absolved:absolved /app/data/db.sqlite3'"
 ```
 
-Check it, then give the machine its command back: `fly machine update <machine-id> --command /app/run.sh --yes -a
-absolved`. Delete `restore.sqlite3` from the laptop.
+Check it, then give the machine its command and autostop back: `fly machine update <machine-id> --command /app/run.sh
+--autostop=suspend --yes -a absolved`. Delete `restore.sqlite3` from the laptop.
 
 ### Checking a restore
 

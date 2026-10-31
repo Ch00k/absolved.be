@@ -28,10 +28,11 @@ kill_timeout = 30
 [http_service]
   internal_port = 8080
   force_https = true
-  min_machines_running = 1
-  # Stopping the machine when idle would also clear the rate-limit counters, which live in its
-  # memory, and put a cold start in front of the next visitor.
-  auto_stop_machines = "off"
+  # Suspended when idle, which Fly bills like a stopped machine: storage only. Unlike stopping, it
+  # resumes from a memory snapshot, which keeps the rate-limit counters and skips a cold start; a
+  # deploy discards the snapshot, so the first request after one boots the machine afresh.
+  min_machines_running = 0
+  auto_stop_machines = "suspend"
   auto_start_machines = true
 
   # fly runs no health checks unless they are declared. This one is what makes

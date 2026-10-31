@@ -29,6 +29,11 @@ jobs:
     steps:
       - uses: superfly/flyctl-actions/setup-flyctl@v1
 
+      # The machine is suspended when idle, and only a request through Fly's proxy wakes it; SSH does
+      # not. The proxy answers once the app does, so the machine is up when this returns.
+      - name: Wake the machine
+        run: curl --fail --silent --show-error --output /dev/null https://absolved.be/health/
+
       # As the app's user: an SSH session is root, and a root process that opens the database can
       # leave its -wal and -shm files owned by root, which the app then cannot write. Absolute paths
       # because a command given to ssh console does not run through the image's entrypoint.
