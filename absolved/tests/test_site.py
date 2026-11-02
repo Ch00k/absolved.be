@@ -438,6 +438,11 @@ def test_a_request_cannot_write_an_access_log_line_of_its_own() -> None:
     assert "/probe\\x0aGET /forged" in line
     assert "agent\\x0d\\x0aGET /forged" in line
 
+    nel = _access_log_line("/probe\x85GET /forged", "")
+
+    assert "\x85" not in nel
+    assert "/probe\\x85GET /forged" in nel
+
 
 def test_a_request_gunicorn_could_not_parse_is_still_logged() -> None:
     """gunicorn logs it with an environment that names no path, before it answers the error."""
