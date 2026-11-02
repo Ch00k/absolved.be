@@ -1,12 +1,16 @@
 import datetime
 import hashlib
 import json
+import logging
+import logging.handlers
 import os
 import re
+import runpy
 import subprocess
 import sys
 import tomllib
 from pathlib import Path
+from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
 import pytest
@@ -17,6 +21,7 @@ from django.template import Context, Template
 from django.test import Client, RequestFactory, override_settings
 from django.urls import reverse
 from django.utils import translation
+from gunicorn.config import Config
 
 from absolved.ratelimits import client_ip
 
@@ -375,3 +380,70 @@ def test_dates_name_the_month_as_a_date_does(language: str, expected: str) -> No
         )
 
     assert rendered == f'<time datetime="2026-09-01" data-since="days">{expected}</time>'
+
+
+def _access_log_line(path: str | None, query: str, user_agent: str = "Mozilla/5.0") -> str:
+    """The line gunicorn, configured by gunicorn.conf.py, writes for a GET of `path` that answered 200 with 2048 bytes
+    in 0.125s, from a visitor whose address Fly forwards. Caught on gunicorn's own logger, which does not propagate.
+    With no path, the environment is the one gunicorn logs a request it could not parse with, which names none."""
+    config = Config()
+    for name, value in runpy.run_path(str(django_settings.BASE_DIR / "gunicorn.conf.py")).items():
+        if name in config.settings:
+            config.set(name, value)
+    logger = config.logger_class(config)
+    environ = {
+        "REQUEST_METHOD": "GET",
+        "QUERY_STRING": query,
+        "RAW_URI": f"{path}?{query}",
+        "SERVER_PROTOCOL": "HTTP/1.1",
+        "REMOTE_ADDR": "203.0.113.7",
+        "HTTP_USER_AGENT": user_agent,
+        "HTTP_FLY_CLIENT_IP": "198.51.100.23",
+    }
+    if path is not None:
+        environ["PATH_INFO"] = path
+    response = SimpleNamespace(status="200 OK", sent=2048, headers=[])
+    request = SimpleNamespace(headers=[("USER-AGENT", "Mozilla/5.0"), ("FLY-CLIENT-IP", "198.51.100.23")])
+
+    caught = logging.handlers.BufferingHandler(capacity=10)
+    logger.access_log.addHandler(caught)
+    try:
+        logger.access(response, request, environ, datetime.timedelta(microseconds=125_000))
+    finally:
+        logger.access_log.removeHandler(caught)
+
+    (record,) = caught.buffer
+    return record.getMessage()
+
+
+def test_the_access_log_is_one_line_of_what_a_request_asked_for() -> None:
+    assert _access_log_line("/history/", "") == 'GET /history/ 200 2048 125ms "Mozilla/5.0"'
+
+
+def test_the_access_log_keeps_no_client_address_and_no_query() -> None:
+    """Neither the proxy's address gunicorn sees nor the visitor's that Fly forwards, as docs/plan.md promises."""
+    line = _access_log_line("/login/", "next=/history/")
+
+    assert "203.0.113.7" not in line
+    assert "198.51.100.23" not in line
+    assert "next=" not in line
+
+
+def test_a_request_cannot_write_an_access_log_line_of_its_own() -> None:
+    """gunicorn hands over the path percent-decoded, so /probe%0AGET... arrives holding a newline."""
+    line = _access_log_line('/probe\nGET /forged 200 0 1ms "x"', "", user_agent="agent\r\nGET /forged")
+
+    assert "\n" not in line
+    assert "\r" not in line
+    assert "/probe\\x0aGET /forged" in line
+    assert "agent\\x0d\\x0aGET /forged" in line
+
+    nel = _access_log_line("/probe\x85GET /forged", "")
+
+    assert "\x85" not in nel
+    assert "/probe\\x85GET /forged" in nel
+
+
+def test_a_request_gunicorn_could_not_parse_is_still_logged() -> None:
+    """gunicorn logs it with an environment that names no path, before it answers the error."""
+    assert _access_log_line(None, "") == 'GET - 200 2048 125ms "Mozilla/5.0"'

@@ -73,8 +73,9 @@ and never sees the password, so neither a leaked database nor the operator can r
   database knows each salt and can guess passwords offline, so a short password is what would expose an examination. The
   check runs in the browser, since the server never sees the password; bypassing it only weakens the bypasser's own
   account.
-- The app logs no IP addresses: gunicorn's access log is off, and the app's own logs carry no request addresses. Fly's
-  proxy keeps its own logs regardless.
+- The app logs no IP addresses: gunicorn's access log (`gunicorn.conf.py`) records each request's method, path, status,
+  size, duration and user agent, with no client address and no query string, and the app's own logs carry no request
+  addresses. Fly's proxy keeps its own logs regardless.
 
 What the operator can still see: usernames, confession dates, account creation and last login times, when an examination
 was last saved and roughly its size, and Fly's proxy logs (IP, user agent, time and path of each request).
