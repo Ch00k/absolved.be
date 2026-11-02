@@ -6,6 +6,7 @@
 !static/
 !manage.py
 !run.sh
+!gunicorn.conf.py
 !pyproject.toml
 !uv.lock
 absolved/tests/
