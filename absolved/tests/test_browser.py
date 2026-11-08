@@ -12,12 +12,15 @@ import hashlib
 import hmac
 import re
 import time
+from io import StringIO
 from typing import TYPE_CHECKING
 
 import pytest
 from argon2.low_level import Type, hash_secret_raw
+from django.core.management import call_command
 from playwright.sync_api import Browser, BrowserContext, Locator, Page, Request, Route, expect
 
+from absolved.management.commands import create_dev_account
 from absolved.models import Confession, Examination, User
 
 if TYPE_CHECKING:
@@ -989,6 +992,17 @@ def test_browser_derives_the_reference_login_key(
     page.goto(f"{live_server.url}/login/")
 
     assert derive_in_browser(page, username, password) == reference_auth_key(username, password)
+
+
+def test_the_development_account_logs_in_with_its_password(
+    page: Page, live_server: LiveServer, settings: Settings
+) -> None:
+    """The account make run creates logs in with the password the command prints: the login key the command stores
+    is the one the browser derives from that password."""
+    settings.DEBUG = True
+    call_command("create_dev_account", stdout=StringIO())
+
+    log_in(page, live_server, password=create_dev_account.PASSWORD, username=create_dev_account.USERNAME)
 
 
 def test_a_username_is_the_same_however_it_is_typed(page: Page, live_server: LiveServer) -> None:

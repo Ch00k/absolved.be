@@ -3,13 +3,15 @@ from io import StringIO
 from typing import TYPE_CHECKING
 
 import pytest
-from django.core.management import call_command
+from django.core.management import CommandError, call_command
 
 from absolved.models import Examination, User
 from absolved.tests.conftest import AUTH_KEY, SEALED
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    from pytest_django.fixtures import Settings
 
 # VACUUM INTO cannot run inside a transaction, which a plain django_db test holds open around itself.
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -53,3 +55,26 @@ def test_a_leftover_from_an_earlier_run_is_replaced(tmp_path: Path) -> None:
     integrity = copy.execute("pragma integrity_check").fetchone()[0]
     copy.close()
     assert integrity == "ok"
+
+
+def test_the_development_account_is_created_once(settings: Settings) -> None:
+    """make run creates the account on every start; once it exists, it is left as it is."""
+    settings.DEBUG = True
+    out = StringIO()
+
+    call_command("create_dev_account", stdout=out)
+    user = User.objects.get()
+    call_command("create_dev_account", stdout=out)
+
+    assert list(User.objects.values_list("pk", "username", "password")) == [(user.pk, "dev", user.password)]
+    assert out.getvalue() == "Log in as dev with the password 'correct horse battery'.\n" * 2
+
+
+def test_the_development_account_is_refused_in_production(settings: Settings) -> None:
+    """An account whose password is in the public repository must never exist in production."""
+    settings.DEBUG = False
+
+    with pytest.raises(CommandError, match="only for DJANGO_DEBUG=1"):
+        call_command("create_dev_account", stdout=StringIO())
+
+    assert not User.objects.exists()

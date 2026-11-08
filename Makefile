@@ -1,4 +1,4 @@
-.PHONY: run makemigrations migrate lint check static test browsers tailwind-version tailwind-watch tailwind-build \
+.PHONY: run dev-account makemigrations migrate lint check static test browsers tailwind-version tailwind-watch tailwind-build \
 	css-check vendor-sodium makemessages compilemessages messages-check app-icons
 
 # The release of the Tailwind standalone CLI static/css/output.css is built with; another builds a different stylesheet.
@@ -8,8 +8,11 @@ SODIUM_VERSION := 0.8.4
 SODIUM_INTEGRITY := sha512-TMtHShQfVVsaxDygyapvUC3o7YsPgXa/hRWeIgzyFz6w5k/1hirGptCxp1U7XwW3rCskaTTYKgV10v86UiGgNw==
 SODIUM_WRAPPERS_INTEGRITY := sha512-ql7hcgulKZ3ekfa2DGAogcCKsWU0diA/0nArz1CFzh93WQdb46/Kj18ka/Hifq6uA3Ush34Pc6vU/6HXeRwUkg==
 
-run: migrate
+run: dev-account
 	DJANGO_DEBUG=1 uv run manage.py runserver 127.0.0.1:8095
+
+dev-account: migrate
+	DJANGO_DEBUG=1 uv run manage.py create_dev_account
 
 makemigrations:
 	DJANGO_DEBUG=1 uv run manage.py makemigrations
