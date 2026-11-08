@@ -394,6 +394,38 @@ def test_an_empty_preparation_still_leads_to_confession(page: Page, live_server:
     expect(page.locator("main")).not_to_contain_text("since my last confession")
 
 
+def test_confession_text_size_is_picked_and_remembered(page: Page, live_server: LiveServer) -> None:
+    """The buttons zoom the confession script a step at a time, between its own size and twice it, each button
+    disabled at its end; the size outlasts a reload, and the script grows on the page with it."""
+    sign_up(page, live_server)
+    skip_last_confession_question(page)
+    page.goto(f"{live_server.url}/prepare/")
+    page.click("[data-ready]")
+    page.wait_for_url(f"{live_server.url}/confession/")
+    script = page.locator(".confession-script")
+    smaller = page.locator("#text-smaller")
+    larger = page.locator("#text-larger")
+    expect(script).to_have_css("zoom", "1")
+    expect(smaller).to_be_disabled()
+    height = script.evaluate("(element) => element.getBoundingClientRect().height")
+
+    larger.click()
+    expect(script).to_have_css("zoom", "1.25")
+    expect(smaller).to_be_enabled()
+    assert script.evaluate("(element) => element.getBoundingClientRect().height") > height
+
+    page.reload()
+    expect(script).to_have_css("zoom", "1.25")
+    for _ in range(3):
+        larger.click()
+    expect(script).to_have_css("zoom", "2")
+    expect(larger).to_be_disabled()
+
+    smaller.click()
+    expect(script).to_have_css("zoom", "1.75")
+    expect(larger).to_be_enabled()
+
+
 def test_the_password_never_leaves_the_browser(page: Page, live_server: LiveServer) -> None:
     """Signup, login, a password change and deleting the account post derived keys only: no request carries either
     password."""
