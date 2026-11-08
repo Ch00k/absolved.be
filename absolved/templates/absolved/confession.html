@@ -4,12 +4,21 @@
 {% block title %}{% translate "Confession" %} - absolved.be{% endblock %}
 
 {% block scripts %}
+  <script src="{% static 'js/text-size.js' %}"></script>
   <script type="module" src="{% static 'js/confession.js' %}"></script>
 {% endblock %}
 
 {% block content %}
+  {# text-size.js zooms the script to the size picked with these buttons. #}
+  <div class="-mt-2 mb-2 flex justify-end gap-1">
+    <button type="button" id="text-smaller" class="icon-link"
+            aria-label="{% translate 'Smaller text' %}" title="{% translate 'Smaller text' %}">{% icon "a-arrow-down" "size-5" %}</button>
+    <button type="button" id="text-larger" class="icon-link"
+            aria-label="{% translate 'Larger text' %}" title="{% translate 'Larger text' %}">{% icon "a-arrow-up" "size-5" %}</button>
+  </div>
+
   {# The parts of the confession in the order they happen. What the penitent says is in cards; the directions between them are not. #}
-  <div class="space-y-6 text-lg">
+  <div class="confession-script space-y-6 text-lg">
     <section class="space-y-2">
       <h2 class="step"><span class="step-number">1</span>{% translate "Greeting" %}</h2>
       <p class="direction">{% translate "Make the Sign of the Cross and say:" %}</p>

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: absolved\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 07:24+0000\n"
+"POT-Creation-Date: 2026-11-08 09:38+0000\n"
 "PO-Revision-Date: 2026-10-19 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Polish\n"
@@ -10,7 +10,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #: absolved/examination.py:52
 msgid "I am the Lord your God: you shall not have strange gods before me."
@@ -37,8 +39,8 @@ msgid ""
 "Have I doubted or denied a truth of the faith, or been ashamed of it before "
 "others?"
 msgstr ""
-"Czy wątpiłem(-am) w prawdę wiary lub jej zaprzeczałem(-am), albo "
-"wstydziłem(-am) się wiary przed innymi?"
+"Czy wątpiłem(-am) w prawdę wiary lub jej zaprzeczałem(-am), albo wstydziłem(-"
+"am) się wiary przed innymi?"
 
 #: absolved/examination.py:64
 msgid "I doubted a truth of the faith."
@@ -158,8 +160,8 @@ msgid ""
 "Have I used the name of God, Jesus, Mary or the saints carelessly or in "
 "anger?"
 msgstr ""
-"Czy wymawiałem(-am) imię Boga, Jezusa, Maryi lub świętych lekkomyślnie albo w"
-" gniewie?"
+"Czy wymawiałem(-am) imię Boga, Jezusa, Maryi lub świętych lekkomyślnie albo "
+"w gniewie?"
 
 #: absolved/examination.py:127
 msgid "I used the name of God or of the saints carelessly."
@@ -244,8 +246,8 @@ msgstr "Z własnej winy opuściłem(-am) Mszę Świętą w święto nakazane."
 #: absolved/examination.py:182
 msgid "Have I come late to Mass or left early without good reason?"
 msgstr ""
-"Czy bez ważnego powodu spóźniałem(-am) się na Mszę Świętą lub "
-"wychodziłem(-am) przed jej końcem?"
+"Czy bez ważnego powodu spóźniałem(-am) się na Mszę Świętą lub wychodziłem(-"
+"am) przed jej końcem?"
 
 #: absolved/examination.py:184
 msgid "I came late to Mass without good reason."
@@ -258,8 +260,8 @@ msgstr "Bez ważnego powodu opuściłem(-am) Mszę Świętą przed jej końcem."
 #: absolved/examination.py:190
 msgid "Have I been deliberately inattentive or irreverent at Mass?"
 msgstr ""
-"Czy byłem(-am) świadomie nieuważny(-a) lub zachowywałem(-am) się bez szacunku"
-" podczas Mszy Świętej?"
+"Czy byłem(-am) świadomie nieuważny(-a) lub zachowywałem(-am) się bez "
+"szacunku podczas Mszy Świętej?"
 
 #: absolved/examination.py:192
 msgid "I was deliberately inattentive at Mass."
@@ -446,8 +448,8 @@ msgstr "Traktowałem(-am) kogoś z pogardą."
 msgid ""
 "Have I harmed my health through drunkenness, drugs, gluttony or recklessness?"
 msgstr ""
-"Czy szkodziłem(-am) swojemu zdrowiu przez pijaństwo, narkotyki, obżarstwo lub"
-" lekkomyślność?"
+"Czy szkodziłem(-am) swojemu zdrowiu przez pijaństwo, narkotyki, obżarstwo "
+"lub lekkomyślność?"
 
 #: absolved/examination.py:297
 msgid "I got drunk."
@@ -470,8 +472,8 @@ msgid ""
 "Have I put others in danger, for example by driving recklessly or under the "
 "influence?"
 msgstr ""
-"Czy narażałem(-am) innych na niebezpieczeństwo, na przykład jeżdżąc brawurowo"
-" lub pod wpływem alkoholu czy narkotyków?"
+"Czy narażałem(-am) innych na niebezpieczeństwo, na przykład jeżdżąc "
+"brawurowo lub pod wpływem alkoholu czy narkotyków?"
 
 #: absolved/examination.py:307
 msgid "I drove recklessly."
@@ -607,8 +609,8 @@ msgstr "Zniszczyłem(-am) czyjąś własność i nie naprawiłem(-am) szkody."
 #: absolved/examination.py:391
 msgid "Have I been lazy or dishonest in my work, or withheld a just wage?"
 msgstr ""
-"Czy byłem(-am) leniwy(-a) lub nieuczciwy(-a) w pracy, albo nie "
-"wypłaciłem(-am) komuś sprawiedliwej zapłaty?"
+"Czy byłem(-am) leniwy(-a) lub nieuczciwy(-a) w pracy, albo nie wypłaciłem(-"
+"am) komuś sprawiedliwej zapłaty?"
 
 #: absolved/examination.py:393
 msgid "I was lazy in my work."
@@ -905,12 +907,12 @@ msgstr "Znikają po spowiedzi"
 #: absolved/templates/absolved/_privacy.html:29
 msgid ""
 "When you mark your confession as done, your notes are deleted for good, like "
-"burning the paper you wrote them on. The copies in our backups, still locked,"
-" are gone within a month."
+"burning the paper you wrote them on. The copies in our backups, still "
+"locked, are gone within a month."
 msgstr ""
-"Gdy oznaczysz spowiedź jako odbytą, twoje notatki zostaną usunięte na zawsze,"
-" jak spalona kartka, na której je zapisano. Ich wciąż zamknięte kopie znikają"
-" z naszych kopii zapasowych w ciągu miesiąca."
+"Gdy oznaczysz spowiedź jako odbytą, twoje notatki zostaną usunięte na "
+"zawsze, jak spalona kartka, na której je zapisano. Ich wciąż zamknięte kopie "
+"znikają z naszych kopii zapasowych w ciągu miesiąca."
 
 #: absolved/templates/absolved/_privacy.html:35
 msgid "No ads, no trackers"
@@ -931,9 +933,9 @@ msgid ""
 "forget your password, they are lost. Choose a long one that you will "
 "remember."
 msgstr ""
-"Widzimy tylko twoją nazwę użytkownika i daty twoich spowiedzi. A ponieważ nie"
-" możemy odczytać twoich notatek, nie możemy ich też odzyskać: jeśli zapomnisz"
-" hasła, przepadną. Wybierz długie hasło, które zapamiętasz."
+"Widzimy tylko twoją nazwę użytkownika i daty twoich spowiedzi. A ponieważ "
+"nie możemy odczytać twoich notatek, nie możemy ich też odzyskać: jeśli "
+"zapomnisz hasła, przepadną. Wybierz długie hasło, które zapamiętasz."
 
 #: absolved/templates/absolved/_privacy_details.html:3
 msgid "How we keep your notes private"
@@ -947,7 +949,7 @@ msgstr "Ile razy lub inne uwagi"
 
 #: absolved/templates/absolved/account.html:4
 #: absolved/templates/absolved/account.html:13
-#: absolved/templates/absolved/base.html:37
+#: absolved/templates/absolved/base.html:52
 msgid "Account"
 msgstr "Konto"
 
@@ -1053,44 +1055,52 @@ msgstr "Usuwanie konta..."
 msgid "Delete my account"
 msgstr "Usuń moje konto"
 
-#: absolved/templates/absolved/base.html:29
+#: absolved/templates/absolved/base.html:28
+msgid "Language"
+msgstr "Język"
+
+#: absolved/templates/absolved/base.html:44
 msgid "Theme: as on this device"
 msgstr "Motyw: jak na tym urządzeniu"
 
-#: absolved/templates/absolved/base.html:30
+#: absolved/templates/absolved/base.html:45
 msgid "Theme: light"
 msgstr "Motyw: jasny"
 
-#: absolved/templates/absolved/base.html:30
+#: absolved/templates/absolved/base.html:45
 msgid "Theme: dark"
 msgstr "Motyw: ciemny"
 
-#: absolved/templates/absolved/base.html:36
+#: absolved/templates/absolved/base.html:51
 #: absolved/templates/absolved/history.html:4
 #: absolved/templates/absolved/history.html:7
 msgid "History"
 msgstr "Historia"
-
-#: absolved/templates/absolved/base.html:47
-msgid "Language"
-msgstr "Język"
 
 #: absolved/templates/absolved/confession.html:4
 #: absolved/templates/absolved/home.html:39
 msgid "Confession"
 msgstr "Spowiedź"
 
-#: absolved/templates/absolved/confession.html:14
+#: absolved/templates/absolved/confession.html:15
+msgid "Smaller text"
+msgstr "Mniejszy tekst"
+
+#: absolved/templates/absolved/confession.html:17
+msgid "Larger text"
+msgstr "Większy tekst"
+
+#: absolved/templates/absolved/confession.html:23
 msgid "Greeting"
 msgstr "Powitanie"
 
-#: absolved/templates/absolved/confession.html:15
+#: absolved/templates/absolved/confession.html:24
 msgid "Make the Sign of the Cross and say:"
 msgstr ""
 "Powiedz \"Niech będzie pochwalony Jezus Chrystus\", przeżegnaj się i mów "
 "dalej:"
 
-#: absolved/templates/absolved/confession.html:19
+#: absolved/templates/absolved/confession.html:28
 #, python-format
 msgid ""
 "Bless me, Father, for I have sinned. It has been %(since)s since my last "
@@ -1099,34 +1109,34 @@ msgstr ""
 "Ostatni raz u spowiedzi świętej byłem(-am) %(since)s temu. Obraziłem(-am) "
 "Pana Boga następującymi grzechami:"
 
-#: absolved/templates/absolved/confession.html:23
+#: absolved/templates/absolved/confession.html:32
 msgid "Bless me, Father, for I have sinned."
 msgstr "Obraziłem(-am) Pana Boga następującymi grzechami:"
 
-#: absolved/templates/absolved/confession.html:29
+#: absolved/templates/absolved/confession.html:38
 msgid "Your sins"
 msgstr "Twoje grzechy"
 
-#: absolved/templates/absolved/confession.html:30
+#: absolved/templates/absolved/confession.html:39
 #: absolved/templates/absolved/prepare.html:16
 msgid "Decrypting your notes..."
 msgstr "Odszyfrowywanie notatek..."
 
-#: absolved/templates/absolved/confession.html:49
+#: absolved/templates/absolved/confession.html:58
 msgid "Nothing was marked in your preparation."
 msgstr "W przygotowaniu nic nie zostało zaznaczone."
 
-#: absolved/templates/absolved/confession.html:52
+#: absolved/templates/absolved/confession.html:61
 msgid "For these and all the sins of my past life, I am sorry."
 msgstr ""
 "Więcej grzechów nie pamiętam, za wszystkie serdecznie żałuję, postanawiam "
 "poprawę, proszę o pokutę i rozgrzeszenie."
 
-#: absolved/templates/absolved/confession.html:56
+#: absolved/templates/absolved/confession.html:65
 msgid "Penance and contrition"
 msgstr "Pokuta i żal"
 
-#: absolved/templates/absolved/confession.html:58
+#: absolved/templates/absolved/confession.html:67
 msgid ""
 "Listen to the priest's counsel and accept your penance. When he asks, pray "
 "the Act of Contrition:"
@@ -1134,7 +1144,7 @@ msgstr ""
 "Wysłuchaj nauki kapłana i przyjmij pokutę. Jeśli o to poprosi, odmów akt "
 "żalu:"
 
-#: absolved/templates/absolved/confession.html:61
+#: absolved/templates/absolved/confession.html:70
 msgid ""
 "O my God, I am heartily sorry for having offended Thee, and I detest all my "
 "sins because of Thy just punishments, but most of all because they offend "
@@ -1145,52 +1155,52 @@ msgstr ""
 "Ach, żałuję za me złości, jedynie dla Twej miłości. Bądź miłościw mnie "
 "grzesznemu, dla Ciebie odpuszczam bliźniemu. Amen."
 
-#: absolved/templates/absolved/confession.html:70
+#: absolved/templates/absolved/confession.html:79
 msgid "Absolution"
 msgstr "Rozgrzeszenie"
 
-#: absolved/templates/absolved/confession.html:71
+#: absolved/templates/absolved/confession.html:80
 msgid "The priest gives you absolution. Answer:"
 msgstr "Kapłan udziela ci rozgrzeszenia. Odpowiedz:"
 
-#: absolved/templates/absolved/confession.html:72
+#: absolved/templates/absolved/confession.html:81
 msgid "Amen."
 msgstr "Amen."
 
-#: absolved/templates/absolved/confession.html:73
+#: absolved/templates/absolved/confession.html:82
 msgid "If he says \"Give thanks to the Lord, for he is good\", answer:"
 msgstr "Jeśli powie \"Chwalmy Pana, bo jest dobry\", odpowiedz:"
 
-#: absolved/templates/absolved/confession.html:74
+#: absolved/templates/absolved/confession.html:83
 msgid "His mercy endures for ever."
 msgstr "Bo Jego miłosierdzie trwa na wieki."
 
-#: absolved/templates/absolved/confession.html:75
+#: absolved/templates/absolved/confession.html:84
 msgid "When he sends you away in peace, answer:"
 msgstr "Gdy odeśle cię w pokoju, odpowiedz:"
 
-#: absolved/templates/absolved/confession.html:76
+#: absolved/templates/absolved/confession.html:85
 msgid "Thanks be to God."
 msgstr "Bogu niech będą dzięki."
 
-#: absolved/templates/absolved/confession.html:80
+#: absolved/templates/absolved/confession.html:89
 msgid "Back to preparation"
 msgstr "Wróć do przygotowania"
 
-#: absolved/templates/absolved/confession.html:83
+#: absolved/templates/absolved/confession.html:92
 msgid "I have confessed"
 msgstr "Wyspowiadałem(-am) się"
 
-#: absolved/templates/absolved/confession.html:87
+#: absolved/templates/absolved/confession.html:96
 #: absolved/templates/absolved/home.html:61
 msgid "Date"
 msgstr "Data"
 
-#: absolved/templates/absolved/confession.html:90
+#: absolved/templates/absolved/confession.html:99
 msgid "This records the confession and permanently deletes your preparation."
 msgstr "To zapisze spowiedź i trwale usunie twoje przygotowanie."
 
-#: absolved/templates/absolved/confession.html:91
+#: absolved/templates/absolved/confession.html:100
 msgid "Record and delete my preparation"
 msgstr "Zapisz i usuń moje przygotowanie"
 

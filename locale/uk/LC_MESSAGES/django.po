@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: absolved\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 07:24+0000\n"
+"POT-Creation-Date: 2026-11-08 09:38+0000\n"
 "PO-Revision-Date: 2026-10-19 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
@@ -10,7 +10,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: absolved/examination.py:52
 msgid "I am the Lord your God: you shall not have strange gods before me."
@@ -37,8 +40,8 @@ msgid ""
 "Have I doubted or denied a truth of the faith, or been ashamed of it before "
 "others?"
 msgstr ""
-"Чи сумнівався(-лася) я в істині віри або заперечував(-ла) її, чи "
-"соромився(-лася) віри перед іншими?"
+"Чи сумнівався(-лася) я в істині віри або заперечував(-ла) її, чи соромився(-"
+"лася) віри перед іншими?"
 
 #: absolved/examination.py:64
 msgid "I doubted a truth of the faith."
@@ -254,8 +257,8 @@ msgstr "Я без поважної причини виходив(-ла) зі С�
 #: absolved/examination.py:190
 msgid "Have I been deliberately inattentive or irreverent at Mass?"
 msgstr ""
-"Чи був(-ла) я свідомо неуважним(-ою) або поводився(-лася) нешанобливо під час"
-" Святої Меси?"
+"Чи був(-ла) я свідомо неуважним(-ою) або поводився(-лася) нешанобливо під "
+"час Святої Меси?"
 
 #: absolved/examination.py:192
 msgid "I was deliberately inattentive at Mass."
@@ -292,8 +295,8 @@ msgstr "Шануй батька твого і матір твою."
 msgid ""
 "Have I been disrespectful to my parents, or neglected them in their need?"
 msgstr ""
-"Чи був(-ла) я нешанобливим(-ою) до батьків або залишав(-ла) їх без допомоги в"
-" потребі?"
+"Чи був(-ла) я нешанобливим(-ою) до батьків або залишав(-ла) їх без допомоги "
+"в потребі?"
 
 #: absolved/examination.py:215
 msgid "I was disrespectful to my parents."
@@ -544,8 +547,8 @@ msgstr "Я діяв(-ла) проти відкритості подружжя н
 msgid ""
 "Have I dressed, spoken or acted immodestly, or joined in impure conversation?"
 msgstr ""
-"Чи вдягався(-лася), говорив(-ла) чи поводився(-лася) я нескромно, або "
-"брав(-ла) участь у нечистих розмовах?"
+"Чи вдягався(-лася), говорив(-ла) чи поводився(-лася) я нескромно, або брав(-"
+"ла) участь у нечистих розмовах?"
 
 #: absolved/examination.py:356
 msgid "I dressed immodestly."
@@ -840,8 +843,8 @@ msgstr "ім'я користувача"
 #: absolved/models.py:34
 msgid "Use 3 to 32 lowercase letters, digits, dots, dashes or underscores."
 msgstr ""
-"Використай від 3 до 32 малих латинських літер (a-z), цифр, крапок, дефісів чи"
-" підкреслень."
+"Використай від 3 до 32 малих латинських літер (a-z), цифр, крапок, дефісів "
+"чи підкреслень."
 
 #: absolved/templates/absolved/_date_picker.html:3
 #: absolved/templates/absolved/_date_picker.html:4
@@ -877,8 +880,8 @@ msgid ""
 "it."
 msgstr ""
 "Те, що ми зберігаємо, виглядає як безглуздий набір символів. Прочитати це не "
-"можемо ні ми, ні компанія, що надає нам хостинг, ні навіть той, хто зламав би"
-" наш сервер."
+"можемо ні ми, ні компанія, що надає нам хостинг, ні навіть той, хто зламав "
+"би наш сервер."
 
 #: absolved/templates/absolved/_privacy.html:21
 msgid "Nothing that says who you are"
@@ -899,12 +902,12 @@ msgstr "Зникають після сповіді"
 #: absolved/templates/absolved/_privacy.html:29
 msgid ""
 "When you mark your confession as done, your notes are deleted for good, like "
-"burning the paper you wrote them on. The copies in our backups, still locked,"
-" are gone within a month."
+"burning the paper you wrote them on. The copies in our backups, still "
+"locked, are gone within a month."
 msgstr ""
 "Коли ти позначиш сповідь як звершену, твої нотатки буде видалено назавжди, "
-"ніби спалено папір, на якому їх записано. Їхні копії, досі замкнені, зникають"
-" із наших резервних копій протягом місяця."
+"ніби спалено папір, на якому їх записано. Їхні копії, досі замкнені, "
+"зникають із наших резервних копій протягом місяця."
 
 #: absolved/templates/absolved/_privacy.html:35
 msgid "No ads, no trackers"
@@ -925,9 +928,9 @@ msgid ""
 "forget your password, they are lost. Choose a long one that you will "
 "remember."
 msgstr ""
-"Ми бачимо лише твоє ім'я користувача та дати твоїх сповідей. А оскільки ми не"
-" можемо прочитати твої нотатки, то не можемо їх і відновити: якщо ти забудеш "
-"пароль, їх буде втрачено. Обери довгий пароль, який ти запам'ятаєш."
+"Ми бачимо лише твоє ім'я користувача та дати твоїх сповідей. А оскільки ми "
+"не можемо прочитати твої нотатки, то не можемо їх і відновити: якщо ти "
+"забудеш пароль, їх буде втрачено. Обери довгий пароль, який ти запам'ятаєш."
 
 #: absolved/templates/absolved/_privacy_details.html:3
 msgid "How we keep your notes private"
@@ -941,7 +944,7 @@ msgstr "Скільки разів або інші уточнення"
 
 #: absolved/templates/absolved/account.html:4
 #: absolved/templates/absolved/account.html:13
-#: absolved/templates/absolved/base.html:37
+#: absolved/templates/absolved/base.html:52
 msgid "Account"
 msgstr "Обліковий запис"
 
@@ -1046,78 +1049,87 @@ msgstr "Видалення облікового запису..."
 msgid "Delete my account"
 msgstr "Видалити мій обліковий запис"
 
-#: absolved/templates/absolved/base.html:29
+#: absolved/templates/absolved/base.html:28
+msgid "Language"
+msgstr "Мова"
+
+#: absolved/templates/absolved/base.html:44
 msgid "Theme: as on this device"
 msgstr "Тема: як на цьому пристрої"
 
-#: absolved/templates/absolved/base.html:30
+#: absolved/templates/absolved/base.html:45
 msgid "Theme: light"
 msgstr "Тема: світла"
 
-#: absolved/templates/absolved/base.html:30
+#: absolved/templates/absolved/base.html:45
 msgid "Theme: dark"
 msgstr "Тема: темна"
 
-#: absolved/templates/absolved/base.html:36
+#: absolved/templates/absolved/base.html:51
 #: absolved/templates/absolved/history.html:4
 #: absolved/templates/absolved/history.html:7
 msgid "History"
 msgstr "Історія"
-
-#: absolved/templates/absolved/base.html:47
-msgid "Language"
-msgstr "Мова"
 
 #: absolved/templates/absolved/confession.html:4
 #: absolved/templates/absolved/home.html:39
 msgid "Confession"
 msgstr "Сповідь"
 
-#: absolved/templates/absolved/confession.html:14
+#: absolved/templates/absolved/confession.html:15
+msgid "Smaller text"
+msgstr "Менший текст"
+
+#: absolved/templates/absolved/confession.html:17
+msgid "Larger text"
+msgstr "Більший текст"
+
+#: absolved/templates/absolved/confession.html:23
 msgid "Greeting"
 msgstr "Привітання"
 
-#: absolved/templates/absolved/confession.html:15
+#: absolved/templates/absolved/confession.html:24
 msgid "Make the Sign of the Cross and say:"
 msgstr "Скажи \"Слава Ісусу Христу\", перехрестися і продовжуй:"
 
-#: absolved/templates/absolved/confession.html:19
+#: absolved/templates/absolved/confession.html:28
 #, python-format
 msgid ""
 "Bless me, Father, for I have sinned. It has been %(since)s since my last "
 "confession."
 msgstr ""
-"Останній раз я сповідався(-лася) %(since)s тому. Від часу останньої сповіді я"
-" образив(-ла) Бога такими гріхами:"
+"Останній раз я сповідався(-лася) %(since)s тому. Від часу останньої сповіді "
+"я образив(-ла) Бога такими гріхами:"
 
-#: absolved/templates/absolved/confession.html:23
+#: absolved/templates/absolved/confession.html:32
 msgid "Bless me, Father, for I have sinned."
 msgstr "Я образив(-ла) Бога такими гріхами:"
 
-#: absolved/templates/absolved/confession.html:29
+#: absolved/templates/absolved/confession.html:38
 msgid "Your sins"
 msgstr "Твої гріхи"
 
-#: absolved/templates/absolved/confession.html:30
+#: absolved/templates/absolved/confession.html:39
 #: absolved/templates/absolved/prepare.html:16
 msgid "Decrypting your notes..."
 msgstr "Розшифрування нотаток..."
 
-#: absolved/templates/absolved/confession.html:49
+#: absolved/templates/absolved/confession.html:58
 msgid "Nothing was marked in your preparation."
 msgstr "У підготовці нічого не позначено."
 
-#: absolved/templates/absolved/confession.html:52
+#: absolved/templates/absolved/confession.html:61
 msgid "For these and all the sins of my past life, I am sorry."
 msgstr ""
-"Більше гріхів не пам'ятаю, щиро каюсь у тому, що своїми гріхами зневажив(-ла)"
-" Бога, вирішую у майбутньому більше не грішити та прошу задати мені покуту."
+"Більше гріхів не пам'ятаю, щиро каюсь у тому, що своїми гріхами зневажив(-"
+"ла) Бога, вирішую у майбутньому більше не грішити та прошу задати мені "
+"покуту."
 
-#: absolved/templates/absolved/confession.html:56
+#: absolved/templates/absolved/confession.html:65
 msgid "Penance and contrition"
 msgstr "Покута і жаль"
 
-#: absolved/templates/absolved/confession.html:58
+#: absolved/templates/absolved/confession.html:67
 msgid ""
 "Listen to the priest's counsel and accept your penance. When he asks, pray "
 "the Act of Contrition:"
@@ -1125,7 +1137,7 @@ msgstr ""
 "Уважно вислухай повчання священика і прийми покуту. Якщо він попросить, "
 "промов акт жалю:"
 
-#: absolved/templates/absolved/confession.html:61
+#: absolved/templates/absolved/confession.html:70
 msgid ""
 "O my God, I am heartily sorry for having offended Thee, and I detest all my "
 "sins because of Thy just punishments, but most of all because they offend "
@@ -1135,56 +1147,56 @@ msgid ""
 msgstr ""
 "О Боже мій, люблю Тебе понад усе заради Твоєї безмежної доброти і жалію від "
 "усього серця, що Тебе, моє Найвище Добро, так багато разів ображав(-ла). "
-"Наділи мене своєю благодаттю, щоб я вистояв(-ла) у доброму і не "
-"повертався(-лася) вже до давніх моїх гріхів. Помилуй мене, а також душі в "
-"чистилищі. Амінь."
+"Наділи мене своєю благодаттю, щоб я вистояв(-ла) у доброму і не повертався(-"
+"лася) вже до давніх моїх гріхів. Помилуй мене, а також душі в чистилищі. "
+"Амінь."
 
-#: absolved/templates/absolved/confession.html:70
+#: absolved/templates/absolved/confession.html:79
 msgid "Absolution"
 msgstr "Розрішення"
 
-#: absolved/templates/absolved/confession.html:71
+#: absolved/templates/absolved/confession.html:80
 msgid "The priest gives you absolution. Answer:"
 msgstr "Священик уділяє тобі розрішення. Відповідай:"
 
-#: absolved/templates/absolved/confession.html:72
+#: absolved/templates/absolved/confession.html:81
 msgid "Amen."
 msgstr "Амінь."
 
-#: absolved/templates/absolved/confession.html:73
+#: absolved/templates/absolved/confession.html:82
 msgid "If he says \"Give thanks to the Lord, for he is good\", answer:"
 msgstr "Якщо він скаже \"Дякуймо Господу, бо Він добрий\", відповідай:"
 
-#: absolved/templates/absolved/confession.html:74
+#: absolved/templates/absolved/confession.html:83
 msgid "His mercy endures for ever."
 msgstr "Бо навіки Його милосердя."
 
-#: absolved/templates/absolved/confession.html:75
+#: absolved/templates/absolved/confession.html:84
 msgid "When he sends you away in peace, answer:"
 msgstr "Коли він відпускає тебе з миром, відповідай:"
 
-#: absolved/templates/absolved/confession.html:76
+#: absolved/templates/absolved/confession.html:85
 msgid "Thanks be to God."
 msgstr "Амінь."
 
-#: absolved/templates/absolved/confession.html:80
+#: absolved/templates/absolved/confession.html:89
 msgid "Back to preparation"
 msgstr "Назад до підготовки"
 
-#: absolved/templates/absolved/confession.html:83
+#: absolved/templates/absolved/confession.html:92
 msgid "I have confessed"
 msgstr "Я висповідався(-лася)"
 
-#: absolved/templates/absolved/confession.html:87
+#: absolved/templates/absolved/confession.html:96
 #: absolved/templates/absolved/home.html:61
 msgid "Date"
 msgstr "Дата"
 
-#: absolved/templates/absolved/confession.html:90
+#: absolved/templates/absolved/confession.html:99
 msgid "This records the confession and permanently deletes your preparation."
 msgstr "Це запише сповідь і назавжди видалить твою підготовку."
 
-#: absolved/templates/absolved/confession.html:91
+#: absolved/templates/absolved/confession.html:100
 msgid "Record and delete my preparation"
 msgstr "Записати й видалити мою підготовку"
 
@@ -1261,8 +1273,8 @@ msgstr "Коли була твоя остання сповідь?"
 msgid ""
 "It lets the app count the time since. You can change it later in History."
 msgstr ""
-"Так застосунок рахуватиме, скільки часу минуло. Ти можеш змінити це пізніше в"
-" Історії."
+"Так застосунок рахуватиме, скільки часу минуло. Ти можеш змінити це пізніше "
+"в Історії."
 
 #: absolved/templates/absolved/home.html:64
 msgid "Save"
@@ -1402,8 +1414,8 @@ msgstr[1] ""
 "Щонайменше %(length)s символи. Кілька не пов'язаних між собою слів утворюють "
 "довгий пароль, який легко запам'ятати."
 msgstr[2] ""
-"Щонайменше %(length)s символів. Кілька не пов'язаних між собою слів утворюють"
-" довгий пароль, який легко запам'ятати."
+"Щонайменше %(length)s символів. Кілька не пов'язаних між собою слів "
+"утворюють довгий пароль, який легко запам'ятати."
 msgstr[3] ""
 "Щонайменше %(length)s символу. Кілька не пов'язаних між собою слів утворюють "
 "довгий пароль, який легко запам'ятати."

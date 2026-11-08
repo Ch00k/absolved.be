@@ -56,8 +56,9 @@
   .form-error { @apply rounded-xl bg-red-50 px-3 py-2 text-sm text-red-800 dark:bg-red-950 dark:text-red-200; }
 
   .icon-link {
-    @apply grid size-10 place-items-center rounded-xl text-stone-600 hover:bg-stone-200 dark:text-stone-400
-      dark:hover:bg-stone-800;
+    @apply grid size-10 place-items-center rounded-xl text-stone-600 hover:bg-stone-200 disabled:cursor-not-allowed
+      disabled:opacity-40 disabled:hover:bg-transparent dark:text-stone-400 dark:hover:bg-stone-800
+      dark:disabled:hover:bg-transparent;
   }
 
   /* The language menu, opened below its button in the header: the header is as wide as the main column, so the menu
@@ -107,6 +108,9 @@
     & > .disclosure-chevron { @apply text-accent dark:text-violet-400; }
   }
 
+  /* The confession page's script, at the size picked with its text size buttons. Zoomed as a whole, so that its
+     spacing and icons grow with its text, and its lines wrap within the page's width. */
+  .confession-script { zoom: var(--text-zoom, 1); }
   /* The confession page's directions, set apart from the words the penitent says. */
   .direction { @apply pt-1 text-sm text-stone-500 italic dark:text-stone-400; }
   /* What the penitent adds to a sin, set apart from the sins themselves. */
