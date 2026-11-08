@@ -396,7 +396,8 @@ def test_an_empty_preparation_still_leads_to_confession(page: Page, live_server:
 
 def test_confession_text_size_is_picked_and_remembered(page: Page, live_server: LiveServer) -> None:
     """The buttons zoom the confession script a step at a time, between its own size and twice it, each button
-    disabled at its end; the size outlasts a reload, and the script grows on the page with it."""
+    disabled at its end, handing its focus to the other; the size outlasts a reload, and the script grows on the page
+    with it."""
     sign_up(page, live_server)
     skip_last_confession_question(page)
     page.goto(f"{live_server.url}/prepare/")
@@ -424,6 +425,11 @@ def test_confession_text_size_is_picked_and_remembered(page: Page, live_server: 
     smaller.click()
     expect(script).to_have_css("zoom", "1.75")
     expect(larger).to_be_enabled()
+
+    larger.focus()
+    page.keyboard.press("Enter")
+    expect(script).to_have_css("zoom", "2")
+    expect(smaller).to_be_focused()
 
 
 def test_the_password_never_leaves_the_browser(page: Page, live_server: LiveServer) -> None:

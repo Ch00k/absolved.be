@@ -27,15 +27,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const larger = document.getElementById("text-larger");
 
   function update(step) {
+    const focused = document.activeElement;
     textSize = Math.min(Math.max(textSize + step, 0), TEXT_SIZES.length - 1);
     try {
       localStorage.setItem(TEXT_SIZE_KEY, textSize);
     } catch {
       // Kept for this page only.
     }
+
     applyTextSize();
     smaller.disabled = textSize === 0;
     larger.disabled = textSize === TEXT_SIZES.length - 1;
+
+    // A button disabled while it has focus drops it to the page; the other button takes it, so that a keyboard or
+    // screen reader user keeps their place.
+    if (focused?.disabled) {
+      (focused === smaller ? larger : smaller).focus();
+    }
   }
 
   smaller.addEventListener("click", () => update(-1));
