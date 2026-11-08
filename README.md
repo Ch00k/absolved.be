@@ -19,7 +19,8 @@ icons, `rsvg-convert`.
 
 | Command               | What it does                                                               |
 | --------------------- | -------------------------------------------------------------------------- |
-| `make run`            | Migrate and serve at <http://127.0.0.1:8095> with `DJANGO_DEBUG=1`         |
+| `make run`            | `dev-account`, then serve at <http://127.0.0.1:8095> with `DJANGO_DEBUG=1` |
+| `make dev-account`    | Migrate, then add the account `dev` / `correct horse battery` if missing   |
 | `make test`           | Server tests, and browser tests in Chromium and WebKit                     |
 | `make browsers`       | Install the browsers the tests drive (once, and after Playwright upgrades) |
 | `make lint`           | `ruff format`, `ruff check` and `ty`                                       |
